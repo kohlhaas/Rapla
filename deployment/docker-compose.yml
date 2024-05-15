@@ -1,0 +1,7 @@
+version: "0.1"
+
+services:
+    rapla:
+        image: rapla
+        ports:
+            - "8051:8051"
