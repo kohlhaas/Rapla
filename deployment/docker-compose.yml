@@ -6,9 +6,6 @@ services:
         ports:
             - "8051:8051"
         volumes:
-            - ./rapla.war:/app/webapps/rapla.war
-        develop:
-            watch:
-                - action: sync
-                  path: /app/webapps/rapla.war
-                  command: ./raplaserver.sh restart
+            - type: bind
+              source: ./rapla.war
+              target: /app/webapps/rapla.war
