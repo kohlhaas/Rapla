@@ -5,3 +5,5 @@ services:
         image: rapla
         ports:
             - "8051:8051"
+        volumes:
+            - ./rapla.war:/app/webapps/rapla.war
