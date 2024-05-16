@@ -20,7 +20,4 @@ RUN tar -xvf rapla-2.0-RC8.tar.gz
 
 COPY filelistener.sh filelistener.sh
 
-RUN screen -d -m -S listener_session ./filelistener.sh
-
-CMD ["./raplaserver.sh", "run"]
-
+CMD screen -d -m -S rapla_session ./raplaserver.sh run && sleep infinity
