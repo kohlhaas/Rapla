@@ -6,6 +6,4 @@ services:
         ports:
             - "8051:8051"
         volumes:
-            - type: bind
-              source: ./rapla.war
-              target: /app/webapps/rapla.war
+            - ./testfile.txt:/app/testfile.txt
