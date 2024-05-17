@@ -1,1 +1,1 @@
-while inotifywait -e close_write webapps/rapla.war; do echo 'help'; done
+while inotifywait -e modify testfile.txt; do echo 'help'; done
