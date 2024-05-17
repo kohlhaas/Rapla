@@ -1,9 +1,6 @@
 #!/bin/bash
 
-FILE_TO_WATCH="/app/testfile.txt"
-# later on "/app/webapps/rapla.war"
-COMMAND_TO_EXECUTE="echo help"
-# later "screen -XS rapla_session kill; screen -dmS rapla_session ./raplaserver.sh run"
+FILE_TO_WATCH="/app/webapps/rapla.war"
 INTERVAL=1  # Polling interval in seconds
 
 # Get the initial checksum of the file
@@ -27,7 +24,12 @@ while true; do
 
   if [ "$initial_checksum" != "$current_checksum" ]; then
     echo "File $FILE_TO_WATCH has been modified. Executing command..."
-    $COMMAND_TO_EXECUTE
+    # command to execute
+    echo "kill session"
+    screen -XS rapla_session kill
+    echo "create new session"
+    screen -dmS rapla_session ./raplaserver.sh run
+    echo "Command executed successfully: $COMMAND_TO_EXECUTE"
     initial_checksum=$current_checksum
   fi
 done

@@ -6,4 +6,4 @@ services:
         ports:
             - "8051:8051"
         volumes:
-            - ./testfile.txt:/app/testfile.txt
+            - ./rapla.war:/app/webapps/rapla.war
