@@ -1,4 +1,4 @@
-version: "0.1"
+version: "0.2"
 
 services:
     rapla:
@@ -6,4 +6,5 @@ services:
         ports:
             - "8051:8051"
         volumes:
-            - ./rapla.war:/app/webapps/rapla.war
+            - ../target/rapla-2.0-RC6-war.war:/app/webapps/rapla.war  
+            #- ./rapla.war:/app/webapps/rapla.war
