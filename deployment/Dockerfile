@@ -20,4 +20,8 @@ RUN tar -xvf rapla-2.0-RC8.tar.gz
 
 COPY filelistener.sh filelistener.sh
 
-CMD screen -d -m -S rapla_session ./raplaserver.sh run && sleep infinity
+RUN apt-get update && apt-get install -y dos2unix
+
+RUN dos2unix filelistener.sh
+
+CMD screen -d -m -S rapla_session ./raplaserver.sh run && ./filelistener.sh
