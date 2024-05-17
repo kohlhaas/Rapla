@@ -3,8 +3,9 @@ version: "0.2"
 services:
     rapla:
         image: rapla
+        restart: always
         ports:
             - "8051:8051"
         volumes:
-            - ../target/rapla-2.0-RC6-war.war:/app/webapps/rapla.war  
+            - ../target/rapla-2.0-RC6-war.war:/app/webapps/rapla.war
             #- ./rapla.war:/app/webapps/rapla.war
