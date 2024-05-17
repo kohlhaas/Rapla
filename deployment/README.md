@@ -25,21 +25,29 @@ chmod 777 filelistener.sh
 ## Install Libraries
 Mac:
 
-```brew install maven```
+```bash
+brew install maven
+```
 
 Windows:
 
-```choco install maven```
+```bash
+choco install maven
+```
 
 
 ## Build the .war File
 First you have to go into the project directory:
 
-```cd /path/to/project```
+```bash
+cd /path/to/rapla
+```
 
 Then you can build the .war file with the following command:
 
-```mvn package -DskipTests```
+```bash
+mvn package -DskipTests
+```
 
 
 The .war file will be located in the target folder of the project directory.
