@@ -2,7 +2,7 @@ version: "0.2"
 
 services:
     rapla:
-        image: rapla
+        image: git.dhbw-stuttgart.de:4567/wwi2021f-gruppe5/rapla:latest
         restart: always
         ports:
             - "8051:8051"
