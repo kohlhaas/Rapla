@@ -80,6 +80,7 @@ import org.rapla.framework.Disposable;
 import org.rapla.framework.RaplaException;
 import org.rapla.framework.RaplaLocale;
 import org.rapla.logger.Logger;
+import org.rapla.plugin.exchangeconnector.ExchangeConnectorPlugin;
 import org.rapla.rest.JsonParserWrapper;
 import org.rapla.scheduler.CommandScheduler;
 import org.rapla.scheduler.Promise;
@@ -1075,7 +1076,7 @@ public abstract class LocalAbstractCachableOperator extends AbstractCachableOper
         }
         final long delayCleanup = DateTools.MILLISECONDS_PER_HOUR;
         scheduleConnectedTasks(cleanUpConflicts, delayCleanup, DateTools.MILLISECONDS_PER_HOUR);
-        final int refreshPeriod = 1000 * 20;
+        final int refreshPeriod = 1000 * 60;
         final long delayRefresh = 1000;
         scheduleConnectedTasks(()->
             {
@@ -3580,7 +3581,7 @@ public abstract class LocalAbstractCachableOperator extends AbstractCachableOper
         store.put(newPref);
 
         @SuppressWarnings("deprecation")
-        String[] userGroups = new String[] { Permission.GROUP_CAN_READ_EVENTS_FROM_OTHERS, Permission.GROUP_CAN_CREATE_EVENTS };
+        String[] userGroups = new String[] { Permission.GROUP_CAN_READ_EVENTS_FROM_OTHERS, Permission.GROUP_CAN_CREATE_EVENTS, ExchangeConnectorPlugin.EXCHANGE_SYNCHRONIZATION_GROUP};
 
         CategoryImpl groupsCategory = new CategoryImpl(now, now);
         groupsCategory.setKey("user-groups");
