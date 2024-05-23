@@ -3,7 +3,7 @@
 /temp
 /logs
 /dist
-/data
+# /data
 /custom-builds
 /build
 /rapla.cer
