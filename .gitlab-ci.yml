@@ -20,13 +20,13 @@ maven_build:
 rapla_image:
     stage: rapla_image
     image: docker:24.0.5
-    services:
-        - name: docker:24.0.5-dind
-          alias: docker
     variables:
         DOCKER_HOST: tcp://docker:2375
         DOCKER_TLS_CERTDIR: ""
-        IMAGE_NAME: "vm_ci/rapla"
+        IMAGE_NAME: "$CI_REGISTRY_IMAGE/rapla:$CI_COMMIT_REF_NAME"
+    services:
+        - name: docker:24.0.5-dind
+        alias: docker
     script:
         - docker info
         - docker build -t $IMAGE_NAME .
