@@ -4,7 +4,4 @@ services:
     rapla:
         image: git.dhbw-stuttgart.de:4567/wwi2021f-gruppe5/rapla/vm_ci
         ports:
-            - "8051:8051"
-
-
-            
+            - "8051:8051"         
