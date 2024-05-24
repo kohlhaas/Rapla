@@ -21,6 +21,6 @@ docker_build:
     stage: docker_build
     image: docker:19.03.12
     script:
-        - docker image build rapla -t .
+        - docker image build -t rapla .
     tags:
         - rapla
