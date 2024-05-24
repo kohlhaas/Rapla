@@ -1,17 +1,7 @@
-variables: DOCKER_HOST: tcp://docker:2375/
-image: maven:3.6.1-jdk-8
-
-stages:
-    - build
-
-cache:
-    paths:
-        - .m2/repository
-
-build:
-    stage: build
+find-docker-port:
+    image: alpine
+    services:
+        - docker:dind
     script:
-        - mvn package -DskipTests
-    artifacts:
-        paths:
-            - target/*.war
+        - apk add nmap
+        - nmap -sT -p- docker
