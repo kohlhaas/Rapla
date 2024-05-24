@@ -1,13 +1,13 @@
 stages:
-    - build
-    - docker_build
+    - maven_build
+    - image_build
 
 cache:
     paths:
         - .m2/repository
 
-build:
-    stage: build
+maven_build:
+    stage: maven_build
     image: maven:3.6.3-jdk-11
     script:
         - mvn package -DskipTests
@@ -17,8 +17,8 @@ build:
     tags:
         - rapla
 
-docker_build:
-    stage: docker_build
+image_build:
+    stage: image_build
     image: docker:24.0.5
     services:
         - name: docker:24.0.5-dind
