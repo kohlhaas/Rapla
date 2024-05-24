@@ -40,19 +40,18 @@ variables:
 #     - rapla
 
 deploy:
-    stage: deploy
-    image: ubuntu:22.04
-    before_script:
-        - apt-get update
-        - apt-get install openssh-client git-core -y
-        - eval $(ssh-agent -s)
-        - echo "$SSH_DEPLOY_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-        - mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-        - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-        - git clone git@gitlab.com:gitlab-org/gitlab-ce.git
-    script:
-        - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-        - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker pull $IMAGE_NAME"
-        - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker run -d -p 8080:8080 --name rapla_container $IMAGE_NAME"        
-    tags:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - echo "$SSH_PRIVATE_KEY"
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
+  script:
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker pull $IMAGE_NAME"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker run -d -p 8080:8080 --name rapla_container $IMAGE_NAME"
+  tags:
         - rapla
