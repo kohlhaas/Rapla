@@ -16,7 +16,6 @@ cache:
 #             - target/*.war
 #     tags:
 #         - rapla
-
 docker_build:
     stage: docker_build
     image: docker:24.0.5
