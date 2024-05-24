@@ -9,6 +9,8 @@ import org.rapla.entities.domain.Allocatable;
 import org.rapla.entities.domain.Reservation;
 import org.rapla.entities.dynamictype.ClassificationFilter;
 import org.rapla.entities.dynamictype.DynamicType;
+import org.rapla.entities.dynamictype.Classification;
+import org.rapla.entities.dynamictype.Attribute;
 import org.rapla.entities.storage.ReferenceInfo;
 import org.rapla.facade.RaplaFacade;
 import org.rapla.framework.RaplaException;
@@ -69,6 +71,33 @@ public class RaplaPruefungen {
         for (Reservation reservation:reservations) {
             out.println("<p>");
             out.println(reservation.getName(null));
+            out.println("<br>");
+            // out.println(reservation.getResources());
+            out.println("<br>");
+            out.println("Resourcen: <br>");
+            for (Allocatable resource:reservation.getResources()) {
+                out.println(resource.getName(null));
+                out.println("<br>");
+            }
+            out.println("<br>");
+            out.println(reservation.getFirstDate());
+            out.println("<br>");
+            // out.println(reservation.getAnnotationKeys());
+            // out.println("<br>");
+            // for (String key:reservation.getAnnotationKeys()) {
+            //     out.println(key + " : " + reservation.getAnnotation(key, null));
+            //     out.println("<br>");
+            // }
+
+            out.println("Dynamic Type Test <br>");
+            Classification classification = reservation.getClassification();
+            out.println(classification.getName(null));
+            for (Attribute attribute:classification.getAttributes()) {
+                out.println(attribute.getKey() + " : " + classification.getValueForAttribute(attribute));
+                out.println("<br>");
+            }
+
+
             out.println("</p>");
         }
         out.println( "<hr>" );
