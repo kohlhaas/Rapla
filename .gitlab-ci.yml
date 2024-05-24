@@ -1,7 +1,16 @@
-find-docker-port:
-    image: alpine
-    services:
-        - docker:dind
+image: maven:3.6.3-jdk-11
+
+stages:
+    - build
+
+cache:
+    paths:
+        - .m2/repository
+
+build:
+    stage: build
     script:
-        - apk add nmap
-        - nmap -sT -p- docker
+        - mvn package -DskipTests
+    artifacts:
+        paths:
+            - target/*.war
