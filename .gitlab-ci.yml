@@ -1,18 +1,17 @@
 stages:
-    # - maven_build
-    # - rapla_image_build
-    - deploy
+  # - maven_build
+  # - rapla_image_build
+  - deploy
 
 cache:
-    paths:
-        - .m2/repository
+  paths:
+    - .m2/repository
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
-  IMAGE_NAME: "$CI_REGISTRY_IMAGE/vm_ci:$CI_COMMIT_REF_NAME"
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE/vm_ci:latest"
   DEPLOY_USER: "ubuntu"
   DEPLOY_HOST: "193.196.55.85"
-
 
 # maven_build:
 #     stage: maven_build
@@ -55,6 +54,6 @@ deploy:
     # - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $IMAGE_NAME"
     # - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker run -d -p 8051:8051 --name rapla_container $IMAGE_NAME"
   tags:
-        - rapla
+    - rapla
 
-            # - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker compose up -d"
+      # - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker compose up -d"
