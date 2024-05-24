@@ -11,9 +11,15 @@ build:
     stage: build
     script:
         - mvn package -DskipTests
-        - cp target/*.war /target/*.war
     artifacts:
         paths:
             - target/*.war
+    tags:
+        - rapla
+
+docker_build:
+    stage: docker_build
+    script:
+        - docker image build -t .
     tags:
         - rapla
