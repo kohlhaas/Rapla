@@ -1,25 +1,25 @@
-image: maven:3.6.3-jdk-11
-
 stages:
-    - build
+    # - build
     - docker_build
 
 cache:
     paths:
         - .m2/repository
 
-build:
-    stage: build
-    script:
-        - mvn package -DskipTests
-    artifacts:
-        paths:
-            - target/*.war
-    tags:
-        - rapla
+# build:
+#     stage: build
+# image: maven:3.6.3-jdk-11
+#     script:
+#         - mvn package -DskipTests
+#     artifacts:
+#         paths:
+#             - target/*.war
+#     tags:
+#         - rapla
 
 docker_build:
     stage: docker_build
+    image: docker:19.03.12
     script:
         - docker image build -t .
     tags:
