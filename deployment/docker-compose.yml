@@ -8,5 +8,9 @@ services:
             - "8051:8051"
         volumes:
             - ../target/rapla-2.0-RC9-war.war:/app/webapps/rapla.war
-            - ../data/data.xml:/app/data/data.xml
+            - rapla-data:/app/data
+            # - ../data/data.xml:/app/data/data.xml
             #- ./rapla.war:/app/webapps/rapla.war
+
+volumes:
+    rapla-data:

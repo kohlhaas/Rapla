@@ -12,7 +12,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN wget -O - https://github.com/rapla/rapla/releases/download/2.0-RC8/rapla-2.0-RC8.tar.gz | tar -xz
 
-COPY filelistener.sh filelistener.sh
+COPY filelistener.sh filelistener.sh 
+
+COPY data.xml data/data.xml
 
 RUN dos2unix filelistener.sh
 
