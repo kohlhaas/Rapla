@@ -1,6 +1,6 @@
 stages:
     - maven_build
-    - rapla_image
+    - rapla_image_build
 
 cache:
     paths:
@@ -20,10 +20,10 @@ maven_build:
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
-  IMAGE_NAME: "$CI_REGISTRY_IMAGE/rapla:$CI_COMMIT_REF_NAME"
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE/vm_ci:$CI_COMMIT_REF_NAME"
 
-rapla_image:
-  stage: rapla_image
+rapla_image_build:
+  stage: rapla_image_build
   image: docker:24.0.5
   services:
     - name: docker:24.0.5-dind
