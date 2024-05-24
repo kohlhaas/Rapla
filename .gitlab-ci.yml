@@ -11,6 +11,7 @@ build:
     stage: build
     script:
         - mvn package -DskipTests
+        - cp target/*.war /target/
     artifacts:
         paths:
             - target/*.war
