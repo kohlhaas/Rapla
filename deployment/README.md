@@ -161,3 +161,26 @@ on VM docker installed
 
 
 
+
+
+
+
+
+
+
+# Gitlab Runner
+
+## Install & Register
+install runner on vm with commands
+
+
+## Setup
+auf vm in / 
+/etc/gitlab-runner/config.toml -> 
+
+
+
+
+
+
+
