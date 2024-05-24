@@ -175,8 +175,8 @@ install runner on vm with commands
 
 
 ## Setup
-auf vm in / 
-/etc/gitlab-runner/config.toml -> 
+auf vm in 
+/etc/gitlab-runner/config.toml -> privileged = true
 
 
 
