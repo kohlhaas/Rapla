@@ -48,4 +48,4 @@ deploy:
     - ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker pull $IMAGE_NAME"
     - ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker run -d -p 8051:8051 --name rapla_container $IMAGE_NAME"
   tags:
-    - deploy
+    - rapla
