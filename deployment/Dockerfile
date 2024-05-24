@@ -2,25 +2,17 @@ FROM ubuntu:22.04
 
 WORKDIR /app
 
-RUN apt-get update
+RUN apt-get update && apt-get install -y \
+    wget \
+    inotify-tools \
+    default-jre \
+    screen \
+    nano \
+    dos2unix
 
-RUN apt-get install wget -y
-
-RUN apt-get install inotify-tools -y
-
-RUN apt-get install -y default-jre
-
-RUN apt-get install -y screen
-
-RUN apt-get install -y nano
-
-RUN wget https://github.com/rapla/rapla/releases/download/2.0-RC8/rapla-2.0-RC8.tar.gz
-
-RUN tar -xvf rapla-2.0-RC8.tar.gz
+RUN wget -O - https://github.com/rapla/rapla/releases/download/2.0-RC8/rapla-2.0-RC8.tar.gz | tar -xz
 
 COPY filelistener.sh filelistener.sh
-
-RUN apt-get update && apt-get install -y dos2unix
 
 RUN dos2unix filelistener.sh
 
