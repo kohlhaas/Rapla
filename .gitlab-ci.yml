@@ -6,18 +6,6 @@ stages:
 cache:
     paths:
         - .m2/repository
-
-maven_build:
-    stage: maven_build
-    image: maven:3.6.3-jdk-11
-    script:
-        - mvn package -DskipTests
-    artifacts:
-        paths:
-            - target/*.war
-    tags:
-        - rapla
-
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
@@ -25,19 +13,31 @@ variables:
   DEPLOY_USER: "ubuntu"
   DEPLOY_HOST: "193.196.55.85"
 
-rapla_image_build:
-  stage: rapla_image_build
-  image: docker:24.0.5
-  services:
-    - name: docker:24.0.5-dind
-      alias: docker
-  script:
-    - docker info
-    - docker build -t $IMAGE_NAME .
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - docker push $IMAGE_NAME
-  tags:
-    - rapla
+
+# maven_build:
+#     stage: maven_build
+#     image: maven:3.6.3-jdk-11
+#     script:
+#         - mvn package -DskipTests
+#     artifacts:
+#         paths:
+#             - target/*.war
+#     tags:
+#         - rapla
+
+# rapla_image_build:
+#   stage: rapla_image_build
+#   image: docker:24.0.5
+#   services:
+#     - name: docker:24.0.5-dind
+#       alias: docker
+#   script:
+#     - docker info
+#     - docker build -t $IMAGE_NAME .
+#     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+#     - docker push $IMAGE_NAME
+#   tags:
+#     - rapla
 
 deploy:
   stage: deploy
