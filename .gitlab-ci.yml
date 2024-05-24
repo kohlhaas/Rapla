@@ -1,24 +1,22 @@
 stages:
-    # - build
+    - build
     - docker_build
 
 cache:
     paths:
         - .m2/repository
 
-# build:
-#     stage: build
-# image: maven:3.6.3-jdk-11
-#     script:
-#         # - mvn package -DskipTests
-#         - mkdir target
-#         - touch target/test.war
-#     artifacts:
-#         paths:
-#             - target/*.war
-#     tags:
-#         - rapla
-
+build:
+    stage: build
+    image: maven:3.6.3-jdk-11
+    script:
+        - mkdir target
+        - touch target/test.war
+    artifacts:
+        paths:
+            - target/*.war
+    tags:
+        - rapla
 
 docker_build:
     stage: docker_build
