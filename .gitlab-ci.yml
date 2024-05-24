@@ -51,8 +51,9 @@ deploy:
     - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
   script:
     - echo $CI_REGISTRY_PASSWORD | ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY"
-    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $IMAGE_NAME"
-    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker run -d -p 8051:8051 --name rapla_container $IMAGE_NAME"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker compose up"
+    # - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $IMAGE_NAME"
+    # - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker run -d -p 8051:8051 --name rapla_container $IMAGE_NAME"
   tags:
         - rapla
 
