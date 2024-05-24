@@ -79,6 +79,11 @@ public class RaplaPruefungen {
                 out.println(resource.getName(null));
                 out.println("<br>");
             }
+            out.println("Dozierende: <br>");
+            for (Allocatable resource:reservation.getPersons()) {
+                out.println(resource.getName(null));
+                out.println("<br>");
+            }
             out.println("<br>");
             out.println(reservation.getFirstDate());
             out.println("<br>");
