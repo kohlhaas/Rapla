@@ -19,7 +19,9 @@ cache:
 
 docker_build:
     stage: docker_build
-    image: docker:19.03.12
+    image: docker:24.0.5
+    services:
+        - docker:24.0.5-dind
     script:
         - docker image build -t rapla .
     tags:
