@@ -17,20 +17,21 @@ maven_build:
     tags:
         - rapla
 
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE/rapla:$CI_COMMIT_REF_NAME"
+
 rapla_image:
-    stage: rapla_image
-    image: docker:24.0.5
-    variables:
-        DOCKER_HOST: tcp://docker:2375
-        DOCKER_TLS_CERTDIR: ""
-        IMAGE_NAME: "$CI_REGISTRY_IMAGE/rapla:$CI_COMMIT_REF_NAME"
-    services:
-        - name: docker:24.0.5-dind
-        alias: docker
-    script:
-        - docker info
-        - docker build -t $IMAGE_NAME .
-        - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-        - docker push $IMAGE_NAME
-    tags:
-        - rapla
+  stage: rapla_image
+  image: docker:24.0.5
+  services:
+    - name: docker:24.0.5-dind
+      alias: docker
+  script:
+    - docker info
+    - docker build -t $IMAGE_NAME .
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push $IMAGE_NAME
+  tags:
+    - rapla
