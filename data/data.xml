@@ -4180,7 +4180,7 @@
       </relax:define>
 
       <relax:define name="Pruefung">
-         <relax:element name="dynatt:Pruefung" id="d2ccf1ee-bfbe-4d38-a81b-f6c0dedd707c" created-at="2015-12-16T07:49:39.123Z" last-changed="2024-05-16T10:03:33.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
+         <relax:element name="dynatt:Pruefung" id="d2ccf1ee-bfbe-4d38-a81b-f6c0dedd707c" created-at="2015-12-16T07:49:39.123Z" last-changed="2024-05-24T11:56:47.295Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
             <doc:name lang="de">Prüfung</doc:name>
             <doc:annotations>
                <rapla:annotation key="nameformat_export">{Name} {filter(event:allocatables,r-&gt;or(equals(key(type(r)),&quot;Kurs&quot;),equals(key(type(r)),&quot;Teilkurs&quot;),equals(key(type(r)),&quot;Kursgruppe&quot;)))}  {Beschreibung}</rapla:annotation>
@@ -4330,6 +4330,26 @@
                   <doc:name lang="de">Interne Info</doc:name>
                   <doc:name lang="en">Internal Info</doc:name>
                   <doc:name lang="fr">info intérieure</doc:name>
+                  <relax:data type="string"/>
+                  <rapla:default></rapla:default>
+               </relax:element>
+            </relax:optional>
+            <relax:optional>
+               <relax:element name="max_punkte">
+                  <doc:name lang="de">Maximale Punktzahl</doc:name>
+                  <relax:data type="int"/>
+               </relax:element>
+            </relax:optional>
+            <relax:optional>
+               <relax:element name="unit_name">
+                  <doc:name lang="de">Modulname</doc:name>
+                  <relax:data type="string"/>
+                  <rapla:default></rapla:default>
+               </relax:element>
+            </relax:optional>
+            <relax:optional>
+               <relax:element name="themenfeld">
+                  <doc:name lang="de">Themenfeld</doc:name>
                   <relax:data type="string"/>
                   <rapla:default></rapla:default>
                </relax:element>
@@ -6104,7 +6124,7 @@
             <rapla:entry key="export_attendees" value="true"/>
             <rapla:entry key="export_attendees_participation_status" value="TENTATIVE"/>
             <rapla:entry key="org.rapla.DefaultSelection">
-               <rapla:calendar title="{allocatables}" view="week" startdate="2024-05-20" enddate="2024-12-26">
+               <rapla:calendar title="{allocatables}" view="week" startdate="2024-05-20" enddate="2024-12-30">
                   <selected>
                      <rapla:resource idref="rf38b7cc-b1dd-4731-8cd0-6b3dde331d26"/>
                   </selected>
@@ -6112,7 +6132,7 @@
                      <rapla:map>
                         <rapla:mapentry key="org.rapla.plugin.abstractcalendar.show_navigation" value="true"/>
                         <rapla:mapentry key="org.rapla.plugin.abstractcalendar.save_selected_date" value="false"/>
-                        <rapla:mapentry key="org.rapla.plugin.export2ical.selected" value="true"/>
+                        <rapla:mapentry key="org.rapla.plugin.export2ical.selected" value="false"/>
                         <rapla:mapentry key="org.rapla.plugin.abstractcalendar.only_allocation_info" value="false"/>
                         <rapla:mapentry key="org.rapla.plugin.urlencryption.selected" value="true"/>
                         <rapla:mapentry key="org.rapla.plugin.abstractcalendar.resources_link_list" value="true"/>
@@ -7004,10 +7024,10 @@
          <rapla:permission group="category[key='STG']/category[key='S']/category[key='SA']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
       </rapla:resource>
-      <rapla:resource id="r20f9f0d-f011-4c45-9468-ef21fffb2fb1" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-01-24T14:36:50.000Z" last-changed="2024-05-21T16:31:47.368Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+      <rapla:resource id="rf952904-7acb-4143-9abc-483dee40ab76" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-01-23T09:47:07.000Z" last-changed="2024-05-21T16:31:47.368Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
          <dynatt:sonstige>
-            <dynatt:name>STG-Scenario Cards Team</dynatt:name>
-            <dynatt:description>ZMS-Material</dynatt:description>
+            <dynatt:name>STG-Pitch Your Green Idea</dynatt:name>
+            <dynatt:description>Planspiele</dynatt:description>
          </dynatt:sonstige>
          <rapla:permission group="category[key='STG']/category[key='ZMS']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
@@ -7015,10 +7035,10 @@
          <rapla:permission group="category[key='STG']/category[key='W']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='GW']" access="read"/>
       </rapla:resource>
-      <rapla:resource id="rf952904-7acb-4143-9abc-483dee40ab76" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-01-23T09:47:07.000Z" last-changed="2024-05-21T16:31:47.368Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+      <rapla:resource id="r20f9f0d-f011-4c45-9468-ef21fffb2fb1" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-01-24T14:36:50.000Z" last-changed="2024-05-21T16:31:47.368Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
          <dynatt:sonstige>
-            <dynatt:name>STG-Pitch Your Green Idea</dynatt:name>
-            <dynatt:description>Planspiele</dynatt:description>
+            <dynatt:name>STG-Scenario Cards Team</dynatt:name>
+            <dynatt:description>ZMS-Material</dynatt:description>
          </dynatt:sonstige>
          <rapla:permission group="category[key='STG']/category[key='ZMS']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
@@ -10148,21 +10168,6 @@
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIB']" access="allocate_conflicts"/>
       </rapla:resource>
-      <rapla:resource id="r50d716a-5fe3-4ee8-b9fa-2d470b61adca" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:34:28.000Z" last-changed="2023-01-04T20:22:50.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="conflictCreation">ignore</rapla:annotation>
-            <rapla:annotation key="externalid">Studiengang:334504913524186</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Studiengang>
-            <dynatt:Name>STG-S-SA</dynatt:Name>
-            <dynatt:DualisId>334504913524186</dynatt:DualisId>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Studiengang>
-         <rapla:permission group="category[key='STG']" access="read_no_allocation"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='S']/category[key='SA']" access="allocate_conflicts"/>
-      </rapla:resource>
       <rapla:resource id="rf427936-9b32-428f-a456-c4bad2628a6b" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:34:28.000Z" last-changed="2023-01-04T20:22:50.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="conflictCreation">ignore</rapla:annotation>
@@ -10177,6 +10182,21 @@
          <rapla:permission group="category[key='STG']" access="read_no_allocation"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='T']/category[key='ET']" access="allocate_conflicts"/>
+      </rapla:resource>
+      <rapla:resource id="r50d716a-5fe3-4ee8-b9fa-2d470b61adca" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:34:28.000Z" last-changed="2023-01-04T20:22:50.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="conflictCreation">ignore</rapla:annotation>
+            <rapla:annotation key="externalid">Studiengang:334504913524186</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Studiengang>
+            <dynatt:Name>STG-S-SA</dynatt:Name>
+            <dynatt:DualisId>334504913524186</dynatt:DualisId>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Studiengang>
+         <rapla:permission group="category[key='STG']" access="read_no_allocation"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='S']/category[key='SA']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="r612f85a-f7c2-462a-b3fe-b23c0fe68b45" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2019-06-17T09:17:52.000Z" last-changed="2023-01-04T20:22:54.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
@@ -11519,19 +11539,6 @@
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIB']" access="allocate_conflicts"/>
       </rapla:resource>
-      <rapla:resource id="r703c1de-8ee9-414c-aa66-71667f6db61e" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-02-21T07:02:16.000Z" last-changed="2024-05-21T16:31:27.878Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
-         <dynatt:virtuellerRaum>
-            <dynatt:name>STG-Zoom-KR53-B304</dynatt:name>
-            <dynatt:capcity></dynatt:capcity>
-            <dynatt:url-participant></dynatt:url-participant>
-            <dynatt:url-audience></dynatt:url-audience>
-            <dynatt:Videokonferenzsystem></dynatt:Videokonferenzsystem>
-         </dynatt:virtuellerRaum>
-         <rapla:permission group="category[key='STG']" access="read"/>
-         <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIN']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIB']" access="allocate_conflicts"/>
-      </rapla:resource>
       <rapla:resource id="r6166227-0fbd-4080-89c8-3c0582ca519d" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2023-11-30T15:00:21.000Z" last-changed="2024-05-21T16:31:27.878Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
          <dynatt:virtuellerRaum>
             <dynatt:name>STG-Zoom-RB131-4.10</dynatt:name>
@@ -11544,6 +11551,19 @@
          <rapla:permission group="category[key='STG']/category[key='S']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='S']/category[key='SA']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+      </rapla:resource>
+      <rapla:resource id="r703c1de-8ee9-414c-aa66-71667f6db61e" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-02-21T07:02:16.000Z" last-changed="2024-05-21T16:31:27.878Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <dynatt:virtuellerRaum>
+            <dynatt:name>STG-Zoom-KR53-B304</dynatt:name>
+            <dynatt:capcity></dynatt:capcity>
+            <dynatt:url-participant></dynatt:url-participant>
+            <dynatt:url-audience></dynatt:url-audience>
+            <dynatt:Videokonferenzsystem></dynatt:Videokonferenzsystem>
+         </dynatt:virtuellerRaum>
+         <rapla:permission group="category[key='STG']" access="read"/>
+         <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIN']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIB']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="rf95f80a-8fd7-48b5-933b-d457f5213463" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2023-12-12T09:22:53.000Z" last-changed="2024-05-21T16:31:27.878Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
          <dynatt:virtuellerRaum>
@@ -12824,40 +12844,6 @@
          <rapla:permission group="category[key='HDH']" access="read"/>
          <rapla:permission group="category[key='HDH']/category[key='hdh_admin']" access="admin"/>
       </rapla:resource>
-      <rapla:resource id="r5377c60-af1e-49b1-bc4b-1c0824da144b" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:30.000Z" last-changed="2024-05-02T14:02:40.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="externalid">1bff1256-1d97-11db-a4bb-0fbfc009c816</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>Seminarraum</dynatt:Raumname>
-            <dynatt:MoradaId>1bff1256-1d97-11db-a4bb-0fbfc009c816</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>0.18</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>018</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>RB41-0.18</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten></dynatt:Oeffnungszeiten>
-            <dynatt:OeffnungszeitenBemerkung></dynatt:OeffnungszeitenBemerkung>
-            <dynatt:Raumart>category[key='DIN_5_2_1']</dynatt:Raumart>
-            <dynatt:Gebaeude>r210be3a-b3db-46cc-8f36-dcb6d3cef976</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>65</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>27</dynatt:AnzahlPlaetzeFest>
-            <dynatt:AnzahlPlaetzePruefung>14</dynatt:AnzahlPlaetzePruefung>
-            <dynatt:RollstuhlgerechterZugang>false</dynatt:RollstuhlgerechterZugang>
-            <dynatt:RollstuhlgerechterZugangBemerkung></dynatt:RollstuhlgerechterZugangBemerkung>
-            <dynatt:AusstattungListe>category[key='OHP']</dynatt:AusstattungListe>
-            <dynatt:AusstattungListe>category[key='TGB']</dynatt:AusstattungListe>
-            <dynatt:AusstattungListe>category[key='DEB']</dynatt:AusstattungListe>
-            <dynatt:AusstattungListe>category[key='BLW']</dynatt:AusstattungListe>
-            <dynatt:Etage>Erdgeschoss</dynatt:Etage>
-            <dynatt:SonstigeBemerkung></dynatt:SonstigeBemerkung>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']" access="read"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='GW']/category[key='AHW']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='GW']/category[key='AHWB']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
-      </rapla:resource>
       <rapla:resource id="rd482933-d4ea-4cf0-b2db-4c3eebb8fbd4" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:52:22.000Z" last-changed="2023-07-26T14:03:09.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">f4e225d5-0601-a4cb-e040-180a142771e9</rapla:annotation>
@@ -12893,6 +12879,40 @@
          <rapla:permission group="category[key='HDH']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='HDH']" access="read"/>
          <rapla:permission group="category[key='HDH']/category[key='hdh_admin']" access="admin"/>
+      </rapla:resource>
+      <rapla:resource id="r5377c60-af1e-49b1-bc4b-1c0824da144b" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:30.000Z" last-changed="2024-05-02T14:02:40.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="externalid">1bff1256-1d97-11db-a4bb-0fbfc009c816</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>Seminarraum</dynatt:Raumname>
+            <dynatt:MoradaId>1bff1256-1d97-11db-a4bb-0fbfc009c816</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>0.18</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>018</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>RB41-0.18</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten></dynatt:Oeffnungszeiten>
+            <dynatt:OeffnungszeitenBemerkung></dynatt:OeffnungszeitenBemerkung>
+            <dynatt:Raumart>category[key='DIN_5_2_1']</dynatt:Raumart>
+            <dynatt:Gebaeude>r210be3a-b3db-46cc-8f36-dcb6d3cef976</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>65</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>27</dynatt:AnzahlPlaetzeFest>
+            <dynatt:AnzahlPlaetzePruefung>14</dynatt:AnzahlPlaetzePruefung>
+            <dynatt:RollstuhlgerechterZugang>false</dynatt:RollstuhlgerechterZugang>
+            <dynatt:RollstuhlgerechterZugangBemerkung></dynatt:RollstuhlgerechterZugangBemerkung>
+            <dynatt:AusstattungListe>category[key='OHP']</dynatt:AusstattungListe>
+            <dynatt:AusstattungListe>category[key='TGB']</dynatt:AusstattungListe>
+            <dynatt:AusstattungListe>category[key='DEB']</dynatt:AusstattungListe>
+            <dynatt:AusstattungListe>category[key='BLW']</dynatt:AusstattungListe>
+            <dynatt:Etage>Erdgeschoss</dynatt:Etage>
+            <dynatt:SonstigeBemerkung></dynatt:SonstigeBemerkung>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']" access="read"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='GW']/category[key='AHW']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='GW']/category[key='AHWB']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="r9ebcd06-dad7-424c-ab53-3ca541ab3121" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T11:02:38.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
@@ -15306,6 +15326,31 @@
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
+      <rapla:resource id="r769e577-a3fb-40b7-a8dc-1a5570c73c0f" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:18.000Z" last-changed="2024-05-02T11:02:37.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="externalid">87867d3c-478f-4440-a172-f2ad098ed8a9</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>Labor, Elektr. Antriebssysteme Pedelec</dynatt:Raumname>
+            <dynatt:MoradaId>87867d3c-478f-4440-a172-f2ad098ed8a9</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>C.215.P</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>C.215.P</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>LE1-C2.15</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
+            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>87</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>0</dynatt:AnzahlPlaetzeFest>
+            <dynatt:AnzahlPlaetzePruefung>0</dynatt:AnzahlPlaetzePruefung>
+            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
+            <dynatt:Etage>2.Obergeschoss</dynatt:Etage>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
+      </rapla:resource>
       <rapla:resource id="r5209280-8594-40b1-afc8-ba62a05495fd" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:18.000Z" last-changed="2024-05-02T10:21:09.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">f9398d48-d91e-421e-b6e1-2761c03d4b3c</rapla:annotation>
@@ -15332,31 +15377,6 @@
          <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
-      </rapla:resource>
-      <rapla:resource id="r769e577-a3fb-40b7-a8dc-1a5570c73c0f" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:18.000Z" last-changed="2024-05-02T11:02:37.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="externalid">87867d3c-478f-4440-a172-f2ad098ed8a9</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>Labor, Elektr. Antriebssysteme Pedelec</dynatt:Raumname>
-            <dynatt:MoradaId>87867d3c-478f-4440-a172-f2ad098ed8a9</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>C.215.P</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>C.215.P</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>LE1-C2.15</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
-            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>87</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>0</dynatt:AnzahlPlaetzeFest>
-            <dynatt:AnzahlPlaetzePruefung>0</dynatt:AnzahlPlaetzePruefung>
-            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
-            <dynatt:Etage>2.Obergeschoss</dynatt:Etage>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="r6fa6a55-2300-4661-b11a-dbf56135b693" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
@@ -16341,6 +16361,34 @@
          <rapla:permission group="category[key='HDH']" access="read"/>
          <rapla:permission group="category[key='HDH']/category[key='hdh_admin']" access="admin"/>
       </rapla:resource>
+      <rapla:resource id="rfaca31f-54fc-471d-a443-db683d839bee" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2024-04-02T09:02:37.000Z" last-changed="2024-04-02T11:16:24.000Z">
+         <doc:annotations>
+            <rapla:annotation key="externalid">2b5a7fad-1d97-11db-a4bb-0fbfc009c816</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>PC-Übungsraum</dynatt:Raumname>
+            <dynatt:MoradaId>2b5a7fad-1d97-11db-a4bb-0fbfc009c816</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>3.6</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>306</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>3.6</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten></dynatt:Oeffnungszeiten>
+            <dynatt:OeffnungszeitenBemerkung></dynatt:OeffnungszeitenBemerkung>
+            <dynatt:Raumart>category[key='DIN_5_3_3']</dynatt:Raumart>
+            <dynatt:Gebaeude>r2a1db1c-937b-4663-8c9e-d2e451a5ff0f</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>70</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>29</dynatt:AnzahlPlaetzeFest>
+            <dynatt:MaximaleAnzahlPlaetze>29</dynatt:MaximaleAnzahlPlaetze>
+            <dynatt:RollstuhlgerechterZugang>false</dynatt:RollstuhlgerechterZugang>
+            <dynatt:RollstuhlgerechterZugangBemerkung></dynatt:RollstuhlgerechterZugangBemerkung>
+            <dynatt:AusstattungListe>category[key='DEB']</dynatt:AusstattungListe>
+            <dynatt:AusstattungListe>category[key='BLW']</dynatt:AusstattungListe>
+            <dynatt:Etage>3. Obergeschoss</dynatt:Etage>
+            <dynatt:SonstigeBemerkung></dynatt:SonstigeBemerkung>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+      </rapla:resource>
       <rapla:resource id="r81ac714-5a20-4d45-8c0b-6530c3cb8a6b" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:30.000Z" last-changed="2024-05-02T10:21:09.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">294226f7-1d97-11db-a4bb-0fbfc009c816</rapla:annotation>
@@ -16372,34 +16420,6 @@
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIN']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIB']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
-      </rapla:resource>
-      <rapla:resource id="rfaca31f-54fc-471d-a443-db683d839bee" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2024-04-02T09:02:37.000Z" last-changed="2024-04-02T11:16:24.000Z">
-         <doc:annotations>
-            <rapla:annotation key="externalid">2b5a7fad-1d97-11db-a4bb-0fbfc009c816</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>PC-Übungsraum</dynatt:Raumname>
-            <dynatt:MoradaId>2b5a7fad-1d97-11db-a4bb-0fbfc009c816</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>3.6</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>306</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>3.6</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten></dynatt:Oeffnungszeiten>
-            <dynatt:OeffnungszeitenBemerkung></dynatt:OeffnungszeitenBemerkung>
-            <dynatt:Raumart>category[key='DIN_5_3_3']</dynatt:Raumart>
-            <dynatt:Gebaeude>r2a1db1c-937b-4663-8c9e-d2e451a5ff0f</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>70</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>29</dynatt:AnzahlPlaetzeFest>
-            <dynatt:MaximaleAnzahlPlaetze>29</dynatt:MaximaleAnzahlPlaetze>
-            <dynatt:RollstuhlgerechterZugang>false</dynatt:RollstuhlgerechterZugang>
-            <dynatt:RollstuhlgerechterZugangBemerkung></dynatt:RollstuhlgerechterZugangBemerkung>
-            <dynatt:AusstattungListe>category[key='DEB']</dynatt:AusstattungListe>
-            <dynatt:AusstattungListe>category[key='BLW']</dynatt:AusstattungListe>
-            <dynatt:Etage>3. Obergeschoss</dynatt:Etage>
-            <dynatt:SonstigeBemerkung></dynatt:SonstigeBemerkung>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
       </rapla:resource>
       <rapla:resource id="r31837ba-618e-4ce1-b701-73bf91f2a0b6" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:52:21.000Z" last-changed="2023-07-26T14:03:08.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
@@ -17694,39 +17714,6 @@
          <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
-      <rapla:resource id="r80019dd-a2e5-4dfb-8045-190b220d0d9e" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:28.000Z" last-changed="2024-05-02T09:02:39.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="externalid">110152a9-9170-092c-e050-180a142953b4</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>Seminarraum</dynatt:Raumname>
-            <dynatt:MoradaId>110152a9-9170-092c-e050-180a142953b4</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>007</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>R.Nr. E7</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>HW31-E.7</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten></dynatt:Oeffnungszeiten>
-            <dynatt:OeffnungszeitenBemerkung></dynatt:OeffnungszeitenBemerkung>
-            <dynatt:Raumart>category[key='DIN_5_2_1']</dynatt:Raumart>
-            <dynatt:Gebaeude>r55f70c0-4d56-4544-8282-388c945e6cb7</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>44</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>21</dynatt:AnzahlPlaetzeFest>
-            <dynatt:AnzahlPlaetzePruefung>11</dynatt:AnzahlPlaetzePruefung>
-            <dynatt:RollstuhlgerechterZugang>false</dynatt:RollstuhlgerechterZugang>
-            <dynatt:RollstuhlgerechterZugangBemerkung></dynatt:RollstuhlgerechterZugangBemerkung>
-            <dynatt:AusstattungListe>category[key='BLW']</dynatt:AusstattungListe>
-            <dynatt:AusstattungListe>category[key='DEB']</dynatt:AusstattungListe>
-            <dynatt:AusstattungListe>category[key='TGB']</dynatt:AusstattungListe>
-            <dynatt:Etage>Erd-/Zwischengeschoss</dynatt:Etage>
-            <dynatt:SonstigeBemerkung>Raum befindet sich 1/2 Treppe über Eingang!</dynatt:SonstigeBemerkung>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']" access="read"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='B']/category[key='dekanat-wirtschaft-gesundheit']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
-      </rapla:resource>
       <rapla:resource id="rad647f2-b91e-4928-931d-2f1de432cc5a" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:30.000Z" last-changed="2024-05-02T14:02:40.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">2b4040f2-1d97-11db-a4bb-0fbfc009c816</rapla:annotation>
@@ -17758,6 +17745,39 @@
          <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
+      </rapla:resource>
+      <rapla:resource id="r80019dd-a2e5-4dfb-8045-190b220d0d9e" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:28.000Z" last-changed="2024-05-02T09:02:39.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="externalid">110152a9-9170-092c-e050-180a142953b4</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>Seminarraum</dynatt:Raumname>
+            <dynatt:MoradaId>110152a9-9170-092c-e050-180a142953b4</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>007</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>R.Nr. E7</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>HW31-E.7</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten></dynatt:Oeffnungszeiten>
+            <dynatt:OeffnungszeitenBemerkung></dynatt:OeffnungszeitenBemerkung>
+            <dynatt:Raumart>category[key='DIN_5_2_1']</dynatt:Raumart>
+            <dynatt:Gebaeude>r55f70c0-4d56-4544-8282-388c945e6cb7</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>44</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>21</dynatt:AnzahlPlaetzeFest>
+            <dynatt:AnzahlPlaetzePruefung>11</dynatt:AnzahlPlaetzePruefung>
+            <dynatt:RollstuhlgerechterZugang>false</dynatt:RollstuhlgerechterZugang>
+            <dynatt:RollstuhlgerechterZugangBemerkung></dynatt:RollstuhlgerechterZugangBemerkung>
+            <dynatt:AusstattungListe>category[key='BLW']</dynatt:AusstattungListe>
+            <dynatt:AusstattungListe>category[key='DEB']</dynatt:AusstattungListe>
+            <dynatt:AusstattungListe>category[key='TGB']</dynatt:AusstattungListe>
+            <dynatt:Etage>Erd-/Zwischengeschoss</dynatt:Etage>
+            <dynatt:SonstigeBemerkung>Raum befindet sich 1/2 Treppe über Eingang!</dynatt:SonstigeBemerkung>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='B']/category[key='dekanat-wirtschaft-gesundheit']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="rfb77283-740d-459d-96b0-dc14022a4558" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:27.000Z" last-changed="2024-05-02T09:02:37.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
@@ -19235,6 +19255,31 @@
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
+      <rapla:resource id="rf2fea8a-3f0f-4d68-aed5-3320693c4831" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="externalid">8107a3f2-e60d-4f95-935a-1be4b5465d8e</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>Studienarbeiten</dynatt:Raumname>
+            <dynatt:MoradaId>8107a3f2-e60d-4f95-935a-1be4b5465d8e</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>B.529.B</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>B.529.B</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>LE1-B5.29</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
+            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>10</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>1</dynatt:AnzahlPlaetzeFest>
+            <dynatt:AnzahlPlaetzePruefung>0</dynatt:AnzahlPlaetzePruefung>
+            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
+            <dynatt:Etage>5.Obergeschoss</dynatt:Etage>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
+      </rapla:resource>
       <rapla:resource id="r2e7ccc3-a894-4f59-a0ee-751c4e73f9c8" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-10-27T17:02:49.000Z" last-changed="2024-05-02T14:02:41.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">d1d8aa40-e841-11df-bfc9-31260a182914</rapla:annotation>
@@ -19269,31 +19314,6 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='ZMS']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='B']/category[key='BuT']" access="allocate_conflicts"/>
-      </rapla:resource>
-      <rapla:resource id="rf2fea8a-3f0f-4d68-aed5-3320693c4831" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="externalid">8107a3f2-e60d-4f95-935a-1be4b5465d8e</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>Studienarbeiten</dynatt:Raumname>
-            <dynatt:MoradaId>8107a3f2-e60d-4f95-935a-1be4b5465d8e</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>B.529.B</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>B.529.B</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>LE1-B5.29</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
-            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>10</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>1</dynatt:AnzahlPlaetzeFest>
-            <dynatt:AnzahlPlaetzePruefung>0</dynatt:AnzahlPlaetzePruefung>
-            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
-            <dynatt:Etage>5.Obergeschoss</dynatt:Etage>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="r2ec78ca-b7eb-4321-8ebd-4c97a0c56aa4" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
@@ -23183,6 +23203,31 @@
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
+      <rapla:resource id="re85d8f1-c589-45b9-899e-8e37112aa1c6" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="externalid">5cedc4fe-6e46-44da-aa2d-582cdeca09a6</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>Vorlesung</dynatt:Raumname>
+            <dynatt:MoradaId>5cedc4fe-6e46-44da-aa2d-582cdeca09a6</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>C.502.V</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>C.502.V</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>LE1-C5.02</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
+            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>73</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>28</dynatt:AnzahlPlaetzeFest>
+            <dynatt:AnzahlPlaetzePruefung>14</dynatt:AnzahlPlaetzePruefung>
+            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
+            <dynatt:Etage>5.Obergeschoss</dynatt:Etage>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
+      </rapla:resource>
       <rapla:resource id="r773f968-d8d1-4c00-b307-4b4a5d64a19c" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:34.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">0897d092-e600-30de-e050-180a14290582</rapla:annotation>
@@ -23210,31 +23255,6 @@
          <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
-      </rapla:resource>
-      <rapla:resource id="re85d8f1-c589-45b9-899e-8e37112aa1c6" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="externalid">5cedc4fe-6e46-44da-aa2d-582cdeca09a6</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>Vorlesung</dynatt:Raumname>
-            <dynatt:MoradaId>5cedc4fe-6e46-44da-aa2d-582cdeca09a6</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>C.502.V</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>C.502.V</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>LE1-C5.02</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
-            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>73</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>28</dynatt:AnzahlPlaetzeFest>
-            <dynatt:AnzahlPlaetzePruefung>14</dynatt:AnzahlPlaetzePruefung>
-            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
-            <dynatt:Etage>5.Obergeschoss</dynatt:Etage>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="r062a0ef-e91f-401b-a959-b3c5668518ec" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:26.000Z" last-changed="2024-05-02T09:02:37.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
@@ -25066,6 +25086,31 @@
          <rapla:permission group="category[key='HDH']" access="read"/>
          <rapla:permission group="category[key='HDH']/category[key='hdh_admin']" access="admin"/>
       </rapla:resource>
+      <rapla:resource id="rede9f91-b99a-485b-8554-0963d9f075cf" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
+         <doc:annotations>
+            <rapla:annotation key="externalid">8db3d65b-2710-4eac-9907-58b37b3ad0fe</rapla:annotation>
+         </doc:annotations>
+         <dynatt:Raum>
+            <dynatt:Raumname>Vorlesung</dynatt:Raumname>
+            <dynatt:MoradaId>8db3d65b-2710-4eac-9907-58b37b3ad0fe</dynatt:MoradaId>
+            <dynatt:Kurzbezeichnung>A.509.V</dynatt:Kurzbezeichnung>
+            <dynatt:Raumnummer>A.509.V</dynatt:Raumnummer>
+            <dynatt:SekundaereRaumnummer>LE1-A5.09</dynatt:SekundaereRaumnummer>
+            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
+            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
+            <dynatt:Grundflaeche>74</dynatt:Grundflaeche>
+            <dynatt:AnzahlPlaetzeFest>31</dynatt:AnzahlPlaetzeFest>
+            <dynatt:AnzahlPlaetzePruefung>15</dynatt:AnzahlPlaetzePruefung>
+            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
+            <dynatt:Etage>5.Obergeschoss</dynatt:Etage>
+            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
+            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
+         </dynatt:Raum>
+         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
+         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
+      </rapla:resource>
       <rapla:resource id="r4d98f45-951e-40f0-92dd-8ad8d4eddd90" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:49:34.000Z" last-changed="2024-05-02T14:02:41.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
             <rapla:annotation key="externalid">0897d092-e550-30de-e050-180a14290582</rapla:annotation>
@@ -25096,31 +25141,6 @@
          <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
-      </rapla:resource>
-      <rapla:resource id="rede9f91-b99a-485b-8554-0963d9f075cf" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2023-04-18T17:03:19.000Z" last-changed="2024-05-02T14:02:42.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
-         <doc:annotations>
-            <rapla:annotation key="externalid">8db3d65b-2710-4eac-9907-58b37b3ad0fe</rapla:annotation>
-         </doc:annotations>
-         <dynatt:Raum>
-            <dynatt:Raumname>Vorlesung</dynatt:Raumname>
-            <dynatt:MoradaId>8db3d65b-2710-4eac-9907-58b37b3ad0fe</dynatt:MoradaId>
-            <dynatt:Kurzbezeichnung>A.509.V</dynatt:Kurzbezeichnung>
-            <dynatt:Raumnummer>A.509.V</dynatt:Raumnummer>
-            <dynatt:SekundaereRaumnummer>LE1-A5.09</dynatt:SekundaereRaumnummer>
-            <dynatt:Oeffnungszeiten>Mo. - Fr.: 07:00 - 19:00</dynatt:Oeffnungszeiten>
-            <dynatt:Gebaeude>r6e249fc-8b08-4674-8d5d-aa7f81e9338d</dynatt:Gebaeude>
-            <dynatt:Grundflaeche>74</dynatt:Grundflaeche>
-            <dynatt:AnzahlPlaetzeFest>31</dynatt:AnzahlPlaetzeFest>
-            <dynatt:AnzahlPlaetzePruefung>15</dynatt:AnzahlPlaetzePruefung>
-            <dynatt:RollstuhlgerechterZugang>true</dynatt:RollstuhlgerechterZugang>
-            <dynatt:Etage>5.Obergeschoss</dynatt:Etage>
-            <dynatt:OrgaEinheit></dynatt:OrgaEinheit>
-            <dynatt:SyncStatus>category[key='existing']</dynatt:SyncStatus>
-         </dynatt:Raum>
-         <rapla:permission group="category[key='STG']" access="allocate_conflicts"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='T']" access="allocate_conflicts"/>
          <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="allocate_conflicts"/>
       </rapla:resource>
       <rapla:resource id="rc461cd1-7d44-40d2-8d85-3752343fb475" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2018-05-16T11:52:21.000Z" last-changed="2023-07-26T14:03:08.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
@@ -30732,6 +30752,60 @@
             <dynatt:sichtbar>true</dynatt:sichtbar>
          </dynatt:Person>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='WI']" access="allocate_conflicts"/>
+      </rapla:person>
+      <rapla:person id="r7d13216-4485-413f-957a-93688920efa4" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T12:06:36.717Z" last-changed="2024-05-24T12:06:36.717Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <dynatt:Person>
+            <dynatt:campusnetId></dynatt:campusnetId>
+            <dynatt:surname>Baral</dynatt:surname>
+            <dynatt:firstname>Stephanie</dynatt:firstname>
+            <dynatt:hinweis-dualis></dynatt:hinweis-dualis>
+            <dynatt:email></dynatt:email>
+            <dynatt:exchangeMailbox></dynatt:exchangeMailbox>
+            <dynatt:Title></dynatt:Title>
+            <dynatt:OrgaEinheiten></dynatt:OrgaEinheiten>
+            <dynatt:Telefon></dynatt:Telefon>
+            <dynatt:Buero></dynatt:Buero>
+            <dynatt:Sprechzeiten></dynatt:Sprechzeiten>
+            <dynatt:benachrichtigt>false</dynatt:benachrichtigt>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:sichtbar>true</dynatt:sichtbar>
+         </dynatt:Person>
+      </rapla:person>
+      <rapla:person id="r184b810-9940-4201-a303-49706ed6df8c" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T12:07:03.255Z" last-changed="2024-05-24T12:07:03.255Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <dynatt:Person>
+            <dynatt:campusnetId></dynatt:campusnetId>
+            <dynatt:surname>Brandt</dynatt:surname>
+            <dynatt:firstname>Alexander</dynatt:firstname>
+            <dynatt:hinweis-dualis></dynatt:hinweis-dualis>
+            <dynatt:email></dynatt:email>
+            <dynatt:exchangeMailbox></dynatt:exchangeMailbox>
+            <dynatt:Title>Prof. Dr.</dynatt:Title>
+            <dynatt:OrgaEinheiten></dynatt:OrgaEinheiten>
+            <dynatt:Telefon></dynatt:Telefon>
+            <dynatt:Buero></dynatt:Buero>
+            <dynatt:Sprechzeiten></dynatt:Sprechzeiten>
+            <dynatt:benachrichtigt>false</dynatt:benachrichtigt>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:sichtbar>true</dynatt:sichtbar>
+         </dynatt:Person>
+      </rapla:person>
+      <rapla:person id="r3335b7f-e6e0-4a8a-a6b6-0f0af90ee57e" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T12:06:21.279Z" last-changed="2024-05-24T12:06:21.279Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <dynatt:Person>
+            <dynatt:campusnetId></dynatt:campusnetId>
+            <dynatt:surname>Graumann</dynatt:surname>
+            <dynatt:firstname>Timo</dynatt:firstname>
+            <dynatt:hinweis-dualis></dynatt:hinweis-dualis>
+            <dynatt:email></dynatt:email>
+            <dynatt:exchangeMailbox></dynatt:exchangeMailbox>
+            <dynatt:Title></dynatt:Title>
+            <dynatt:OrgaEinheiten></dynatt:OrgaEinheiten>
+            <dynatt:Telefon></dynatt:Telefon>
+            <dynatt:Buero></dynatt:Buero>
+            <dynatt:Sprechzeiten></dynatt:Sprechzeiten>
+            <dynatt:benachrichtigt>false</dynatt:benachrichtigt>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:sichtbar>true</dynatt:sichtbar>
+         </dynatt:Person>
       </rapla:person>
       <rapla:resource id="r6476401-14cc-413b-aadd-a15d8ce2ba59" owner="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2021-08-11T10:12:11.000Z" last-changed="2024-03-31T23:02:33.000Z" last-changed-by="u2134324-2se3-4404-98f3-87be6a93cccc">
          <doc:annotations>
@@ -38363,6 +38437,22 @@
          <rapla:permission group="category[key='STG']/category[key='T']/category[key='ES']" access="admin"/>
          <rapla:permission group="category[key='STG']" access="read"/>
       </rapla:reservation>
+      <rapla:reservation id="e9a4f7c0-1bac-4edb-91f1-f8fb9aea2959" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-25T14:07:21.000Z" last-changed="2023-05-25T14:07:21.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">r4158383-dee9-4feb-904f-78930c3c65a3</rapla:annotation>
+         <rapla:annotation key="template">reb78015-3666-4e6e-8815-94279b6467c7</rapla:annotation>
+         <dynatt:SonstigerTermin>
+            <dynatt:Name>Tag 1</dynatt:Name>
+            <dynatt:Beschreibung></dynatt:Beschreibung>
+            <dynatt:ExchangeId></dynatt:ExchangeId>
+            <dynatt:kategorie>category[key='magenta']</dynatt:kategorie>
+         </dynatt:SonstigerTermin>
+         <rapla:appointment id="a7f8dff4-58d8-4fba-a73c-8159b60eabcf" start-date="2020-01-01" start-time="08:00:00" end-date="2020-01-01" end-time="16:45:00"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='ESC']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="admin"/>
+      </rapla:reservation>
       <rapla:reservation id="e03cc8ec-8ef6-4b9a-8995-470cd52aa200" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-04-25T15:05:53.000Z" last-changed="2023-04-25T15:06:08.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">r35fff33-870a-41cc-8ec9-cf403ae1b2a8</rapla:annotation>
          <rapla:annotation key="template">r6b0f9cc-d30a-4a35-bf74-07d699d2eec1</rapla:annotation>
@@ -38385,22 +38475,6 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='TM']/category[key='WIW']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-      </rapla:reservation>
-      <rapla:reservation id="e9a4f7c0-1bac-4edb-91f1-f8fb9aea2959" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-25T14:07:21.000Z" last-changed="2023-05-25T14:07:21.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
-         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
-         <rapla:annotation key="copyof">r4158383-dee9-4feb-904f-78930c3c65a3</rapla:annotation>
-         <rapla:annotation key="template">reb78015-3666-4e6e-8815-94279b6467c7</rapla:annotation>
-         <dynatt:SonstigerTermin>
-            <dynatt:Name>Tag 1</dynatt:Name>
-            <dynatt:Beschreibung></dynatt:Beschreibung>
-            <dynatt:ExchangeId></dynatt:ExchangeId>
-            <dynatt:kategorie>category[key='magenta']</dynatt:kategorie>
-         </dynatt:SonstigerTermin>
-         <rapla:appointment id="a7f8dff4-58d8-4fba-a73c-8159b60eabcf" start-date="2020-01-01" start-time="08:00:00" end-date="2020-01-01" end-time="16:45:00"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='ESC']" access="admin"/>
-         <rapla:permission group="category[key='STG']" access="read"/>
-         <rapla:permission group="category[key='STG']/category[key='Gebaeudemanagement_LE1']" access="admin"/>
       </rapla:reservation>
       <rapla:reservation id="e968391b-15ce-4868-8e99-2ef44673de14" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-04-05T15:22:42.000Z" last-changed="2023-04-05T15:29:13.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
@@ -38457,22 +38531,6 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='T']/category[key='INF']" access="admin"/>
       </rapla:reservation>
-      <rapla:reservation id="e8a62118-ebaa-46b9-ad8d-e21e624c5804" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-23T16:39:36.000Z" last-changed="2023-05-23T16:39:49.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
-         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
-         <rapla:annotation key="copyof">r15ca4f9-6713-4f11-a7ca-37bb3ab4a6c4</rapla:annotation>
-         <rapla:annotation key="template">r987af1e-c7b3-4da9-9f9a-ef1c8b43b6a7</rapla:annotation>
-         <dynatt:planungsinformationen>
-            <dynatt:Name>Wartung</dynatt:Name>
-            <dynatt:Beschreibung></dynatt:Beschreibung>
-            <dynatt:RessourceVerplanbar>false</dynatt:RessourceVerplanbar>
-            <dynatt:Grund>Wartungsarbeiten</dynatt:Grund>
-            <dynatt:kategorie>category[key='magenta']</dynatt:kategorie>
-         </dynatt:planungsinformationen>
-         <rapla:appointment id="a468ef66-fe62-430a-9a54-52490e3a5f0b" start-date="2020-02-04" start-time="09:00:00" end-date="2020-02-04" end-time="11:00:00"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='labore']/category[key='lab-mb']" access="admin"/>
-         <rapla:permission group="category[key='STG']" access="read"/>
-      </rapla:reservation>
       <rapla:reservation id="e9a9176d-fcc1-499d-8ebc-911687572cff" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-02T16:14:51.000Z" last-changed="2023-05-02T16:27:27.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">r120ec39-545a-44c1-bd8c-17a0eb8142ac</rapla:annotation>
          <rapla:annotation key="template">r054b82d-e4bf-481b-bfa6-e11e67fa6261</rapla:annotation>
@@ -38492,6 +38550,22 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='WM']/category[key='MC']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+      </rapla:reservation>
+      <rapla:reservation id="e8a62118-ebaa-46b9-ad8d-e21e624c5804" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-23T16:39:36.000Z" last-changed="2023-05-23T16:39:49.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">r15ca4f9-6713-4f11-a7ca-37bb3ab4a6c4</rapla:annotation>
+         <rapla:annotation key="template">r987af1e-c7b3-4da9-9f9a-ef1c8b43b6a7</rapla:annotation>
+         <dynatt:planungsinformationen>
+            <dynatt:Name>Wartung</dynatt:Name>
+            <dynatt:Beschreibung></dynatt:Beschreibung>
+            <dynatt:RessourceVerplanbar>false</dynatt:RessourceVerplanbar>
+            <dynatt:Grund>Wartungsarbeiten</dynatt:Grund>
+            <dynatt:kategorie>category[key='magenta']</dynatt:kategorie>
+         </dynatt:planungsinformationen>
+         <rapla:appointment id="a468ef66-fe62-430a-9a54-52490e3a5f0b" start-date="2020-02-04" start-time="09:00:00" end-date="2020-02-04" end-time="11:00:00"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='labore']/category[key='lab-mb']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
       </rapla:reservation>
       <rapla:reservation id="e9efc735-a5a3-46d8-8b65-ae375723c03c" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-15T17:49:37.000Z" last-changed="2023-05-15T17:49:53.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
@@ -38903,23 +38977,6 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='GW']/category[key='HK']" access="admin"/>
       </rapla:reservation>
-      <rapla:reservation id="e07a848f-b868-4b2f-a844-22866e49a60d" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-16T13:06:59.000Z" last-changed="2023-05-16T13:07:55.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
-         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
-         <rapla:annotation key="copyof">rb86324e-2105-49da-b3b5-7430c2ed72ea</rapla:annotation>
-         <rapla:annotation key="template">r4d76983-96e0-448f-bb76-b026ef95ce02</rapla:annotation>
-         <dynatt:planungsinformationen>
-            <dynatt:Name></dynatt:Name>
-            <dynatt:Beschreibung></dynatt:Beschreibung>
-            <dynatt:gewählteRessource>rbd2dda3-dfba-4cd1-bfbb-ee47db070a55</dynatt:gewählteRessource>
-            <dynatt:RessourceVerplanbar>false</dynatt:RessourceVerplanbar>
-            <dynatt:Grund></dynatt:Grund>
-            <dynatt:kategorie>category[key='magenta']</dynatt:kategorie>
-         </dynatt:planungsinformationen>
-         <rapla:appointment id="a0faf80f-f37a-4e29-89fc-cb2161e242f8" start-date="2020-02-04" start-time="09:00:00" end-date="2020-02-04" end-time="11:00:00"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='B']/category[key='E-Car']" access="admin"/>
-         <rapla:permission group="category[key='STG']" access="read"/>
-      </rapla:reservation>
       <rapla:reservation id="e632538f-ce19-43e2-b8bf-a1afe9ac0245" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-02T15:13:54.000Z" last-changed="2023-05-02T15:14:12.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">re7bbc89-cf60-4e92-8c14-b5750b8ea404</rapla:annotation>
          <rapla:annotation key="template">ra694f73-1c8e-421f-a597-23ee11e859c4</rapla:annotation>
@@ -38939,6 +38996,23 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='T']/category[key='MT']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+      </rapla:reservation>
+      <rapla:reservation id="e07a848f-b868-4b2f-a844-22866e49a60d" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-16T13:06:59.000Z" last-changed="2023-05-16T13:07:55.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">rb86324e-2105-49da-b3b5-7430c2ed72ea</rapla:annotation>
+         <rapla:annotation key="template">r4d76983-96e0-448f-bb76-b026ef95ce02</rapla:annotation>
+         <dynatt:planungsinformationen>
+            <dynatt:Name></dynatt:Name>
+            <dynatt:Beschreibung></dynatt:Beschreibung>
+            <dynatt:gewählteRessource>rbd2dda3-dfba-4cd1-bfbb-ee47db070a55</dynatt:gewählteRessource>
+            <dynatt:RessourceVerplanbar>false</dynatt:RessourceVerplanbar>
+            <dynatt:Grund></dynatt:Grund>
+            <dynatt:kategorie>category[key='magenta']</dynatt:kategorie>
+         </dynatt:planungsinformationen>
+         <rapla:appointment id="a0faf80f-f37a-4e29-89fc-cb2161e242f8" start-date="2020-02-04" start-time="09:00:00" end-date="2020-02-04" end-time="11:00:00"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='B']/category[key='E-Car']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
       </rapla:reservation>
       <rapla:reservation id="e091872c-c4a3-4fdd-91e2-4b56213e78cf" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-02-07T12:35:26.000Z" last-changed="2023-02-07T12:36:28.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
@@ -39069,21 +39143,6 @@
          <rapla:permission group="category[key='STG']/category[key='T']/category[key='MB']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
       </rapla:reservation>
-      <rapla:reservation id="e10961a2-a226-4743-bf90-e9e97c9d6a14" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-02T16:40:33.000Z" last-changed="2023-05-02T16:40:48.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
-         <rapla:annotation key="copyof">raa91d60-cb41-4524-a92a-9afb01f7b6d9</rapla:annotation>
-         <rapla:annotation key="template">rb311447-0ed2-4b4f-a8c4-f3ecb5d787f5</rapla:annotation>
-         <dynatt:SonstigerTermin>
-            <dynatt:Name></dynatt:Name>
-            <dynatt:Beschreibung></dynatt:Beschreibung>
-            <dynatt:ExchangeId></dynatt:ExchangeId>
-            <dynatt:Status></dynatt:Status>
-            <dynatt:kategorie>category[key='blau']</dynatt:kategorie>
-         </dynatt:SonstigerTermin>
-         <rapla:appointment id="a4fa9b92-66df-4b2e-858b-9c8ad4e74225" start-date="2023-12-28" start-time="13:00:00" end-date="2023-12-28" end-time="16:15:00"/>
-         <rapla:permission group="category[key='STG']" access="read"/>
-         <rapla:permission group="category[key='STG']/category[key='T']/category[key='ET']" access="admin"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-      </rapla:reservation>
       <rapla:reservation id="e6131865-7035-4275-825c-46198258e7c5" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-15T17:43:52.000Z" last-changed="2023-05-15T17:44:12.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
          <rapla:annotation key="copyof">rbbc64dc-9af6-41af-bb6b-ca8c7d343715</rapla:annotation>
@@ -39107,6 +39166,21 @@
          <rapla:permission group="category[key='STG']/category[key='ZMS']" access="edit"/>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIW']" access="admin"/>
          <rapla:permission group="category[key='STG']" access="read"/>
+      </rapla:reservation>
+      <rapla:reservation id="e10961a2-a226-4743-bf90-e9e97c9d6a14" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-02T16:40:33.000Z" last-changed="2023-05-02T16:40:48.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
+         <rapla:annotation key="copyof">raa91d60-cb41-4524-a92a-9afb01f7b6d9</rapla:annotation>
+         <rapla:annotation key="template">rb311447-0ed2-4b4f-a8c4-f3ecb5d787f5</rapla:annotation>
+         <dynatt:SonstigerTermin>
+            <dynatt:Name></dynatt:Name>
+            <dynatt:Beschreibung></dynatt:Beschreibung>
+            <dynatt:ExchangeId></dynatt:ExchangeId>
+            <dynatt:Status></dynatt:Status>
+            <dynatt:kategorie>category[key='blau']</dynatt:kategorie>
+         </dynatt:SonstigerTermin>
+         <rapla:appointment id="a4fa9b92-66df-4b2e-858b-9c8ad4e74225" start-date="2023-12-28" start-time="13:00:00" end-date="2023-12-28" end-time="16:15:00"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+         <rapla:permission group="category[key='STG']/category[key='T']/category[key='ET']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
       </rapla:reservation>
       <rapla:reservation id="e517e351-75e8-4161-ade5-6fb2fb8fb44e" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-04-25T15:03:08.000Z" last-changed="2023-04-25T15:03:31.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">r2285297-5b01-4d84-819e-79ac70e967e1</rapla:annotation>
@@ -39377,6 +39451,22 @@
          <rapla:permission group="category[key='STG']/category[key='TM']/category[key='INF']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
       </rapla:reservation>
+      <rapla:reservation id="ef057bcc-d57f-4bf5-881e-5121cce7b825" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-15T12:27:00.000Z" last-changed="2023-05-15T12:27:17.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">rfde298f-4b40-4432-a927-5dff0d1e1df4</rapla:annotation>
+         <rapla:annotation key="template">r1b0f55c-98d6-40bc-8513-7c57a453f739</rapla:annotation>
+         <dynatt:exkursion>
+            <dynatt:name></dynatt:name>
+            <dynatt:Exkursionsziel></dynatt:Exkursionsziel>
+            <dynatt:Beschreibung></dynatt:Beschreibung>
+            <dynatt:Status></dynatt:Status>
+            <dynatt:kategorie>category[key='gruen']</dynatt:kategorie>
+         </dynatt:exkursion>
+         <rapla:appointment id="a5cc18a0-5bee-43be-b10e-c3aef5f3a76e" start-date="2019-10-01" start-time="09:00:00" end-date="2019-10-01" end-time="11:00:00"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+         <rapla:permission group="category[key='STG']/category[key='TM']/category[key='MB']" access="admin"/>
+      </rapla:reservation>
       <rapla:reservation id="e22ed29b-7387-48f8-9807-aaf078281a06" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-04-25T14:46:43.000Z" last-changed="2023-12-08T10:45:58.000Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
          <rapla:annotation key="copyof">r180b4d7-9ebb-47ee-a87c-752461086c0a</rapla:annotation>
          <rapla:annotation key="template">rf6b0c5b-cd9d-432f-b03c-a810f2c5ffc1</rapla:annotation>
@@ -39397,22 +39487,6 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWHW']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-      </rapla:reservation>
-      <rapla:reservation id="ef057bcc-d57f-4bf5-881e-5121cce7b825" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-15T12:27:00.000Z" last-changed="2023-05-15T12:27:17.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
-         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
-         <rapla:annotation key="copyof">rfde298f-4b40-4432-a927-5dff0d1e1df4</rapla:annotation>
-         <rapla:annotation key="template">r1b0f55c-98d6-40bc-8513-7c57a453f739</rapla:annotation>
-         <dynatt:exkursion>
-            <dynatt:name></dynatt:name>
-            <dynatt:Exkursionsziel></dynatt:Exkursionsziel>
-            <dynatt:Beschreibung></dynatt:Beschreibung>
-            <dynatt:Status></dynatt:Status>
-            <dynatt:kategorie>category[key='gruen']</dynatt:kategorie>
-         </dynatt:exkursion>
-         <rapla:appointment id="a5cc18a0-5bee-43be-b10e-c3aef5f3a76e" start-date="2019-10-01" start-time="09:00:00" end-date="2019-10-01" end-time="11:00:00"/>
-         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
-         <rapla:permission group="category[key='STG']" access="read"/>
-         <rapla:permission group="category[key='STG']/category[key='TM']/category[key='MB']" access="admin"/>
       </rapla:reservation>
       <rapla:reservation id="eec42126-73c0-4cd5-bdc2-812a15f36c73" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-02T15:47:25.000Z" last-changed="2023-05-02T15:47:39.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">r29fa6a3-25bb-412c-bb8d-43d2e2f27fe9</rapla:annotation>
@@ -40048,6 +40122,66 @@
          <rapla:permission group="category[key='STG']" access="read"/>
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWIW']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+      </rapla:reservation>
+      <rapla:reservation id="ec92b7e3-fdf4-4614-9cfc-4980f1876efa" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T08:58:26.496Z" last-changed="2024-05-24T10:01:18.585Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">r4aea832-d0e2-42d0-b82e-5a24381d9ecc</rapla:annotation>
+         <dynatt:Pruefung>
+            <dynatt:Name>Die finale Prüfung</dynatt:Name>
+            <dynatt:Beschreibung>Wie bei Kung Fu Panda</dynatt:Beschreibung>
+            <dynatt:link>https://i.ytimg.com/vi/t-mmivasE5E/maxresdefault.jpg</dynatt:link>
+            <dynatt:EventNr>8051</dynatt:EventNr>
+            <dynatt:Dauer>187</dynatt:Dauer>
+            <dynatt:Pruefungsart>Praxisprüfung</dynatt:Pruefungsart>
+            <dynatt:Unitcode></dynatt:Unitcode>
+            <dynatt:Modulcode></dynatt:Modulcode>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:kategorie>category[key='rot']</dynatt:kategorie>
+            <dynatt:Art></dynatt:Art>
+            <dynatt:Status></dynatt:Status>
+            <dynatt:Versionsnummer></dynatt:Versionsnummer>
+            <dynatt:InternalInfo>Es gibt keine Geheimzutat</dynatt:InternalInfo>
+            <dynatt:max_punkte>42</dynatt:max_punkte>
+         </dynatt:Pruefung>
+         <rapla:appointment id="a45de810-2a3d-40ea-b2d5-deb1cce34240" start-date="2024-05-24" start-time="08:00:00" end-date="2024-05-24" end-time="09:00:00"/>
+         <rapla:allocate idref="rf84a7da-f1d6-4d68-99cd-b2c6e8f481b4"/>
+         <rapla:allocate idref="r244763d-3c0f-4f33-bebd-831e4c8338d9"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='its']" access="edit"/>
+         <rapla:permission group="category[key='STG']/category[key='W']/category[key='WI']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+      </rapla:reservation>
+      <rapla:reservation id="e91277da-138b-48a9-a772-4da267787935" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T12:16:45.809Z" last-changed="2024-05-24T12:17:57.206Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">r4aea832-d0e2-42d0-b82e-5a24381d9ecc</rapla:annotation>
+         <dynatt:Pruefung>
+            <dynatt:Name>Machine Learning Projekt</dynatt:Name>
+            <dynatt:Beschreibung>Abgabebericht + Präsentation</dynatt:Beschreibung>
+            <dynatt:link>https://elearning.dhbw-stuttgart.de/moodle/course/view.php?id=19468</dynatt:link>
+            <dynatt:EventNr></dynatt:EventNr>
+            <dynatt:Pruefungsart>Portfolio</dynatt:Pruefungsart>
+            <dynatt:Unitcode></dynatt:Unitcode>
+            <dynatt:Modulcode></dynatt:Modulcode>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:kategorie>category[key='rot']</dynatt:kategorie>
+            <dynatt:Art></dynatt:Art>
+            <dynatt:Status></dynatt:Status>
+            <dynatt:Versionsnummer></dynatt:Versionsnummer>
+            <dynatt:max_punkte>60</dynatt:max_punkte>
+            <dynatt:unit_name>Advanced Machine Learning</dynatt:unit_name>
+            <dynatt:themenfeld>Studienrichtungsmodul</dynatt:themenfeld>
+         </dynatt:Pruefung>
+         <rapla:appointment id="a23efa49-683b-439f-8d93-69c6efe8800f" start-date="2024-06-10" start-time="09:00:00" end-date="2024-06-10" end-time="12:15:00"/>
+         <rapla:appointment id="af9c9b4a-b712-4d56-a396-39ff3cfaec9b" start-date="2024-06-27" start-time="09:00:00" end-date="2024-06-27" end-time="12:15:00"/>
+         <rapla:appointment id="acf352f0-f2f4-4c97-8114-0ef6a79cc9b1" start-date="2024-07-04" start-time="09:00:00" end-date="2024-07-04" end-time="12:15:00"/>
+         <rapla:appointment id="afb5ea9b-ccab-4870-8c29-8f2f596ab5f9" start-date="2024-07-28" start-time="00:00:00" end-date="2024-07-28" end-time="23:59:00"/>
+         <rapla:allocate idref="rf84a7da-f1d6-4d68-99cd-b2c6e8f481b4"/>
+         <rapla:allocate idref="r184b810-9940-4201-a303-49706ed6df8c"/>
+         <rapla:allocate idref="r254ed32-3c66-4cc2-bb4c-8aa8eea4f0d8"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='its']" access="edit"/>
+         <rapla:permission group="category[key='STG']/category[key='W']/category[key='WI']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
       </rapla:reservation>
       <rapla:reservation id="e5e29cce-9c5a-4fef-acb5-5d3536670169" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-04-25T14:58:19.000Z" last-changed="2023-04-25T14:58:36.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">ra2aa508-4e43-4b2b-ac54-a704dfd7f425</rapla:annotation>
@@ -42606,6 +42740,35 @@
          <rapla:permission group="category[key='STG']/category[key='W']/category[key='BWST']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
       </rapla:reservation>
+      <rapla:reservation id="eb1a2a31-b7c5-40f6-9f80-cd584a6b9452" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T12:04:12.764Z" last-changed="2024-05-24T12:07:13.446Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">r4aea832-d0e2-42d0-b82e-5a24381d9ecc</rapla:annotation>
+         <dynatt:Pruefung>
+            <dynatt:Name>Neue Konzepte I</dynatt:Name>
+            <dynatt:Beschreibung>Modulklausur (1/2)</dynatt:Beschreibung>
+            <dynatt:EventNr></dynatt:EventNr>
+            <dynatt:Dauer>60</dynatt:Dauer>
+            <dynatt:Pruefungsart>Klausur</dynatt:Pruefungsart>
+            <dynatt:Unitcode></dynatt:Unitcode>
+            <dynatt:Modulcode></dynatt:Modulcode>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:kategorie>category[key='rot']</dynatt:kategorie>
+            <dynatt:Art></dynatt:Art>
+            <dynatt:Status></dynatt:Status>
+            <dynatt:Versionsnummer></dynatt:Versionsnummer>
+            <dynatt:max_punkte>60</dynatt:max_punkte>
+            <dynatt:unit_name>Neue Konzepte</dynatt:unit_name>
+            <dynatt:themenfeld>Wirtschaftsinformatik/Informatik</dynatt:themenfeld>
+         </dynatt:Pruefung>
+         <rapla:appointment id="aa81ec9d-519b-4e30-8d94-96aa188540f3" start-date="2024-07-18" start-time="12:00:00" end-date="2024-07-18" end-time="13:00:00"/>
+         <rapla:allocate idref="rf84a7da-f1d6-4d68-99cd-b2c6e8f481b4"/>
+         <rapla:allocate idref="r1d4baab-0386-4ccd-a85e-776d1c807370"/>
+         <rapla:allocate idref="r184b810-9940-4201-a303-49706ed6df8c"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='its']" access="edit"/>
+         <rapla:permission group="category[key='STG']/category[key='W']/category[key='WI']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+      </rapla:reservation>
       <rapla:reservation id="e87246cb-2a4f-4d71-9e6b-6d382aa41f05" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-02T17:04:45.000Z" last-changed="2023-05-02T17:05:00.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
          <rapla:annotation key="copyof">rb626615-e823-4eba-a1cb-6355c4d2a592</rapla:annotation>
          <rapla:annotation key="template">r9ef242a-a28a-4db2-b8b5-e93a25fbd0ff</rapla:annotation>
@@ -43104,6 +43267,36 @@
          <rapla:appointment id="aeebafcb-afa1-4526-8ec2-ee7f1fa96c02" start-date="2020-02-04" start-time="09:00:00" end-date="2020-02-04" end-time="11:00:00"/>
          <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
          <rapla:permission group="category[key='STG']/category[key='B']/category[key='dekanat-technik']" access="admin"/>
+         <rapla:permission group="category[key='STG']" access="read"/>
+      </rapla:reservation>
+      <rapla:reservation id="e6c4a4b9-37ac-4599-b1fe-5ed50837a77e" owner="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2024-05-24T12:01:50.778Z" last-changed="2024-05-24T12:07:22.700Z" last-changed-by="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d">
+         <rapla:annotation key="externalid">Pruefung:</rapla:annotation>
+         <rapla:annotation key="copyof">r4aea832-d0e2-42d0-b82e-5a24381d9ecc</rapla:annotation>
+         <dynatt:Pruefung>
+            <dynatt:Name>Neue Konzepte II</dynatt:Name>
+            <dynatt:Beschreibung>Modulklausur (2/2)</dynatt:Beschreibung>
+            <dynatt:EventNr></dynatt:EventNr>
+            <dynatt:Dauer>60</dynatt:Dauer>
+            <dynatt:Pruefungsart>Klausur</dynatt:Pruefungsart>
+            <dynatt:Unitcode></dynatt:Unitcode>
+            <dynatt:Modulcode></dynatt:Modulcode>
+            <dynatt:DualisId></dynatt:DualisId>
+            <dynatt:kategorie>category[key='rot']</dynatt:kategorie>
+            <dynatt:Art></dynatt:Art>
+            <dynatt:Status></dynatt:Status>
+            <dynatt:Versionsnummer></dynatt:Versionsnummer>
+            <dynatt:max_punkte>60</dynatt:max_punkte>
+            <dynatt:unit_name>Neue Konzepte</dynatt:unit_name>
+            <dynatt:themenfeld>Wirtschaftsinformatik/Informatik</dynatt:themenfeld>
+         </dynatt:Pruefung>
+         <rapla:appointment id="ab387ca2-939d-49e0-864e-1e47923c97bc" start-date="2024-07-18" start-time="13:00:00" end-date="2024-07-18" end-time="14:00:00"/>
+         <rapla:allocate idref="rf84a7da-f1d6-4d68-99cd-b2c6e8f481b4"/>
+         <rapla:allocate idref="r1d4baab-0386-4ccd-a85e-776d1c807370"/>
+         <rapla:allocate idref="r3335b7f-e6e0-4a8a-a6b6-0f0af90ee57e"/>
+         <rapla:allocate idref="r7d13216-4485-413f-957a-93688920efa4"/>
+         <rapla:permission group="category[key='STG']/category[key='stg_admin']" access="admin"/>
+         <rapla:permission group="category[key='STG']/category[key='its']" access="edit"/>
+         <rapla:permission group="category[key='STG']/category[key='W']/category[key='WI']" access="admin"/>
          <rapla:permission group="category[key='STG']" access="read"/>
       </rapla:reservation>
       <rapla:reservation id="e8d624ff-83d6-4f47-b1a5-581ef7467469" owner="u00f86bd-bdcb-4924-96d0-77c5acaaf13e" created-at="2023-05-16T13:26:11.000Z" last-changed="2023-05-16T13:26:34.000Z" last-changed-by="u00f86bd-bdcb-4924-96d0-77c5acaaf13e">
