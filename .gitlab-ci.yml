@@ -57,3 +57,5 @@ deploy:
     - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker run -d -p 8051:8051 -v rapla-data:/app/data --name $CONTAINER_NAME $IMAGE_NAME"
   tags:
     - rapla
+
+    
