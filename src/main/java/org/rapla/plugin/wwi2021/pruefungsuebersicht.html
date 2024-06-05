@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course and Exam Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+
+        header,
+        .filter,
+        .card,
+        .table-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        header h1,
+        .vorlesungen-header h2 {
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        .vorlesungen-header {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+        }
+
+        .card {
+            padding: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        @media (min-width: 900px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Prüfungsverzeichnis - Kurs WWI2021F</h1>
+        </header>
+        <div class="filter">
+            <p>Semester: </p>
+        </div>
+        <div class="vorlesungen-header">
+            <h2>Vorlesungen</h2>
+        </div>
+        <div class="grid" id="vorlesungen-grid">
+            <!-- Cards will be generated here by JavaScript -->
+        </div>
+        <div class="table-container">
+            <h2>Klausuren / Prüfungsleistungen</h2>
+            <table>
+                <tr>
+                    <th>Datum</th>
+                    <th>Uhrzeit</th>
+                    <th>Raum</th>
+                    <th>Modul</th>
+                    <th>Dauer</th>
+                    <th>Vorlesung / Modul-(teil)klausur</th>
+                    <th>Klausuranteil</th>
+                </tr>
+                <tr>
+                    <td>18.07.24</td>
+                    <td>09:00-11:00</td>
+                    <td>2.10, RB41</td>
+                    <td>Management</td>
+                    <td>120 Min.</td>
+                    <td>Unternehmensführung</td>
+                    <td>60/120 Punkten</td>
+                </tr>
+                <tr>
+                    <td>25.07.24</td>
+                    <td>12:00-14:00</td>
+                    <td>2.10, RB41</td>
+                    <td>Neue Konzepte</td>
+                    <td>120 Min.</td>
+                    <td>Neue Konzepte I<br>Neue Konzepte II</td>
+                    <td>60/120 Punkten</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        const semester = [
+            {
+                semester: 1,
+                start: "01.10.",
+                end: "23.12."
+            },
+            {
+                semester: 2,
+                start: "21.03.",
+                end: "12.06."
+            },
+            {
+                semester: 3,
+                start: "05.09.",
+                end: "27.11."
+            },
+            {
+                semester: 4,
+                start: "13.02.",
+                end: "07.05."
+            },
+            {
+                semester: 5,
+                start: "15.11.",
+                end: "11.02."
+            },
+            {
+                semester: 6,
+                start: "06.05.",
+                end: "28.07."
+            }
+        ]
+        const vorlesungen = [
+            {
+                kurs: "WWI2021F",
+                name: "Vorlesungsname 1 - Modulname 1",
+                pruefungsart: "Prüfungsart 1",
+                details: "Qualitative Beschreibung 1",
+                termine: {
+                    praesentation: ["05.06.2024", "Termin 1.2"],
+                    abgabe: "Termin 1.3",
+                    klausur: "Termin 1.4"
+                },
+                maxPunkte: "Punkte 1",
+                dozierende: ["Doz 1.1", "Doz 1.2"],
+                moodle: "Link 1"
+            },
+            {
+                kurs: "WWI2021F",
+                name: "Vorlesungsname 2 - Modulname 2",
+                pruefungsart: "Prüfungsart 2",
+                details: "Qualitative Beschreibung 2",
+                termine: {
+                    abgabe: "Termin 2.3",
+                    klausur: "Termin 2.4"
+                },
+                maxPunkte: "Punkte 2",
+                dozierende: ["Doz 2.1", "Doz 2.2"],
+                moodle: "Link 2"
+            },
+            {
+                kurs: "WWI2021F",
+                name: "Vorlesungsname 3 - Modulname 3",
+                pruefungsart: "Prüfungsart 3",
+                details: "Qualitative Beschreibung 3",
+                termine: {
+                    // praesentation: ["Termin 3.1", "Termin 3.2"],
+                    // abgabe: "Termin 3.3",
+                    // klausur: "Termin 3.4"
+                },
+                maxPunkte: "Punkte 3",
+                dozierende: ["Doz 3.1", "Doz 3.2"],
+                moodle: "Link 3"
+            }
+            // Add more items as needed
+        ];
+
+        const grid = document.getElementById("vorlesungen-grid");
+
+        vorlesungen.forEach(vorlesung => {
+            const card = document.createElement("div");
+            card.className = "card";
+            let tableContent = '';
+
+            if (vorlesung.name) {
+                tableContent += `<tr><b>${vorlesung.name}</tr>`;
+            }
+            if (vorlesung.pruefungsart) {
+                tableContent += `<tr><th>Prüfungsart</th><td>${vorlesung.pruefungsart}</td></tr>`;
+            }
+
+            if (vorlesung.details) {
+                tableContent += `<tr><th>Details</th><td>${vorlesung.details}</td></tr>`;
+            }
+            if (vorlesung.termine.praesentation || vorlesung.termine.abgabe || vorlesung.termine.klausur) {
+                tableContent += `<tr><th>Termine</th><td>`;
+                if (vorlesung.termine.praesentation) {
+                    tableContent += `Präsentation: ${vorlesung.termine.praesentation.join(", ")}<br>`;
+                }
+                if (vorlesung.termine.abgabe) {
+                    tableContent += `Abgabe: ${vorlesung.termine.abgabe}<br>`;
+                }
+                if (vorlesung.termine.klausur) {
+                    tableContent += `Klausur: ${vorlesung.termine.klausur}</tr>`;
+                }
+            }
+            if (vorlesung.maxPunkte) {
+                tableContent += `<tr><th>Max Punkte</th><td>${vorlesung.maxPunkte}</td></tr>`;
+            }
+            if (vorlesung.dozierende) {
+                tableContent += `<tr><th>Dozierende</th><td>${vorlesung.dozierende.join(", ")}</td></tr>`;
+            }
+            if (vorlesung.moodle) {
+                tableContent += `<tr><th>Moodle</th><td>${vorlesung.moodle}</td></tr>`;
+            }
+
+            card.innerHTML = `<table>${tableContent}</table>`;
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+
+</html>

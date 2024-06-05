@@ -30,9 +30,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
+
+
 
 @Singleton
 @Path("pruefungen")
@@ -49,67 +52,123 @@ public class RaplaPruefungen {
     {
     }
 
+    // @GET
+    // @Path("kurs")
+    // public void generateKurs( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
+    //     java.io.PrintWriter out = response.getWriter();
+    //     String kursId = request.getParameter("id");
+
+    //     ReferenceInfo<Allocatable> kurs =  new ReferenceInfo<>(kursId, Allocatable.class);
+    //     Allocatable resolve = facade.resolve(kurs);
+
+    //     DynamicType pruefung = facade.getDynamicType("Pruefung");
+    //     ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
+    //     Promise<Collection<Reservation>> allePruefungen = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, pruefungen);
+    //     Collection<Reservation> reservations = SynchronizedCompletablePromise.waitFor(allePruefungen, 10000,logger);
+
+    //     out.println( "<html>" );
+    //     out.println( "<head>" );
+    //     out.println("  <title>Kurs</title>");
+    //     out.println("</head>" );
+
+    //     out.println( "<body>" );
+    //     for (Reservation reservation:reservations) {
+    //         out.println("<p>");
+
+    //         out.println(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")));
+
+    //         // out.println(reservation.getName(null));
+    //         // out.println("<br>");
+    //         // // out.println(reservation.getResources());
+    //         // out.println("<br>");
+    //         // out.println("Resourcen: <br>");
+    //         // for (Allocatable resource:reservation.getResources()) {
+    //         //     out.println(resource.getName(null));
+    //         //     out.println("<br>");
+    //         // }
+    //         // out.println("Dozierende: <br>");
+    //         // for (Allocatable resource:reservation.getPersons()) {
+    //         //     out.println(resource.getName(null));
+    //         //     out.println("<br>");
+    //         // }
+    //         // out.println("<br>");
+    //         // out.println(reservation.getFirstDate());
+    //         // out.println("<br>");
+    //         // // out.println(reservation.getAnnotationKeys());
+    //         // // out.println("<br>");
+    //         // // for (String key:reservation.getAnnotationKeys()) {
+    //         // //     out.println(key + " : " + reservation.getAnnotation(key, null));
+    //         // //     out.println("<br>");
+    //         // // }
+
+    //         // out.println("Dynamic Type Test <br>");
+    //         // Classification classification = reservation.getClassification();
+    //         // out.println(classification.getName(null));
+    //         // for (Attribute attribute:classification.getAttributes()) {
+    //         //     out.println(attribute.getKey() + " : " + classification.getValueForAttribute(attribute));
+    //         //     out.println("<br>");
+    //         // }
+
+
+    //         out.println("</p>");
+    //     }
+    //     // out.println( "<hr>" );
+    //     out.println( "</body>" );
+    //     out.println( "</html>" );
+    //     out.close();
+    // }
+
+
+
     @GET
     @Path("kurs")
-    public void generateKurs( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
+    public void generateKurs(@Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
         java.io.PrintWriter out = response.getWriter();
         String kursId = request.getParameter("id");
 
-        ReferenceInfo<Allocatable> kurs =  new ReferenceInfo<>(kursId, Allocatable.class);
+        ReferenceInfo<Allocatable> kurs = new ReferenceInfo<>(kursId, Allocatable.class);
         Allocatable resolve = facade.resolve(kurs);
 
         DynamicType pruefung = facade.getDynamicType("Pruefung");
         ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
-        Promise<Collection<Reservation>> allePruefungen = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, pruefungen);
-        Collection<Reservation> reservations = SynchronizedCompletablePromise.waitFor(allePruefungen, 10000,logger);
-        out.println( "<html>" );
-        out.println( "<head>" );
-        out.println("  <title>Kurse</title>");
-        out.println("</head>" );
+        Promise<Collection<Reservation>> allePruefungen = facade.getReservationsForAllocatable(new Allocatable[]{resolve}, null, null, pruefungen);
+        Collection<Reservation> reservations = SynchronizedCompletablePromise.waitFor(allePruefungen, 10000, logger);
 
-        out.println( "<body>" );
-        for (Reservation reservation:reservations) {
-            out.println("<p>");
-            out.println(reservation.getName(null));
-            out.println("<br>");
-            // out.println(reservation.getResources());
-            out.println("<br>");
-            out.println("Resourcen: <br>");
-            for (Allocatable resource:reservation.getResources()) {
-                out.println(resource.getName(null));
-                out.println("<br>");
-            }
-            out.println("Dozierende: <br>");
-            for (Allocatable resource:reservation.getPersons()) {
-                out.println(resource.getName(null));
-                out.println("<br>");
-            }
-            out.println("<br>");
-            out.println(reservation.getFirstDate());
-            out.println("<br>");
-            // out.println(reservation.getAnnotationKeys());
-            // out.println("<br>");
-            // for (String key:reservation.getAnnotationKeys()) {
-            //     out.println(key + " : " + reservation.getAnnotation(key, null));
-            //     out.println("<br>");
-            // }
+        String template = readHtmlTemplate("template.html");
+        String content = generateContent(reservations);
+        String finalHtml = template.replace("{content}", content);
 
-            out.println("Dynamic Type Test <br>");
-            Classification classification = reservation.getClassification();
-            out.println(classification.getName(null));
-            for (Attribute attribute:classification.getAttributes()) {
-                out.println(attribute.getKey() + " : " + classification.getValueForAttribute(attribute));
-                out.println("<br>");
-            }
-
-
-            out.println("</p>");
-        }
-        out.println( "<hr>" );
-        out.println( "</body>" );
-        out.println( "</html>" );
+        response.setContentType("text/html; charset=ISO-8859-1");
+        out.write(finalHtml);
         out.close();
     }
+
+    private String readHtmlTemplate(String filePath) throws IOException {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                contentBuilder.append(currentLine).append("\n");
+            }
+        }
+        return contentBuilder.toString();
+    }
+
+    private String generateContent(Collection<Reservation> reservations) {
+        StringBuilder contentBuilder = new StringBuilder();
+        for (Reservation reservation : reservations) {
+            contentBuilder.append("<p>")
+                          .append(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")))
+                          .append("</p>\n");
+        }
+        return contentBuilder.toString();
+    }
+
+
+
+
+
+
 
     @GET
     @Produces(MediaType.TEXT_HTML)
