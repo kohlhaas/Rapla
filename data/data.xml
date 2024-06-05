@@ -5792,7 +5792,7 @@
 
    <rapla:users>
       <!-- Users of the system -->
-      <rapla:user id="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2015-12-10T09:17:24.000Z" last-changed="2024-05-21T16:40:27.292Z" username="admin" password="sha-1:da39a3ee5e6b4b0d3255bfef95601890afd80709" name="" email="" isAdmin="true">
+      <rapla:user id="u8b266d3-3eaa-437e-a71f-97e6ee0b8b9d" created-at="2015-12-10T09:17:24.000Z" last-changed="2024-05-21T16:40:27.292Z" username="admin" password="sha-1:8cc3da2d25bc4485c891b553b0e9cdd5bdd2cdd1" name="" email="" isAdmin="true">
          <rapla:preferences>
             <rapla:entry key="org.rapla.plugin.notification.allocationlisteners">
                <rapla:map>
@@ -6265,7 +6265,7 @@
             </rapla:entry>
          </rapla:preferences>
       </rapla:user>
-      <rapla:user id="u07e2ad3-9dd3-4637-9d23-4aea695bf7f4" created-at="2024-05-21T16:41:49.871Z" last-changed="2024-05-21T16:42:21.596Z" username="stg_wwi" password="sha-1:da39a3ee5e6b4b0d3255bfef95601890afd80709" name="" email="" isAdmin="false">
+      <rapla:user id="u07e2ad3-9dd3-4637-9d23-4aea695bf7f4" created-at="2024-05-21T16:41:49.871Z" last-changed="2024-05-21T16:42:21.596Z" username="stg_wwi" password="sha-1:8cc3da2d25bc4485c891b553b0e9cdd5bdd2cdd1" name="" email="" isAdmin="false">
          <rapla:group key="category[key='STG']"/>
          <rapla:group key="category[key='STG']/category[key='W']/category[key='WI']"/>
          <rapla:preferences>
@@ -6330,7 +6330,7 @@
             </rapla:entry>
          </rapla:preferences>
       </rapla:user>
-      <rapla:user id="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2015-12-15T08:42:54.000Z" last-changed="2017-05-04T00:50:52.000Z" username="importExportUser" password="sha-1:da39a3ee5e6b4b0d3255bfef95601890afd80709" name="" email="" isAdmin="true">
+      <rapla:user id="u2134324-2se3-4404-98f3-87be6a93cccc" created-at="2015-12-15T08:42:54.000Z" last-changed="2017-05-04T00:50:52.000Z" username="importExportUser" password="sha-1:8cc3da2d25bc4485c891b553b0e9cdd5bdd2cdd1" name="" email="" isAdmin="true">
       </rapla:user>
    </rapla:users>
 

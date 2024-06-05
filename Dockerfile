@@ -10,4 +10,6 @@ RUN apk add --no-cache \
 
 COPY target/*.war /app/webapps/rapla.war
 
+COPY data/data.xml /app/data/data.xml
+
 CMD ./raplaserver.sh run
