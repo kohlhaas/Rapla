@@ -1,5 +1,5 @@
 stages:
-  # - maven_build
+  - maven_build
   - rapla_image_build
   # - deploy
 
@@ -14,16 +14,16 @@ variables:
   DEPLOY_HOST: "193.196.55.85"
   CONTAINER_NAME: "rapla_container"
 
-# maven_build:
-#   stage: maven_build
-#   image: maven:3.6.3-jdk-11
-#   script:
-#     - mvn package -DskipTests
-#   artifacts:
-#     paths:
-#       - target/*.war
-#   tags:
-#     - rapla
+maven_build:
+  stage: maven_build
+  image: maven:3.6.3-jdk-11
+  script:
+    - mvn package -DskipTests
+  artifacts:
+    paths:
+      - target/*.war
+  tags:
+    - rapla
 
 rapla_image_build:
   stage: rapla_image_build
