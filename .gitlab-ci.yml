@@ -1,7 +1,7 @@
 stages:
   - maven_build
   - rapla_image_build
-  # - deploy
+  - deploy
 
 cache:
   paths:
@@ -27,7 +27,7 @@ maven_build:
 
 rapla_image_build:
   stage: rapla_image_build
-  image: docker:24.0.5
+  image: docker:24.0.5-git
   services:
     - name: docker:24.0.5-dind
       alias: docker
@@ -39,22 +39,21 @@ rapla_image_build:
   tags:
     - rapla
 
-# deploy:
-#   stage: deploy
-#   image: alpine:latest
-#   before_script:
-#     - echo "$SSH_PRIVATE_KEY"
-#     - apk add --no-cache openssh-client
-#     - mkdir -p ~/.ssh
-#     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
-#     - chmod 600 ~/.ssh/id_ed25519
-#     - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
-#   script:
-#     - echo $CI_REGISTRY_PASSWORD | ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY"
-#     - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $IMAGE_NAME"
-#     - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker stop $CONTAINER_NAME"
-#     - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker rm -f $CONTAINER_NAME"
-#     - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker run -d -p 8051:8051 -v rapla-data:/app/data --name $CONTAINER_NAME $IMAGE_NAME"
-#   tags:
-#     - rapla
-
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - echo "$SSH_PRIVATE_KEY"
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
+  script:
+    - echo $CI_REGISTRY_PASSWORD | ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $IMAGE_NAME"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker stop $CONTAINER_NAME"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker rm -f $CONTAINER_NAME"
+    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "sudo docker run -d -p 8051:8051 -v rapla-data:/app/data --name $CONTAINER_NAME $IMAGE_NAME"
+  tags:
+    - rapla
