@@ -69,14 +69,15 @@ public class RaplaPruefungen {
         ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
         Promise<Collection<Reservation>> allePruefungen = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, pruefungen);
         Collection<Reservation> reservations = SynchronizedCompletablePromise.waitFor(allePruefungen, 10000,logger);
-        String linkPrefix = request.getPathTranslated() != null ? "../" : "";
+        // String linkPrefix = request.getPathTranslated() != null ? "../" : "";
 
 
         out.println( "<html>" );
         out.println( "<head>" );
         out.println("<title>Kurs: " + kursId + "</title>"); 
         out.println("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-        out.println("  <link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
+        // out.println("  <link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
+        out.println("  <link REL=\"stylesheet\" href=\"pruefungsansicht.css\" type=\"text/css\">");
         out.println("</head>" );
 
         out.println( "<body>" );
