@@ -21,6 +21,7 @@ import org.rapla.client.swing.RaplaGUIComponent;
 import org.rapla.client.swing.images.RaplaImages;
 import org.rapla.client.swing.internal.SwingPopupContext;
 import org.rapla.client.swing.internal.common.PeriodChooser;
+import org.rapla.client.swing.internal.edit.fields.TextField; //added
 import org.rapla.client.swing.toolkit.MonthChooser;
 import org.rapla.client.swing.toolkit.RaplaButton;
 import org.rapla.client.swing.toolkit.WeekdayChooser;
@@ -68,6 +69,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -127,6 +129,8 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
     CardLayout repeatingCard = new CardLayout();
     // Button for splitting appointments
     RaplaButton convertButton = new RaplaButton();
+
+    JTextField commentField = new JTextField(); //erstmal JTextField - eigentlich RAPLA eigenes Textfield
 
     private final CommandHistory commandHistory;
 
@@ -215,6 +219,9 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         yearlyRepeating.setText(getString("yearly"));
         // Rapla 1.4: Initialize the split appointment button
         convertButton.setText(getString("appointment.convert"));
+
+        commentField = new JTextField(20);
+        panel.add(commentField);
     }
 
     private void switchRepeatings()
