@@ -27,6 +27,14 @@ operating system Linux
 /etc/gitlab-runner/config.toml -> privileged = true
 
 
+auf user git installieren 
+sudo yum install git
+
+
+auf dem user bei GITLAB anmelden
+-> 
+
+
 ### DOCKER AUF RHL9
 auf dem user
 https://docs.docker.com/engine/install/rhel/
@@ -42,6 +50,11 @@ DEPLOY_USER (user mit dem der runner läuft)
 SSH_PRIVATE_KEY (private key der VM (path dahin))
 USER_PASSWORD (password des users)
 
+
+
+### 
+auf VM
+create .ssh 
 
 
 
