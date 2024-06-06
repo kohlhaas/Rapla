@@ -95,6 +95,7 @@ public class RaplaCommentsAppointments {
             for (Appointment appointment:reservation.getAppointments()) {
                 out.println(appointment.toString());
                 out.println("<br>");
+                out.println(appointment.getComment());
                 out.println("<br>");
             // out.println("<br>");
             // out.println("ANNOTATIONS: <br>");

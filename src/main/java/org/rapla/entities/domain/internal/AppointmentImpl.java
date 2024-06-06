@@ -49,6 +49,8 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
     public final static String BUG = null;
     public static String DD = null;
 
+    private String comment;
+
     @Override public Class<Appointment> getTypeClass()
     {
         return Appointment.class;
@@ -885,16 +887,15 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
 	}
 
 
-	 private static boolean equalsOrBothNull(Object o1, Object o2) {
+	private static boolean equalsOrBothNull(Object o1, Object o2) {
 	        if (o1 == null) {
                 return o2 == null;
 	        } else if ( o2 == null) {
 	            return false;
 	        } else return o1.equals(o2);
-     }
+    }
 
-	 public ReferenceInfo<User> getOwnerRef()
-	 {
+	public ReferenceInfo<User> getOwnerRef(){
 		 Reservation reservation = getReservation();
 		 if ( reservation != null)
 		 {
@@ -902,7 +903,17 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
              return ownerId;
 		 }
 		 return null;
-	 }
+	}
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        checkWritable();
+        this.comment = comment;
+    }
+
 
 
 /*
