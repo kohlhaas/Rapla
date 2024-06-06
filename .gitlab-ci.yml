@@ -10,8 +10,8 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   IMAGE_NAME: "$CI_REGISTRY_IMAGE/vm_ci:latest"
-  DEPLOY_USER: "ubuntu"
-  DEPLOY_HOST: "193.196.55.85"
+  DEPLOY_USER: "steve"
+  DEPLOY_HOST: "wwiappdev8.dhbw-stuttgart.de"
   CONTAINER_NAME: "rapla_container"
 
 maven_build:
