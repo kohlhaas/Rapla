@@ -32,7 +32,7 @@ sudo yum install git
 
 
 auf dem user bei GITLAB anmelden
--> 
+-> über container regestiry -> sudo docker login git.dhbw-stuttgart.de:XY (entnehmen aus registry - anmelden mit user und access token)
 
 
 ### DOCKER AUF RHL9
@@ -52,52 +52,4 @@ USER_PASSWORD (password des users)
 
 
 
-### 
-auf VM
-create .ssh 
-
-
-
-
-
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-
+### ports 
