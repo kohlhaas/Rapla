@@ -77,6 +77,8 @@ public class RaplaPruefungen {
         ReferenceInfo<Allocatable> kurs =  new ReferenceInfo<>(kursId, Allocatable.class);
         Allocatable resolve = facade.resolve(kurs);
 
+        String kursName = resolve.getName(null);
+
         DynamicType pruefung = facade.getDynamicType("Pruefung");
         ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
         Promise<Collection<Reservation>> allePruefungen = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, pruefungen);
@@ -86,7 +88,7 @@ public class RaplaPruefungen {
 
         out.println( "<html>" );
         out.println( "<head>" );
-        out.println("<title>Kurs: " + kursId + "</title>"); 
+        out.println("<title>Prüfungsverzeichnis: " + kursName + "</title>"); 
         out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
         // out.println("<link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
         // out.println("<link REL=\"stylesheet\" href=\"pruefungsansicht.css\" type=\"text/css\">");
@@ -157,11 +159,20 @@ public class RaplaPruefungen {
 
         out.println( "<body>" );
         out.println("<div class=\"container\">");
-        out.println("<header> <h1>Prüfungsverzeichnis - Kurs WWI2021F</h1></header>");
+        out.println("<header> <h1>Prüfungsverzeichnis - Kurs " + kursName + "</h1></header>");
 
         out.println("<div class=\"filter-semester-container\">");
         // TODO: Semesterfilter einbauen
-        out.println("<p>Semester: </p>");
+        out.println("<h2>Semester: ");
+            out.println("<select name=\"semester\" id=\"dropdown_semester\">");
+                    out.println("<option value=\"1\">1</option>");
+                    out.println("<option value=\"2\">2</option>");
+                    out.println("<option value=\"3\">3</option>");
+                    out.println("<option value=\"4\">4</option>");
+                    out.println("<option value=\"5\">5</option>");
+                    out.println("<option value=\"6\">6</option>");
+            out.println("</select>");
+        out.println("</h2>");
         out.println("</div>");      // filter-semester-container
                 
         // - - -  View lectures:
