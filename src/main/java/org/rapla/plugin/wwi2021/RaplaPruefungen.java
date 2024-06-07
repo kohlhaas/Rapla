@@ -75,9 +75,72 @@ public class RaplaPruefungen {
         out.println( "<html>" );
         out.println( "<head>" );
         out.println("<title>Kurs: " + kursId + "</title>"); 
-        out.println("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-        // out.println("  <link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
-        out.println("  <link REL=\"stylesheet\" href=\"pruefungsansicht.css\" type=\"text/css\">");
+        out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+        // out.println("<link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
+        // out.println("<link REL=\"stylesheet\" href=\"pruefungsansicht.css\" type=\"text/css\">");
+        out.println("<style>");
+        out.println("body {\r\n" + //
+                        "    font-family: Arial, sans-serif;\r\n" + //
+                        "    margin: 0;\r\n" + //
+                        "    padding: 0;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        ".container {\r\n" + //
+                        "    padding-top: 10px;\r\n" + //
+                        "    width: 90%;\r\n" + //
+                        "    margin: auto;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        ".card,\r\n" + //
+                        ".table-container {\r\n" + //
+                        "    padding: 10px;\r\n" + //
+                        "    margin-bottom: 10px;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        "header h1,\r\n" + //
+                        ".vorlesungen-header h2 {\r\n" + //
+                        "    margin: 0;\r\n" + //
+                        "    padding: 10px 0;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        ".vorlesungen-header {\r\n" + //
+                        "    border-bottom: 1px solid #ccc;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        ".grid {\r\n" + //
+                        "    display: grid;\r\n" + //
+                        "    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\r\n" + //
+                        "    gap: 10px;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        ".card {\r\n" + //
+                        "    padding: 15px;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        "table {\r\n" + //
+                        "    width: 100%;\r\n" + //
+                        "    border-collapse: collapse;\r\n" + //
+                        "    margin-bottom: 10px;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        "th,\r\n" + //
+                        "td {\r\n" + //
+                        "    border: 1px solid #ccc;\r\n" + //
+                        "    padding: 8px;\r\n" + //
+                        "    text-align: left;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        "th {\r\n" + //
+                        "    background-color: #f2f2f2;\r\n" + //
+                        "}\r\n" + //
+                        "\r\n" + //
+                        "@media (min-width: 900px) {\r\n" + //
+                        "    .grid {\r\n" + //
+                        "        grid-template-columns: repeat(3, 1fr);\r\n" + //
+                        "    }\r\n" + //
+                        "}");
+        out.println("</style>");
+
         out.println("</head>" );
 
         out.println( "<body>" );
@@ -87,12 +150,93 @@ public class RaplaPruefungen {
                         "        </header>\r\n" + //
                         "        <div class=\"filter\">\r\n" + //
                         "            <p>Semester: </p>\r\n" + //
-                        "        </div>\r\n" + //
-                        "        <div class=\"vorlesungen-header\">\r\n" + //
-                        "            <h2>Vorlesungen</h2>\r\n" + //
-                        "        </div>\r\n" + //
-                        "        <div class=\"grid\" id=\"vorlesungen-grid\"></div>");
-        out.println("</div>");
+                        "        </div>");
+        
+        // View lectures:
+        out.println("<div class=\"lectures-container\">");
+        out.println("<div class=\"container-header\"> <h2>Vorlesungen</h2> </div>");      
+        out.println("<div class=\"grid\" id=\"lectures-grid\">");
+        
+        // Generate cards for each lecture and exam performance
+        for (Reservation reservation:reservations) {
+            out.println("<div class=\"card\">");
+            out.println("<h4><b>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + " - " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</b></h4>");
+            out.println("<table>");
+            out.println("<tr><th>Prüfungsart</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "</td></tr>");
+            out.println("<tr><th>Prüfungsdetails</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "</td></tr>");
+            
+            out.println("<tr><th>Termine</th><td>" + reservation.getSortedAppointments()+ "</td></tr>");
+            // for (Appointment appointment:reservation.getAppointments()) {
+            //     out.println(appointment.getStart());
+            // }
+
+            out.println("<tr><th>Max. Punkte</th><td>" +reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>");            
+            String dozierende = "";
+            for (Allocatable resource:reservation.getPersons()) {
+                dozierende += resource.getName(null) + "; ";
+            }
+            out.println("<tr><th>Dozierende</th><td>" + dozierende + "</td></tr>");
+            out.println("<tr><th>Moodle</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "</td></tr>");
+            out.println("</table>");
+            out.println("</div>");    // card
+        }
+        
+        out.println("</div>");      // grid
+        out.println("</div>");      // lectures-container
+        
+        // View exams:
+        out.println("<div class=\"table-container\">");
+        out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
+
+        // Hier kommt Code für Tabelle
+        out.println("<p>Prüfungen</p>");
+        
+        out.println("</div>");      // table-container
+        out.println("</div>");      // container
+
+
+
+        // out.println("<script>");
+        // out.println("const grid = document.getElementById(\"vorlesungen-grid\");");
+        // out.println("const card = document.createElement(\"div\");\r\n" + //
+        //                     "            card.className = \"card\";\r\n" + //
+        //                     "            let tableContent = '';");
+
+
+        // for (Reservation reservation:reservations) {
+        //     out.println("tableContent += `<h4><b>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + " - " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</b></h4>`;");
+        //     out.println("tableContent += `<table>`;");
+        //     out.println("tableContent += `<tr><th>Prüfungsart</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "</td></tr>`;");
+        //     out.println("tableContent += `<tr><th>Prüfungsdetails</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "</td></tr>`;");
+            
+        //     out.println("tableContent += `<tr><th>Termine</th><td>" + reservation.getSortedAppointments()+ "</td></tr>`;");
+        //     // for (Appointment appointment:reservation.getAppointments()) {
+        //     //     out.println(appointment.getStart());
+        //     // }
+
+        //     out.println("tableContent += `<tr><th>Max Punkte</th><td>" +reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>`;");            
+        //     String dozierende = "";
+        //     for (Allocatable resource:reservation.getPersons()) {
+        //         dozierende += resource.getName(null) + "; ";
+        //     }
+        //     out.println("tableContent += `<tr><th>Dozierende</th><td>" + dozierende + "</td></tr>`;");
+        //     out.println("tableContent += `<tr><th>Moodle</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "</td></tr>`;");
+        //     out.println("tableContent += `</table>`;");
+        // }
+        // out.println("card.innerHTML = `${tableContent}`;");
+        // out.println("grid.appendChild(card);");
+
+
+
+        // out.println("</script>");
+
+
+
+        out.println( "</body>" );
+        out.println( "</html>" );
+        out.close();
+
+
 
         // for (Reservation reservation:reservations) {
         //     out.println("<p>");
@@ -134,54 +278,7 @@ public class RaplaPruefungen {
 
         //     out.println("</p>");
         // }
-        
 
-        out.println("<div class=\"table-container\">\r\n" + //
-                        "            <h2>Klausuren / Prüfungsleistungen</h2>");
-
-        
-        out.println("</div>");
-
-
-        out.println("<script>");
-        out.println("const grid = document.getElementById(\"vorlesungen-grid\");");
-        out.println("const card = document.createElement(\"div\");\r\n" + //
-                            "            card.className = \"card\";\r\n" + //
-                            "            let tableContent = '';");
-
-
-        for (Reservation reservation:reservations) {
-            out.println("tableContent += `<h4><b>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + " - " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</h4>`;");
-            out.println("tableContent += `<table>`;");
-            out.println("tableContent += `<tr><th>Prüfungsart</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "</td></tr>`;");
-            out.println("tableContent += `<tr><th>Prüfungsdetails</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "</td></tr>`;");
-            
-            out.println("tableContent += `<tr><th>Termine</th><td>" + reservation.getSortedAppointments()+ "</td></tr>`;");
-            // for (Appointment appointment:reservation.getAppointments()) {
-            //     out.println(appointment.getStart());
-            // }
-
-            out.println("tableContent += `<tr><th>Max Punkte</th><td>" +reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>`;");            
-            String dozierende = "";
-            for (Allocatable resource:reservation.getPersons()) {
-                dozierende += resource.getName(null) + "; ";
-            }
-            out.println("tableContent += `<tr><th>Dozierende</th><td>" + dozierende + "</td></tr>`;");
-            out.println("tableContent += `<tr><th>Moodle</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "</td></tr>`;");
-            out.println("tableContent += `</table>`;");
-        }
-        out.println("card.innerHTML = `${tableContent}`;");
-        out.println("grid.appendChild(card);");
-
-
-
-        out.println("</script>");
-
-
-
-        out.println( "</body>" );
-        out.println( "</html>" );
-        out.close();
     }
 
 
