@@ -37,7 +37,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 
 
@@ -204,10 +206,13 @@ public class RaplaPruefungen {
         for (Reservation reservation:reservations) {
             if (reservation.getClassification().getValueAsString(reservation.getClassification().getAttribute("Pruefungsart"), null).equalsIgnoreCase("Klausur")) {
                 out.println("<tr>");
-                // TODO: Nur Datum anzeigen
-                out.println("<td>" + reservation.getSortedAppointments() + "</td>");
-                // TODO: Nur Uhrzeit anzeigen
-                out.println("<td>" + reservation.getSortedAppointments() + "</td>");
+                Date examDate = reservation.getFirstDate();
+                SimpleDateFormat examDayFormat = new SimpleDateFormat("dd.MM.yyyy");
+                String examDay = examDayFormat.format(examDate);
+                out.println("<td>" + examDay + "</td>");
+                SimpleDateFormat examTimeFormat = new SimpleDateFormat("HH:mm");
+                String examTime = examTimeFormat.format(examDate);
+                out.println("<td>" + examTime + "</td>");
                 out.println("<td>");
                 for (Allocatable resource:reservation.getResources()) {
                     try {
