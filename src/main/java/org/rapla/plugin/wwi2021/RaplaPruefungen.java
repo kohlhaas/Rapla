@@ -145,13 +145,13 @@ public class RaplaPruefungen {
 
         out.println( "<body>" );
         out.println("<div class=\"container\">");
-        out.println("<header>\r\n" + //
-                        "            <h1>Prüfungsverzeichnis - Kurs WWI2021F</h1>\r\n" + //
-                        "        </header>\r\n" + //
-                        "        <div class=\"filter\">\r\n" + //
-                        "            <p>Semester: </p>\r\n" + //
-                        "        </div>");
-        
+        out.println("<header> <h1>Prüfungsverzeichnis - Kurs WWI2021F</h1></header>");
+
+        out.println("<div class=\"filter-semester-container\">");
+        // TODO: Semesterfilter einbauen
+        out.println("<p>Semester: </p>");
+        out.println("</div>");      // filter-semester-container
+                
         // View lectures:
         out.println("<div class=\"lectures-container\">");
         out.println("<div class=\"container-header\"> <h2>Vorlesungen</h2> </div>");      
@@ -159,24 +159,34 @@ public class RaplaPruefungen {
         
         // Generate cards for each lecture and exam performance
         for (Reservation reservation:reservations) {
+            // TODO: Error handling für leere Werte
+
             out.println("<div class=\"card\">");
             out.println("<h4><b>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + " - " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</b></h4>");
             out.println("<table>");
             out.println("<tr><th>Prüfungsart</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "</td></tr>");
             out.println("<tr><th>Prüfungsdetails</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "</td></tr>");
             
+            // TODO: Termine richtig anzeigen (Formatieren + je Prüfung)
             out.println("<tr><th>Termine</th><td>" + reservation.getSortedAppointments()+ "</td></tr>");
             // for (Appointment appointment:reservation.getAppointments()) {
             //     out.println(appointment.getStart());
             // }
-
-            out.println("<tr><th>Max. Punkte</th><td>" +reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>");            
+            if (reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) != null) {
+                out.println("<tr><th>Max. Punkte</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>");            
+            } else {
+                out.println("<tr><th>Max. Punkte</th><td></td></tr>");
+            }
             String dozierende = "";
             for (Allocatable resource:reservation.getPersons()) {
                 dozierende += resource.getName(null) + "; ";
             }
             out.println("<tr><th>Dozierende</th><td>" + dozierende + "</td></tr>");
-            out.println("<tr><th>Moodle</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "</td></tr>");
+            if (reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) != null){
+                out.println("<tr><th>Moodle</th><td><p><a href=\"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\">Link</a></p></td></tr>");
+            } else {
+                out.println("<tr><th>Moodle</th><td></td></tr>");
+            }
             out.println("</table>");
             out.println("</div>");    // card
         }
@@ -187,10 +197,42 @@ public class RaplaPruefungen {
         // View exams:
         out.println("<div class=\"table-container\">");
         out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
+        out.println("<table id=\"exams-table\">");
+        out.println("<tr><th>Datum</th><th>Uhrzeit</th><th>Raum</th><th>Modul</th><th>Dauer</th><th>Vorlesung / Modul-(teil)klausur</th><th>Klausuranteil</th></tr>");
 
-        // Hier kommt Code für Tabelle
-        out.println("<p>Prüfungen</p>");
-        
+        // Generate table row for each exam
+        for (Reservation reservation:reservations) {
+            if (reservation.getClassification().getValueAsString(reservation.getClassification().getAttribute("Pruefungsart"), null).equalsIgnoreCase("Klausur")) {
+                out.println("<tr>");
+                // TODO: Nur Datum anzeigen
+                out.println("<td>" + reservation.getSortedAppointments() + "</td>");
+                // TODO: Nur Uhrzeit anzeigen
+                out.println("<td>" + reservation.getSortedAppointments() + "</td>");
+                out.println("<td>");
+                // TODO: Nur Raum anzeigen
+                for (Allocatable resource:reservation.getResources()) {
+                    out.println(resource.getName(null));
+                    out.println("; ");
+                    }
+                out.println("</td>");
+                // TODO: Vorlesungen des selben Moduls kombinieren
+                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</td>");
+                // TODO: Dauer berechnen
+                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + " Min.</td>");
+                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "</td>");
+                // TODO: Gesamtpunktzahl berechnen
+                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td>");
+                out.println("</tr>");
+            } 
+            // else {
+            //     out.println("<tr> Keine Klausur: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name"))+ "</tr>");
+            // }
+    
+        }
+
+        out.println("</table>");
+
+         
         out.println("</div>");      // table-container
         out.println("</div>");      // container
 
