@@ -38,8 +38,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 
 
@@ -154,7 +164,7 @@ public class RaplaPruefungen {
         out.println("<p>Semester: </p>");
         out.println("</div>");      // filter-semester-container
                 
-        // View lectures:
+        // - - -  View lectures:
         out.println("<div class=\"lectures-container\">");
         out.println("<div class=\"container-header\"> <h2>Vorlesungen</h2> </div>");      
         out.println("<div class=\"grid\" id=\"lectures-grid\">");
@@ -196,90 +206,77 @@ public class RaplaPruefungen {
         out.println("</div>");      // grid
         out.println("</div>");      // lectures-container
         
-        // View exams:
+
+        // - - -  View exams:
         out.println("<div class=\"table-container\">");
         out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
         out.println("<table id=\"exams-table\">");
         out.println("<tr><th>Datum</th><th>Uhrzeit</th><th>Raum</th><th>Modul</th><th>Dauer</th><th>Vorlesung / Modul-(teil)klausur</th><th>Klausuranteil</th></tr>");
 
-        // Generate table row for each exam
-        for (Reservation reservation:reservations) {
-            if (reservation.getClassification().getValueAsString(reservation.getClassification().getAttribute("Pruefungsart"), null).equalsIgnoreCase("Klausur")) {
-                out.println("<tr>");
+        // Preprocess reservations to group by unit_name
+        Map<String, List<Reservation>> groupedByUnitName = reservations.stream()
+            .filter(reservation -> reservation.getClassification().getValueAsString(reservation.getClassification().getAttribute("Pruefungsart"), null).equalsIgnoreCase("Klausur"))
+            .collect(Collectors.groupingBy(reservation -> reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")).toString()));
+
+        // Generate table row for each unit_name
+        for (Map.Entry<String, List<Reservation>> entry : groupedByUnitName.entrySet()) {
+            String unitName = entry.getKey();
+            Integer unitPoints = 120;
+            List<Reservation> unitReservations = entry.getValue();
+
+            // Initialize variables for the combined exam details
+            String examDay = null;
+            Date earliestTime = null;
+            String room = null;
+            int totalDuration = 0;
+            StringBuilder names = new StringBuilder();
+            StringBuilder maxPoints = new StringBuilder();
+
+            for (Reservation reservation : unitReservations) {
                 Date examDate = reservation.getFirstDate();
                 SimpleDateFormat examDayFormat = new SimpleDateFormat("dd.MM.yyyy");
-                String examDay = examDayFormat.format(examDate);
-                out.println("<td>" + examDay + "</td>");
-                SimpleDateFormat examTimeFormat = new SimpleDateFormat("HH:mm");
-                String examTime = examTimeFormat.format(examDate);
-                out.println("<td>" + examTime + "</td>");
-                out.println("<td>");
-                for (Allocatable resource:reservation.getResources()) {
-                    try {
-                        resource.getClassification().getValueAsString(resource.getClassification().getAttribute("Raumname"), null);
-                        out.println(resource.getName(null));
-                    }catch (Exception e) {
-                        out.println("");
+                if (examDay == null) {
+                    examDay = examDayFormat.format(examDate);
+                }
+
+                if (earliestTime == null || examDate.before(earliestTime)) {
+                    earliestTime = examDate;
+                }
+
+                if (room == null) {
+                    for (Allocatable resource : reservation.getResources()) {
+                        try {
+                            resource.getClassification().getValueAsString(resource.getClassification().getAttribute("Raumname"), null);
+                            room = resource.getName(null);
+                            break; // Only the first room is needed
+                        } catch (Exception e) {
+                            // Ignore exceptions for resources without room names
+                        }
                     }
                 }
-                out.println("</td>");
-                // TODO: Vorlesungen des selben Moduls kombinieren
-                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</td>");
-                // TODO: Dauer berechnen
-                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + " Min.</td>");
-                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "</td>");
-                // TODO: Gesamtpunktzahl berechnen
-                out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td>");
-                out.println("</tr>");
-            } 
-            // else {
-            //     out.println("<tr> Keine Klausur: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name"))+ "</tr>");
-            // }
-    
+
+                totalDuration += Integer.parseInt(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")).toString());
+                names.append(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name"))).append("<br>");
+                maxPoints.append(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte"))).append("/" + unitPoints + "<br>");
+            }
+
+            SimpleDateFormat examTimeFormat = new SimpleDateFormat("HH:mm");
+            String examTimeStart = examTimeFormat.format(earliestTime);
+            String examTimeEnd = examTimeFormat.format(new Date(earliestTime.getTime() + totalDuration * 60000));
+
+            out.println("<tr>");
+            if (examDay != null) { out.println("<td>" + examDay + "</td>"); } else {out.println("<td></td>");}
+            if (examTimeStart != null) { out.println("<td>" + examTimeStart + " - " + examTimeEnd + "</td>"); } else {out.println("<td></td>");}
+            if (room != null) { out.println("<td>" + room + "</td>"); } else {out.println("<td></td>");}
+            if (unitName != null) { out.println("<td>" + unitName + "</td>"); } else {out.println("<td></td>");}
+            if (totalDuration != 0) { out.println("<td>" + totalDuration + " Min.</td>"); } else {out.println("<td></td>");}
+            if (names.length() != 0) { out.println("<td>" + names.toString() + "</td>"); } else {out.println("<td></td>");}
+            if (maxPoints.length() != 0) { out.println("<td>" + maxPoints.toString() + "</td>"); } else {out.println("<td></td>");}
+            out.println("</tr>");
         }
 
         out.println("</table>");
-
-         
-        out.println("</div>");      // table-container
-        out.println("</div>");      // container
-
-
-
-        // out.println("<script>");
-        // out.println("const grid = document.getElementById(\"vorlesungen-grid\");");
-        // out.println("const card = document.createElement(\"div\");\r\n" + //
-        //                     "            card.className = \"card\";\r\n" + //
-        //                     "            let tableContent = '';");
-
-
-        // for (Reservation reservation:reservations) {
-        //     out.println("tableContent += `<h4><b>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + " - " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</b></h4>`;");
-        //     out.println("tableContent += `<table>`;");
-        //     out.println("tableContent += `<tr><th>Prüfungsart</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "</td></tr>`;");
-        //     out.println("tableContent += `<tr><th>Prüfungsdetails</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "</td></tr>`;");
-            
-        //     out.println("tableContent += `<tr><th>Termine</th><td>" + reservation.getSortedAppointments()+ "</td></tr>`;");
-        //     // for (Appointment appointment:reservation.getAppointments()) {
-        //     //     out.println(appointment.getStart());
-        //     // }
-
-        //     out.println("tableContent += `<tr><th>Max Punkte</th><td>" +reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>`;");            
-        //     String dozierende = "";
-        //     for (Allocatable resource:reservation.getPersons()) {
-        //         dozierende += resource.getName(null) + "; ";
-        //     }
-        //     out.println("tableContent += `<tr><th>Dozierende</th><td>" + dozierende + "</td></tr>`;");
-        //     out.println("tableContent += `<tr><th>Moodle</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "</td></tr>`;");
-        //     out.println("tableContent += `</table>`;");
-        // }
-        // out.println("card.innerHTML = `${tableContent}`;");
-        // out.println("grid.appendChild(card);");
-
-
-
-        // out.println("</script>");
-
+        out.println("</div>"); // table-container
 
 
         out.println( "</body>" );
