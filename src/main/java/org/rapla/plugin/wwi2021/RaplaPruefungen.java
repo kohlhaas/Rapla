@@ -209,11 +209,14 @@ public class RaplaPruefungen {
                 // TODO: Nur Uhrzeit anzeigen
                 out.println("<td>" + reservation.getSortedAppointments() + "</td>");
                 out.println("<td>");
-                // TODO: Nur Raum anzeigen
                 for (Allocatable resource:reservation.getResources()) {
-                    out.println(resource.getName(null));
-                    out.println("; ");
+                    try {
+                        resource.getClassification().getValueAsString(resource.getClassification().getAttribute("Raumname"), null);
+                        out.println(resource.getName(null));
+                    }catch (Exception e) {
+                        out.println("");
                     }
+                }
                 out.println("</td>");
                 // TODO: Vorlesungen des selben Moduls kombinieren
                 out.println("<td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</td>");
