@@ -77,7 +77,7 @@ public class RaplaPruefungen {
         ReferenceInfo<Allocatable> kurs =  new ReferenceInfo<>(kursId, Allocatable.class);
         Allocatable resolve = facade.resolve(kurs);
 
-        String kursName = resolve.getName(null);
+        String courseName = resolve.getName(null);
 
         DynamicType pruefung = facade.getDynamicType("Pruefung");
         ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
@@ -88,7 +88,7 @@ public class RaplaPruefungen {
 
         out.println( "<html>" );
         out.println( "<head>" );
-        out.println("<title>Prüfungsverzeichnis: " + kursName + "</title>"); 
+        out.println("<title>Prüfungsverzeichnis: " + courseName + "</title>"); 
         out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
         // out.println("<link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
         // out.println("<link REL=\"stylesheet\" href=\"pruefungsansicht.css\" type=\"text/css\">");
@@ -159,17 +159,16 @@ public class RaplaPruefungen {
 
         out.println( "<body>" );
         out.println("<div class=\"container\">");
-        out.println("<header> <h1>Prüfungsverzeichnis - Kurs " + kursName + "</h1></header>");
+        out.println("<header> <h1>Prüfungsverzeichnis - Kurs " + courseName + "</h1></header>");
 
         out.println("<div class=\"filter-semester-container\">");
-        // TODO: Semesterfilter einbauen
         out.println("<h2>Semester: ");
             out.println("<select name=\"semester\" id=\"dropdown_semester\">");
                     out.println("<option value=\"1\">1</option>");
                     out.println("<option value=\"2\">2</option>");
                     out.println("<option value=\"3\">3</option>");
                     out.println("<option value=\"4\">4</option>");
-                    out.println("<option value=\"5\">5</option>");
+                    out.println("<option value=\"5\" selected>5</option>");             //Standardwert hier ändern (TODO)
                     out.println("<option value=\"6\">6</option>");
             out.println("</select>");
         out.println("</h2>");
@@ -178,42 +177,8 @@ public class RaplaPruefungen {
         // - - -  View lectures:
         out.println("<div class=\"lectures-container\">");
         out.println("<div class=\"container-header\"> <h2>Vorlesungen</h2> </div>");      
-        out.println("<div class=\"grid\" id=\"lectures-grid\">");
-        
-        // Generate cards for each lecture and exam performance
-        for (Reservation reservation:reservations) {
-            // TODO: Error handling für leere Werte
-
-            out.println("<div class=\"card\">");
-            out.println("<h4><b>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + " - " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "</b></h4>");
-            out.println("<table>");
-            out.println("<tr><th>Prüfungsart</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "</td></tr>");
-            out.println("<tr><th>Prüfungsdetails</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "</td></tr>");
-            
-            // TODO: Termine richtig anzeigen (Formatieren + je Prüfung)
-            out.println("<tr><th>Termine</th><td>" + reservation.getSortedAppointments()+ "</td></tr>");
-            // for (Appointment appointment:reservation.getAppointments()) {
-            //     out.println(appointment.getStart());
-            // }
-            if (reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) != null) {
-                out.println("<tr><th>Max. Punkte</th><td>" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + "</td></tr>");            
-            } else {
-                out.println("<tr><th>Max. Punkte</th><td></td></tr>");
-            }
-            String dozierende = "";
-            for (Allocatable resource:reservation.getPersons()) {
-                dozierende += resource.getName(null) + "; ";
-            }
-            out.println("<tr><th>Dozierende</th><td>" + dozierende + "</td></tr>");
-            if (reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) != null){
-                out.println("<tr><th>Moodle</th><td><p><a href=\"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\">Link</a></p></td></tr>");
-            } else {
-                out.println("<tr><th>Moodle</th><td></td></tr>");
-            }
-            out.println("</table>");
-            out.println("</div>");    // card
-        }
-        
+        out.println("<div class=\"grid\" id=\"lectures-grid\">");     
+        // Generated in JS   
         out.println("</div>");      // grid
         out.println("</div>");      // lectures-container
         
@@ -221,74 +186,169 @@ public class RaplaPruefungen {
         // - - -  View exams:
         out.println("<div class=\"table-container\">");
         out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
-        out.println("<table id=\"exams-table\">");
-        out.println("<tr><th>Datum</th><th>Uhrzeit</th><th>Raum</th><th>Modul</th><th>Dauer</th><th>Vorlesung / Modul-(teil)klausur</th><th>Klausuranteil</th></tr>");
-
-        // Preprocess reservations to group by unit_name
-        Map<String, List<Reservation>> groupedByUnitName = reservations.stream()
-            .filter(reservation -> reservation.getClassification().getValueAsString(reservation.getClassification().getAttribute("Pruefungsart"), null).equalsIgnoreCase("Klausur"))
-            .collect(Collectors.groupingBy(reservation -> reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")).toString()));
-
-        // Generate table row for each unit_name
-        for (Map.Entry<String, List<Reservation>> entry : groupedByUnitName.entrySet()) {
-            String unitName = entry.getKey();
-            Integer unitPoints = 120;
-            List<Reservation> unitReservations = entry.getValue();
-
-            // Initialize variables for the combined exam details
-            String examDay = null;
-            Date earliestTime = null;
-            String room = null;
-            int totalDuration = 0;
-            StringBuilder names = new StringBuilder();
-            StringBuilder maxPoints = new StringBuilder();
-
-            for (Reservation reservation : unitReservations) {
-                Date examDate = reservation.getFirstDate();
-                SimpleDateFormat examDayFormat = new SimpleDateFormat("dd.MM.yyyy");
-                if (examDay == null) {
-                    examDay = examDayFormat.format(examDate);
-                }
-
-                if (earliestTime == null || examDate.before(earliestTime)) {
-                    earliestTime = examDate;
-                }
-
-                if (room == null) {
-                    for (Allocatable resource : reservation.getResources()) {
-                        try {
-                            resource.getClassification().getValueAsString(resource.getClassification().getAttribute("Raumname"), null);
-                            room = resource.getName(null);
-                            break; // Only the first room is needed
-                        } catch (Exception e) {
-                            // Ignore exceptions for resources without room names
-                        }
-                    }
-                }
-
-                totalDuration += Integer.parseInt(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")).toString());
-                names.append(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name"))).append("<br>");
-                maxPoints.append(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte"))).append("/" + unitPoints + "<br>");
-            }
-
-            SimpleDateFormat examTimeFormat = new SimpleDateFormat("HH:mm");
-            String examTimeStart = examTimeFormat.format(earliestTime);
-            String examTimeEnd = examTimeFormat.format(new Date(earliestTime.getTime() + totalDuration * 60000));
-
-            out.println("<tr>");
-            if (examDay != null) { out.println("<td>" + examDay + "</td>"); } else {out.println("<td></td>");}
-            if (examTimeStart != null) { out.println("<td>" + examTimeStart + " - " + examTimeEnd + "</td>"); } else {out.println("<td></td>");}
-            if (room != null) { out.println("<td>" + room + "</td>"); } else {out.println("<td></td>");}
-            if (unitName != null) { out.println("<td>" + unitName + "</td>"); } else {out.println("<td></td>");}
-            if (totalDuration != 0) { out.println("<td>" + totalDuration + " Min.</td>"); } else {out.println("<td></td>");}
-            if (names.length() != 0) { out.println("<td>" + names.toString() + "</td>"); } else {out.println("<td></td>");}
-            if (maxPoints.length() != 0) { out.println("<td>" + maxPoints.toString() + "</td>"); } else {out.println("<td></td>");}
-            out.println("</tr>");
-        }
-
-        out.println("</table>");
+        out.println("<div id=\"exams-table-container\">");
+        // Generated in JS
+        out.println("</div>"); // exams-table-container
         out.println("</div>"); // table-container
 
+
+        out.println("<script>");
+        // Store semester dates in JS
+        int courseYear = Integer.parseInt(courseName.replaceAll("\\D", ""));
+        out.println("const semester = [{semester: 1, start: \"" + courseYear + "-10-01\", end: \"" + (courseYear + 1) + "-03-05\"},");
+        out.println("{semester: 2, start: \"" + (courseYear + 1) + "-03-06\", end: \"" + (courseYear + 1) + "-08-25\"},");
+        out.println("{semester: 3, start: \"" + (courseYear + 1) + "-08-26\", end: \"" + (courseYear + 2) + "-02-01\"},");
+        out.println("{semester: 4, start: \"" + (courseYear + 2) + "-02-02\", end: \"" + (courseYear + 2) + "-11-01\"},");
+        out.println("{semester: 5, start: \"" + (courseYear + 2) + "-11-02\", end: \"" + (courseYear + 3) + "-04-25\"},");
+        out.println("{semester: 6, start: \"" + (courseYear + 3) + "-04-26\", end: \"" + (courseYear + 3) + "-09-30\"}];");
+
+        
+        // Store exam performances in JS
+        out.println("const exam_performances = [");
+        for (Reservation reservation:reservations) {
+            String lecturers_list = "";
+            for (Allocatable resource:reservation.getPersons()) {
+                lecturers_list += "\"" + resource.getName(null) + "\", ";
+            }
+            String exam_room_name = "";
+            for (Allocatable resource:reservation.getResources()) {
+                try {
+                    resource.getClassification().getValueAsString(resource.getClassification().getAttribute("Raumname"), null);
+                    exam_room_name = resource.getName(null);
+                    break; 
+                } catch (Exception e) {
+                    // Ignore exceptions for resources without room names
+                }
+            }
+            out.println("{");
+            out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
+            out.println("unit_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "\",");
+            out.println("type: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "\",");
+            out.println("description: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "\",");
+            out.println("maximal_points: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + ",");
+            out.println("lecturer: [" + lecturers_list + "],");
+            out.println("duration: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + ",");
+            out.println("room: \"" + exam_room_name + "\",");
+            out.println("link: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\",");
+            // TODO: Logik für Semester direkt beim Speichern
+            out.println("semester: 5,");
+            // TODO: Logik für Datum einlesen (Klausur, Abgabe, Präsentation)
+            out.println("dates: \"" + reservation.getSortedAppointments() + "\"");
+            out.println("},");
+        }
+        out.println("];");
+
+        out.println("console.log(semester);");
+        out.println("console.log(exam_performances);");
+
+        out.println("function filterExamPerformancesBySemester(exam_performances, semester) {\r\n" + //
+                        "return exam_performances.filter(exam_performances => exam_performances.semester === semester);}"
+        );
+
+        out.println("function filterExamPerformancesByType(exam_performances, type) {\r\n" + 
+                        "return exam_performances.filter(exam_performance => exam_performance.type.toLowerCase() === type.toLowerCase());}"
+        );
+        
+        // TODO: "date" in Tag und Uhrzeit trennen
+        out.println("function aggregateExamsPerUnit(exams) {\r\n" + //
+                        "const aggregatedData = {};\r\n" + //
+                        "exams.forEach(exam => {\r\n" + //
+                            "const unitName = exam.unit_name;\r\n" + //
+                            "if (!aggregatedData[unitName]) {\r\n" + //
+                                "aggregatedData[unitName] = {\r\n" + //
+                                    "date: exam.dates,\r\n" + //
+                                    "room: exam.room,\r\n" + //
+                                    "unit_name: exam.unit_name,\r\n" + //
+                                    "duration: 0,\r\n" + //
+                                    "lecture_name: [],\r\n" + //
+                                    "maximal_points: []\r\n" + //
+                                "};\r\n" + //
+                            "}\r\n" + //
+                            "aggregatedData[unitName].duration += exam.duration;\r\n" + //
+                            "aggregatedData[unitName].lecture_name.push(exam.lecture_name);\r\n" + //
+                            "aggregatedData[unitName].maximal_points.push(exam.maximal_points);\r\n" + //
+                        "});\r\n" + //
+                        "console.log(aggregatedData);\r\n" + //
+                        "return Object.values(aggregatedData);\r\n" + //
+                    "};"
+        );
+
+        
+        // Lecture view
+        out.println("const grid = document.getElementById('lectures-grid');");
+        out.println("function renderLecturesView(exam_performances) {");
+        out.println("grid.innerHTML = '';                                   \r\n" + //
+                    "exam_performances.forEach(exam_performance => {         \r\n" + //
+                        "const card = document.createElement(\"div\");      \r\n" + //
+                        "card.className = \"card\";                         \r\n" + //
+                        "let tableContent = '';                            \r\n" + //
+        
+                        "tableContent += `<h4><b>${exam_performance.lecture_name} - ${exam_performance.unit_name}</b></h4>`; \r\n" + //
+                        "tableContent += `<table>`; \r\n" + //
+                        "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
+                        "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
+                        "tableContent += `<tr><th>Termine</th><td>${exam_performance.dates}</td></tr>`; \r\n" + //
+                        "if (exam_performance.maximal_points != null) { \r\n" + //
+                            "tableContent += `<tr><th>Max. Punkte</th><td>${exam_performance.maximal_points}</td></tr>`; \r\n" + //
+                        "} else { \r\n" + //
+                            "tableContent += `<tr><th>Max. Punkte</th><td></td></tr>`; \r\n" + //
+                        "} \r\n" + //
+                        "tableContent += `<tr><th>Dozierende</th><td>${exam_performance.lecturer}</td></tr>`; \r\n" + //
+                        "if (exam_performance.link != \"null\") { \r\n" + //
+                            "tableContent += `<tr><th>Moodle</th><td><p><a href=\"${exam_performance.link}\">Link</a></p></td></tr>`; \r\n" + //
+                        "} else { \r\n" + //
+                            "tableContent += `<tr><th>Moodle</th><td></td></tr>`; \r\n" + //
+                        "} \r\n" + //
+                        "tableContent += `</table>`; \r\n" + //
+                        "card.innerHTML = tableContent; \r\n" + //
+                        "grid.appendChild(card); \r\n" + //
+                    "}); \r\n" + //
+                "}"
+        );
+
+        // Exam view
+        out.println("const examsTable = document.getElementById('exams-table-container');");
+        out.println("function renderExamsView(exam_performances) {");
+        out.println("examsTable.innerHTML = '';                                   \r\n" + //
+                    "let tableContent = '<table>';                                      \r\n" + //
+                    "tableContent += `<tr><th>Datum</th><th>Uhrzeit</th><th>Raum</th><th>Modul</th><th>Dauer</th><th>Vorlesung / Modul-(teil)klausur</th><th>Klausuranteil</th></tr>`; \r\n" + //
+                    "exam_performances.forEach(exam_performance => {         \r\n" + //
+                        "tableContent += `<tr>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.date}</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.date}</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.room}</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.unit_name}</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.duration} Min.</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.lecture_name[0]}`; \r\n" + //
+                        "for (let i = 1; i < exam_performance.lecture_name.length; i++) { \r\n" + //
+                            "tableContent += `<br>${exam_performance.lecture_name[i]}`; \r\n" + //
+                        "}\r\n" + //
+                        "tableContent += `</td>`;\r\n" + //
+                        "tableContent += `<td>${exam_performance.maximal_points[0]}/120`; \r\n" + //
+                        "for (let i = 1; i < exam_performance.maximal_points.length; i++) { \r\n" + //
+                            "tableContent += `<br>${exam_performance.maximal_points[i]}/120`;\r\n" + //
+                        "}\r\n" + //
+                        "tableContent += `</td>`; \r\n" + //
+                        "tableContent += `</tr>`; \r\n" + //
+                        "}); \r\n" + //
+                    "tableContent += '</table>'; \r\n" + //
+                    "examsTable.innerHTML += tableContent; \r\n" + //
+                "}"
+        );
+
+
+        out.println("document.getElementById(\"dropdown_semester\").addEventListener(\"change\", function () {     \r\n" + //
+                        "const selectedSemesterValue = parseInt(this.value); \r\n" + //
+                        "const filteredExamPerformances = filterExamPerformancesBySemester(exam_performances, selectedSemesterValue); \r\n" + //
+                        "renderLecturesView(filteredExamPerformances); \r\n" + //
+                        "const filteredExams = filterExamPerformancesByType(filteredExamPerformances, \"Klausur\"); \r\n" + //
+                        "const aggregatedFilteredExams = aggregateExamsPerUnit(filteredExams); \r\n" + //
+                        "renderExamsView(aggregatedFilteredExams); \r\n" + //
+                    "});"
+        );
+        out.println("document.getElementById(\"dropdown_semester\").dispatchEvent(new Event(\"change\"));");
+
+        out.println("</script>");
 
         out.println( "</body>" );
         out.println( "</html>" );
