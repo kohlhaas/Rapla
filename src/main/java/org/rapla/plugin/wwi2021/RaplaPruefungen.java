@@ -80,8 +80,11 @@ public class RaplaPruefungen {
                 break;
             } 
         }
-        if (semester == 0) {
+        if (dateString.compareTo(semesterDates[5][1]) > 0) {
             semester = 6;
+        }
+        if (dateString.compareTo(semesterDates[0][0]) < 0) {
+            semester = 1;
         }
         return semester;
     }
@@ -137,7 +140,7 @@ public class RaplaPruefungen {
         Promise<Collection<Reservation>> allExams = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, exams);
         Collection<Reservation> examsReservations = SynchronizedCompletablePromise.waitFor(allExams, 10000,logger);
         
-        DynamicType lecture = facade.getDynamicType("Pruefung");
+        DynamicType lecture = facade.getDynamicType("Lehrveranstaltung");
         ClassificationFilter[] lectures = lecture.newClassificationFilter().toArray();
         Promise<Collection<Reservation>> allLectures = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, lectures);
         Collection<Reservation> lecturesReservations = SynchronizedCompletablePromise.waitFor(allLectures, 10000,logger);
@@ -207,10 +210,16 @@ public class RaplaPruefungen {
             // TODO: "Richtiges" Datum nutzen (statt getFirstDate())
             int semesterExam = getSemesterForDate(reservation.getFirstDate(), createSemesterDates(courseName));
             Reservation lectureOfExam = getLectureOfExam(reservation, lecturesReservations);
-            int semesterLectures = 0;
-            if (lectureOfExam != null) {
+            int semesterLectures = semesterExam;
+            // // String semesterLectureFeedback = "testing";
+            try{
                 semesterLectures = getSemesterForDate(lectureOfExam.getFirstDate(), createSemesterDates(courseName));
             }
+            catch (Exception e) {
+                // Ignore exceptions 
+            }
+            // if (lectureOfExam != null) {
+            // }
 
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
@@ -222,7 +231,7 @@ public class RaplaPruefungen {
             out.println("duration: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + ",");
             out.println("room: \"" + exam_room_name + "\",");
             out.println("link: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\",");
-            out.println("semester: " + semesterExam + ",");
+            out.println("semester_exams: " + semesterExam + ",");
             out.println("semester_lectures: " + semesterLectures + ",");
             // TODO: Logik für Datum einlesen (Klausur, Abgabe, Präsentation)
             out.println("dates: \"" + reservation.getSortedAppointments() + "\"");
@@ -231,8 +240,12 @@ public class RaplaPruefungen {
         out.println("];");
         out.println("console.log(exam_performances);");
 
-        out.println("function filterExamPerformancesBySemester(exam_performances, semester) {\r\n" + //
-                        "return exam_performances.filter(exam_performances => exam_performances.semester === semester);}"
+        out.println("function filterExamPerformancesByLecturesSemester(exam_performances, semester) {\r\n" + //
+                        "return exam_performances.filter(exam_performances => exam_performances.semester_lectures === semester);}"
+        );
+
+        out.println("function filterExamPerformancesByExamsSemester(exam_performances, semester) {\r\n" + //
+                        "return exam_performances.filter(exam_performances => exam_performances.semester_exams === semester);}"
         );
 
         out.println("function filterExamPerformancesByType(exam_performances, type) {\r\n" + 
@@ -279,7 +292,6 @@ public class RaplaPruefungen {
                         "tableContent += `<table>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
-                        "tableContent += `<tr><th>Semester Vorlesungen</th><td>${exam_performance.semester_lectures}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Termine</th><td>${exam_performance.dates}</td></tr>`; \r\n" + //
                         "if (exam_performance.maximal_points != null) { \r\n" + //
                             "tableContent += `<tr><th>Max. Punkte</th><td>${exam_performance.maximal_points}</td></tr>`; \r\n" + //
@@ -333,9 +345,9 @@ public class RaplaPruefungen {
 
         out.println("document.getElementById(\"dropdown_semester\").addEventListener(\"change\", function () {     \r\n" + //
                         "const selectedSemesterValue = parseInt(this.value); \r\n" + //
-                        "const filteredExamPerformances = filterExamPerformancesBySemester(exam_performances, selectedSemesterValue); \r\n" + //
+                        "const filteredExamPerformances = filterExamPerformancesByLecturesSemester(exam_performances, selectedSemesterValue); \r\n" + //
                         "renderLecturesView(filteredExamPerformances); \r\n" + //
-                        "const filteredExams = filterExamPerformancesByType(filteredExamPerformances, \"Klausur\"); \r\n" + //
+                        "const filteredExams = filterExamPerformancesByType(filterExamPerformancesByExamsSemester(exam_performances, selectedSemesterValue), \"Klausur\"); \r\n" + //
                         "const aggregatedFilteredExams = aggregateExamsPerUnit(filteredExams); \r\n" + //
                         "renderExamsView(aggregatedFilteredExams); \r\n" + //
                     "});"
