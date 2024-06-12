@@ -68,6 +68,38 @@ public class RaplaPruefungen {
     {
     }
 
+
+    public int getSemesterForDate(Date date, String[][] semesterDates) {
+        SimpleDateFormat dateDayFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = dateDayFormat.format(date);
+        int semester = 0;
+        for (int i = 0; i < 6; i++) {
+            if (dateString.compareTo(semesterDates[i][0]) >= 0 && dateString.compareTo(semesterDates[i][1]) <= 0) {
+                semester = i + 1;
+                break;
+            }
+        }
+        return semester;
+    }
+
+    public String[][] createSemesterDates(String courseName) {
+        int courseYear = Integer.parseInt(courseName.replaceAll("\\D", ""));
+        String[][] semesterDates = new String[6][2];
+        semesterDates[0][0] = courseYear + "-10-01";
+        semesterDates[0][1] = (courseYear + 1) + "-03-05";
+        semesterDates[1][0] = (courseYear + 1) + "-03-06";
+        semesterDates[1][1] = (courseYear + 1) + "-08-25";
+        semesterDates[2][0] = (courseYear + 1) + "-08-26";
+        semesterDates[2][1] = (courseYear + 2) + "-02-01";
+        semesterDates[3][0] = (courseYear + 2) + "-02-02";
+        semesterDates[3][1] = (courseYear + 2) + "-11-01";
+        semesterDates[4][0] = (courseYear + 2) + "-11-02";
+        semesterDates[4][1] = (courseYear + 3) + "-04-25";
+        semesterDates[5][0] = (courseYear + 3) + "-04-26";
+        semesterDates[5][1] = (courseYear + 3) + "-09-30";
+        return semesterDates;
+    }
+
     @GET
     @Path("kurs")
     public void generateKurs( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
@@ -168,8 +200,8 @@ public class RaplaPruefungen {
                     out.println("<option value=\"2\">2</option>");
                     out.println("<option value=\"3\">3</option>");
                     out.println("<option value=\"4\">4</option>");
-                    out.println("<option value=\"5\" selected>5</option>");             //Standardwert hier ändern (TODO)
-                    out.println("<option value=\"6\">6</option>");
+                    out.println("<option value=\"5\">5</option>");             
+                    out.println("<option value=\"6\" selected>6</option>");     //Standardwert hier ändern (TODO)
             out.println("</select>");
         out.println("</h2>");
         out.println("</div>");      // filter-semester-container
@@ -192,17 +224,7 @@ public class RaplaPruefungen {
         out.println("</div>"); // table-container
 
 
-        out.println("<script>");
-        // Store semester dates in JS
-        int courseYear = Integer.parseInt(courseName.replaceAll("\\D", ""));
-        out.println("const semester = [{semester: 1, start: \"" + courseYear + "-10-01\", end: \"" + (courseYear + 1) + "-03-05\"},");
-        out.println("{semester: 2, start: \"" + (courseYear + 1) + "-03-06\", end: \"" + (courseYear + 1) + "-08-25\"},");
-        out.println("{semester: 3, start: \"" + (courseYear + 1) + "-08-26\", end: \"" + (courseYear + 2) + "-02-01\"},");
-        out.println("{semester: 4, start: \"" + (courseYear + 2) + "-02-02\", end: \"" + (courseYear + 2) + "-11-01\"},");
-        out.println("{semester: 5, start: \"" + (courseYear + 2) + "-11-02\", end: \"" + (courseYear + 3) + "-04-25\"},");
-        out.println("{semester: 6, start: \"" + (courseYear + 3) + "-04-26\", end: \"" + (courseYear + 3) + "-09-30\"}];");
-
-        
+        out.println("<script>");       
         // Store exam performances in JS
         out.println("const exam_performances = [");
         for (Reservation reservation:reservations) {
@@ -220,6 +242,9 @@ public class RaplaPruefungen {
                     // Ignore exceptions for resources without room names
                 }
             }
+            // TODO: "Richtiges" Datum nutzen (statt getFirstDate())
+            int semester = getSemesterForDate(reservation.getFirstDate(), createSemesterDates(courseName));
+
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
             out.println("unit_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "\",");
@@ -230,15 +255,12 @@ public class RaplaPruefungen {
             out.println("duration: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + ",");
             out.println("room: \"" + exam_room_name + "\",");
             out.println("link: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\",");
-            // TODO: Logik für Semester direkt beim Speichern
-            out.println("semester: 5,");
+            out.println("semester: " + semester + ",");
             // TODO: Logik für Datum einlesen (Klausur, Abgabe, Präsentation)
             out.println("dates: \"" + reservation.getSortedAppointments() + "\"");
             out.println("},");
         }
         out.println("];");
-
-        out.println("console.log(semester);");
         out.println("console.log(exam_performances);");
 
         out.println("function filterExamPerformancesBySemester(exam_performances, semester) {\r\n" + //
@@ -257,6 +279,8 @@ public class RaplaPruefungen {
                             "if (!aggregatedData[unitName]) {\r\n" + //
                                 "aggregatedData[unitName] = {\r\n" + //
                                     "date: exam.dates,\r\n" + //
+                                    "day: exam.dates,\r\n" + //
+                                    "start_time: exam.dates,\r\n" + //
                                     "room: exam.room,\r\n" + //
                                     "unit_name: exam.unit_name,\r\n" + //
                                     "duration: 0,\r\n" + //
