@@ -77,7 +77,10 @@ public class RaplaPruefungen {
             if (dateString.compareTo(semesterDates[i][0]) >= 0 && dateString.compareTo(semesterDates[i][1]) <= 0) {
                 semester = i + 1;
                 break;
-            }
+            } 
+        }
+        if (semester == 0) {
+            semester = 6;
         }
         return semester;
     }
@@ -105,11 +108,14 @@ public class RaplaPruefungen {
     public void generateKurs( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
         java.io.PrintWriter out = response.getWriter();
         String kursId = request.getParameter("id");
-
+        
         ReferenceInfo<Allocatable> kurs =  new ReferenceInfo<>(kursId, Allocatable.class);
         Allocatable resolve = facade.resolve(kurs);
-
+        
         String courseName = resolve.getName(null);
+        
+        Date currentDate = new Date();
+        int currentSemester = getSemesterForDate(currentDate, createSemesterDates(courseName));
 
         DynamicType pruefung = facade.getDynamicType("Pruefung");
         ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
@@ -196,12 +202,13 @@ public class RaplaPruefungen {
         out.println("<div class=\"filter-semester-container\">");
         out.println("<h2>Semester: ");
             out.println("<select name=\"semester\" id=\"dropdown_semester\">");
-                    out.println("<option value=\"1\">1</option>");
-                    out.println("<option value=\"2\">2</option>");
-                    out.println("<option value=\"3\">3</option>");
-                    out.println("<option value=\"4\">4</option>");
-                    out.println("<option value=\"5\">5</option>");             
-                    out.println("<option value=\"6\" selected>6</option>");     //Standardwert hier ändern (TODO)
+            for (int i=1; i<=6; i++) {
+                if (i == currentSemester){
+                    out.println("<option value=\"" + i + "\" selected>" + i + "</option>");
+                } else {
+                    out.println("<option value=\"" + i + "\">" + i + "</option>");
+                }
+            }
             out.println("</select>");
         out.println("</h2>");
         out.println("</div>");      // filter-semester-container
