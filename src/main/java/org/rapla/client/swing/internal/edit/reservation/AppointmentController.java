@@ -523,6 +523,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 endTime.setDurationStart(DateTools.isSameDay(start, end) ? start : null);
                 startTime.setTime(start);
                 endTime.setTime(end);
+                //commentField.setText(appointment.getComment()); // testing
                 oneDayEventCheckBox.setSelected(wholeDaysSet);
                 startTimeLabel.setVisible(!wholeDaysSet);
                 startTime.setVisible(!wholeDaysSet);
@@ -546,6 +547,9 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 end = raplaLocale.toDate(DateTools.addDay(endDate.getDate()), endTime.getTime());
             }
             appointment.move(start, end);
+            // appointment.setComment("Testcomment"); // versuchen String einfach anzuzeigen
+            try { appointment.getReservation().setAnnotation("comment_" + appointment.getId(), "TEstkommentar");}
+            catch (RaplaException e) { e.printStackTrace(); }
             fireAppointmentChanged();
         }
 
@@ -604,6 +608,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                     oneDayEventCheckBox.setSelected(newoneDay);
                     getLogger().debug("Whole day adjusted");
                 }
+
                 mapToAppointment();
                 getLogger().debug("SingleEditor adjusted");
                 mapFromAppointment();

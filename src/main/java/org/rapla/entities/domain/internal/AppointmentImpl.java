@@ -49,7 +49,6 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
     public final static String BUG = null;
     public static String DD = null;
 
-    private String comment;
 
     @Override public Class<Appointment> getTypeClass()
     {
@@ -904,17 +903,6 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
 		 }
 		 return null;
 	}
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        checkWritable();
-        this.comment = comment;
-    }
-
-
 
 /*
    public static List<Appointment> getAppointments(

@@ -11,6 +11,7 @@ import org.rapla.entities.dynamictype.ClassificationFilter;
 import org.rapla.entities.dynamictype.DynamicType;
 import org.rapla.entities.dynamictype.Classification;
 import org.rapla.entities.dynamictype.Attribute;
+import org.rapla.plugin.wwi2021.RaplaCommentsAppointments;
 import org.rapla.entities.domain.Appointment;
 import org.rapla.entities.storage.ReferenceInfo;
 import org.rapla.facade.RaplaFacade;
@@ -73,6 +74,11 @@ public class RaplaCommentsAppointments {
             out.println("<p>");
             out.println(reservation.getName(null));
             out.println("<br>");
+
+            for (String key : reservation.getAnnotationKeys()) {
+                out.println(reservation.getAnnotation(key));
+                out.println("<br>");
+            }
             // out.println(reservation.getResources());
             out.println("<br>");
             out.println("Resourcen: <br>");
@@ -95,7 +101,7 @@ public class RaplaCommentsAppointments {
             for (Appointment appointment:reservation.getAppointments()) {
                 out.println(appointment.toString());
                 out.println("<br>");
-                out.println(appointment.getComment());
+                // out.println(appointment.getComment());
                 out.println("<br>");
             // out.println("<br>");
             // out.println("ANNOTATIONS: <br>");
