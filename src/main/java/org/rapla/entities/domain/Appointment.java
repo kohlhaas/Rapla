@@ -132,6 +132,10 @@ public interface Appointment extends Entity<Appointment>, Comparable {
             return idMap;
         }
     }
+
+    String getComment();
+
+    void setComment(String comment);
 }
 
 

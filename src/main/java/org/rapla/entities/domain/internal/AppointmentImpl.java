@@ -25,6 +25,7 @@ import org.rapla.entities.domain.Reservation;
 import org.rapla.entities.storage.ReferenceInfo;
 import org.rapla.entities.storage.internal.SimpleEntity;
 import org.rapla.facade.RaplaComponent;
+import org.rapla.framework.RaplaException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -903,6 +904,17 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
 		 }
 		 return null;
 	}
+
+
+    public String getComment() {
+        String comment = this.getReservation().getAnnotation("comment_" + this.getId());
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        try { this.getReservation().setAnnotation("comment_" + this.getId(), comment);}
+            catch (RaplaException e) { e.printStackTrace(); }
+    }
 
 /*
    public static List<Appointment> getAppointments(
