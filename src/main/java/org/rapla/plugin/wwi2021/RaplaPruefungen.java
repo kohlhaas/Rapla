@@ -15,6 +15,7 @@ import org.rapla.entities.storage.ReferenceInfo;
 import org.rapla.facade.RaplaFacade;
 import org.rapla.framework.RaplaException;
 import org.rapla.logger.Logger;
+import org.rapla.plugin.abstractcalendar.server.AbstractHTMLCalendarPage;
 import org.rapla.scheduler.Promise;
 import org.rapla.scheduler.sync.SynchronizedCompletablePromise;
 import org.rapla.server.internal.RaplaStatusEntry;
@@ -103,6 +104,20 @@ public class RaplaPruefungen {
         return semesterDates;
     }
 
+    public Reservation getLectureOfExam(Reservation exam, Collection<Reservation> lectures) {
+        for (Reservation lecture:lectures) {
+            // String nameExam = exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("Name"));
+            // String nameLecture = lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("Name"));
+            // String unitNameExam = exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("unit_name"));
+            // String unitNameLecture = lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("unit_name"));
+
+            if (exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("Name")).equals(lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("Name")))){
+                return lecture;
+            }
+        }
+        return null;
+    }
+
     @GET
     @Path("kurs")
     public void generateKurs( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
@@ -117,82 +132,22 @@ public class RaplaPruefungen {
         Date currentDate = new Date();
         int currentSemester = getSemesterForDate(currentDate, createSemesterDates(courseName));
 
-        DynamicType pruefung = facade.getDynamicType("Pruefung");
-        ClassificationFilter[] pruefungen = pruefung.newClassificationFilter().toArray();
-        Promise<Collection<Reservation>> allePruefungen = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, pruefungen);
-        Collection<Reservation> reservations = SynchronizedCompletablePromise.waitFor(allePruefungen, 10000,logger);
-        // String linkPrefix = request.getPathTranslated() != null ? "../" : "";
+        DynamicType exam = facade.getDynamicType("Pruefung");
+        ClassificationFilter[] exams = exam.newClassificationFilter().toArray();
+        Promise<Collection<Reservation>> allExams = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, exams);
+        Collection<Reservation> examsReservations = SynchronizedCompletablePromise.waitFor(allExams, 10000,logger);
+        
+        DynamicType lecture = facade.getDynamicType("Pruefung");
+        ClassificationFilter[] lectures = lecture.newClassificationFilter().toArray();
+        Promise<Collection<Reservation>> allLectures = facade.getReservationsForAllocatable(new Allocatable[] {resolve}, null, null, lectures);
+        Collection<Reservation> lecturesReservations = SynchronizedCompletablePromise.waitFor(allLectures, 10000,logger);
 
 
         out.println( "<html>" );
         out.println( "<head>" );
         out.println("<title>Prüfungsverzeichnis: " + courseName + "</title>"); 
         out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-        // out.println("<link REL=\"stylesheet\" href=\"" + linkPrefix + "pruefungsansicht.css\" type=\"text/css\">");
-        // out.println("<link REL=\"stylesheet\" href=\"pruefungsansicht.css\" type=\"text/css\">");
-        out.println("<style>");
-        out.println("body {\r\n" + //
-                        "    font-family: Arial, sans-serif;\r\n" + //
-                        "    margin: 0;\r\n" + //
-                        "    padding: 0;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        ".container {\r\n" + //
-                        "    padding-top: 10px;\r\n" + //
-                        "    width: 90%;\r\n" + //
-                        "    margin: auto;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        ".card,\r\n" + //
-                        ".table-container {\r\n" + //
-                        "    padding: 10px;\r\n" + //
-                        "    margin-bottom: 10px;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        "header h1,\r\n" + //
-                        ".vorlesungen-header h2 {\r\n" + //
-                        "    margin: 0;\r\n" + //
-                        "    padding: 10px 0;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        ".vorlesungen-header {\r\n" + //
-                        "    border-bottom: 1px solid #ccc;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        ".grid {\r\n" + //
-                        "    display: grid;\r\n" + //
-                        "    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\r\n" + //
-                        "    gap: 10px;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        ".card {\r\n" + //
-                        "    padding: 15px;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        "table {\r\n" + //
-                        "    width: 100%;\r\n" + //
-                        "    border-collapse: collapse;\r\n" + //
-                        "    margin-bottom: 10px;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        "th,\r\n" + //
-                        "td {\r\n" + //
-                        "    border: 1px solid #ccc;\r\n" + //
-                        "    padding: 8px;\r\n" + //
-                        "    text-align: left;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        "th {\r\n" + //
-                        "    background-color: #f2f2f2;\r\n" + //
-                        "}\r\n" + //
-                        "\r\n" + //
-                        "@media (min-width: 900px) {\r\n" + //
-                        "    .grid {\r\n" + //
-                        "        grid-template-columns: repeat(3, 1fr);\r\n" + //
-                        "    }\r\n" + //
-                        "}");
-        out.println("</style>");
-
+        out.println(AbstractHTMLCalendarPage.getCssLine(request, "pruefungsansicht.css"));
         out.println("</head>" );
 
         out.println( "<body>" );
@@ -234,7 +189,7 @@ public class RaplaPruefungen {
         out.println("<script>");       
         // Store exam performances in JS
         out.println("const exam_performances = [");
-        for (Reservation reservation:reservations) {
+        for (Reservation reservation:examsReservations) {
             String lecturers_list = "";
             for (Allocatable resource:reservation.getPersons()) {
                 lecturers_list += "\"" + resource.getName(null) + "\", ";
@@ -250,7 +205,12 @@ public class RaplaPruefungen {
                 }
             }
             // TODO: "Richtiges" Datum nutzen (statt getFirstDate())
-            int semester = getSemesterForDate(reservation.getFirstDate(), createSemesterDates(courseName));
+            int semesterExam = getSemesterForDate(reservation.getFirstDate(), createSemesterDates(courseName));
+            Reservation lectureOfExam = getLectureOfExam(reservation, lecturesReservations);
+            int semesterLectures = 0;
+            if (lectureOfExam != null) {
+                semesterLectures = getSemesterForDate(lectureOfExam.getFirstDate(), createSemesterDates(courseName));
+            }
 
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
@@ -262,7 +222,8 @@ public class RaplaPruefungen {
             out.println("duration: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + ",");
             out.println("room: \"" + exam_room_name + "\",");
             out.println("link: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\",");
-            out.println("semester: " + semester + ",");
+            out.println("semester: " + semesterExam + ",");
+            out.println("semester_lectures: " + semesterLectures + ",");
             // TODO: Logik für Datum einlesen (Klausur, Abgabe, Präsentation)
             out.println("dates: \"" + reservation.getSortedAppointments() + "\"");
             out.println("},");
@@ -318,6 +279,7 @@ public class RaplaPruefungen {
                         "tableContent += `<table>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
+                        "tableContent += `<tr><th>Semester Vorlesungen</th><td>${exam_performance.semester_lectures}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Termine</th><td>${exam_performance.dates}</td></tr>`; \r\n" + //
                         "if (exam_performance.maximal_points != null) { \r\n" + //
                             "tableContent += `<tr><th>Max. Punkte</th><td>${exam_performance.maximal_points}</td></tr>`; \r\n" + //
@@ -355,6 +317,7 @@ public class RaplaPruefungen {
                             "tableContent += `<br>${exam_performance.lecture_name[i]}`; \r\n" + //
                         "}\r\n" + //
                         "tableContent += `</td>`;\r\n" + //
+                        // TODO: Errorhandeling, wenn maximal_points "null" returnt
                         "tableContent += `<td>${exam_performance.maximal_points[0]}/120`; \r\n" + //
                         "for (let i = 1; i < exam_performance.maximal_points.length; i++) { \r\n" + //
                             "tableContent += `<br>${exam_performance.maximal_points[i]}/120`;\r\n" + //
