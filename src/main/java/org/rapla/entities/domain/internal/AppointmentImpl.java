@@ -907,12 +907,12 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
 
 
     public String getComment() {
-        String comment = this.getReservation().getAnnotation("comment_" + this.getId());
+        String comment = this.getReservation().getAnnotation("apt_comment_" + this.getId());
         return comment;
     }
 
     public void setComment(String comment) {
-        try { this.getReservation().setAnnotation("comment_" + this.getId(), comment);}
+        try { this.getReservation().setAnnotation("apt_comment_" + this.getId(), comment);}
             catch (RaplaException e) { e.printStackTrace(); }
     }
 

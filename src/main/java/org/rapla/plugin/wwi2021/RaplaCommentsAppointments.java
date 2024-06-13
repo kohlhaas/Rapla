@@ -75,10 +75,10 @@ public class RaplaCommentsAppointments {
             out.println(reservation.getName(null));
             out.println("<br>");
 
-            for (String key : reservation.getAnnotationKeys()) {
-                out.println(reservation.getAnnotation(key));
-                out.println("<br>");
-            }
+            // for (String key : reservation.getAnnotationKeys()) {
+            //     out.println(reservation.getAnnotation(key));
+            //     out.println("<br>");
+            // }
             // out.println(reservation.getResources());
             out.println("<br>");
             out.println("Resourcen: <br>");
@@ -86,7 +86,7 @@ public class RaplaCommentsAppointments {
                 out.println(resource.getName(null));
                 out.println("<br>");
             }
-            out.println("Dozierende: <br>");
+            out.println("DOZIERENDE: <br>");
             for (Allocatable resource:reservation.getPersons()) {
                 out.println(resource.getName(null));
                 out.println("<br>");
@@ -101,18 +101,25 @@ public class RaplaCommentsAppointments {
             for (Appointment appointment:reservation.getAppointments()) {
                 out.println(appointment.toString());
                 out.println("<br>");
-                // out.println(appointment.getComment());
+                out.println(appointment.getComment());
                 out.println("<br>");
-            // out.println("<br>");
-            // out.println("ANNOTATIONS: <br>");
-            // out.println(reservation.getAnnotationKeys());
-            // out.println("<br>");
-            // for (String key:reservation.getAnnotationKeys()) {
-            //     out.println(key + " : " + reservation.getAnnotation(key, null));
-            //     out.println("<br>");
             }
 
-            out.println("Dynamic Type Test <br>");
+            out.println("<br>");
+            out.println("ANNOTATION KEYS: <br>");
+            out.println(reservation.getAnnotationKeys());
+            out.println("<br>");
+
+            out.println("<br>");
+            out.println("ANNOTATIONS: <br>");
+
+            for (String key:reservation.getAnnotationKeys()) {
+                out.println(key + " : " + reservation.getAnnotation(key, null));
+                out.println("<br>");
+            }
+
+            out.println("<br>");
+            out.println("ATTRIBUTES (DType): <br>");
             Classification classification = reservation.getClassification();
             out.println(classification.getName(null));
             for (Attribute attribute:classification.getAttributes()) {

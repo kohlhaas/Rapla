@@ -372,8 +372,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         JLabel endTimeLabel = new JLabel();
         RaplaTime endTime;
         JCheckBox oneDayEventCheckBox = new JCheckBox();
-        JTextField commentField = new JTextField(10); //erstmal JTextField - eigentlich RAPLA eigenes Textfield
-        // TextField commentField = new TextField();
+        JTextField commentField = new JTextField(10); 
         
         private boolean listenerEnabled = true;
 
@@ -519,11 +518,12 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 Date start = appointment.getStart();
                 startDate.setDate(start);
                 Date end = appointment.getEnd();
+                String comment = appointment.getComment();
                 endDate.setDate(DateTools.addDays(end, wholeDaysSet ? -1 : 0));
                 endTime.setDurationStart(DateTools.isSameDay(start, end) ? start : null);
                 startTime.setTime(start);
                 endTime.setTime(end);
-                commentField.setText(appointment.getComment()); // testing
+                commentField.setText(comment);
                 oneDayEventCheckBox.setSelected(wholeDaysSet);
                 startTimeLabel.setVisible(!wholeDaysSet);
                 startTime.setVisible(!wholeDaysSet);
@@ -549,8 +549,6 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
             }
             appointment.move(start, end);
             appointment.setComment(comment);
-            // try { appointment.getReservation().setAnnotation("comment_" + appointment.getId(), "TEstkommentar");}
-            // catch (RaplaException e) { e.printStackTrace(); }
             fireAppointmentChanged();
         }
 
