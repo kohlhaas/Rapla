@@ -25,6 +25,7 @@ import org.rapla.entities.domain.Reservation;
 import org.rapla.entities.storage.ReferenceInfo;
 import org.rapla.entities.storage.internal.SimpleEntity;
 import org.rapla.facade.RaplaComponent;
+import org.rapla.framework.RaplaException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +49,7 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
     public final static boolean DE = true;
     public final static String BUG = null;
     public static String DD = null;
+
 
     @Override public Class<Appointment> getTypeClass()
     {
@@ -885,16 +887,15 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
 	}
 
 
-	 private static boolean equalsOrBothNull(Object o1, Object o2) {
+	private static boolean equalsOrBothNull(Object o1, Object o2) {
 	        if (o1 == null) {
                 return o2 == null;
 	        } else if ( o2 == null) {
 	            return false;
 	        } else return o1.equals(o2);
-     }
+    }
 
-	 public ReferenceInfo<User> getOwnerRef()
-	 {
+	public ReferenceInfo<User> getOwnerRef(){
 		 Reservation reservation = getReservation();
 		 if ( reservation != null)
 		 {
@@ -902,8 +903,18 @@ public final class AppointmentImpl extends SimpleEntity implements Appointment
              return ownerId;
 		 }
 		 return null;
-	 }
+	}
 
+
+    public String getComment() {
+        String comment = this.getReservation().getAnnotation("apt_comment_" + this.getId());
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        try { this.getReservation().setAnnotation("apt_comment_" + this.getId(), comment);}
+            catch (RaplaException e) { e.printStackTrace(); }
+    }
 
 /*
    public static List<Appointment> getAppointments(
