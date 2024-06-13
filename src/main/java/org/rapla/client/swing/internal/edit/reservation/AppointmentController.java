@@ -372,7 +372,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         JLabel endTimeLabel = new JLabel();
         RaplaTime endTime;
         JCheckBox oneDayEventCheckBox = new JCheckBox();
-        JTextField commentField = new JTextField(10); 
+        JTextField commentField = new JTextField(10);
         
         private boolean listenerEnabled = true;
 
