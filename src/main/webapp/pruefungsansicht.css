@@ -103,6 +103,10 @@ th {
     background-color: #f2f2f2;
 }
 
+.kurs-liste {
+    color: #000000;
+}
+
 @media (min-width: 900px) {
     .grid {
         grid-template-columns: repeat(3, 1fr);

@@ -40,14 +40,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -76,8 +68,6 @@ public class RaplaPruefungen {
     }
 
     public int getSemesterForDate(Date date, String[][] semesterDates) {
-        // SimpleDateFormat dateDayFormat = new SimpleDateFormat("yyyy-MM-dd");
-        // String dateString = dateDayFormat.format(date);
         String dateString = formatDate(date, "yyyy-MM-dd");
         int semester = 0;
         for (int i = 0; i < 6; i++) {
@@ -204,7 +194,9 @@ public class RaplaPruefungen {
             for (Allocatable resource:reservation.getPersons()) {
                 lecturers_list += "" + resource.getName(null) + "; ";
             }
-            lecturers_list = lecturers_list.substring(0, lecturers_list.length() - 2);
+            if (lecturers_list.length() > 0){
+                lecturers_list = lecturers_list.substring(0, lecturers_list.length() - 2);
+            }
             String exam_room_name = "";
             for (Allocatable resource:reservation.getResources()) {
                 try {
@@ -262,7 +254,9 @@ public class RaplaPruefungen {
             if (examDates.length() > 0) {
                 datesList += "klausur: \"" + examDates + "\", ";
             }
-            datesList = datesList.substring(0, datesList.length() - 2);
+            if (datesList.length() > 0){
+                datesList = datesList.substring(0, datesList.length() - 2);
+            }
 
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
@@ -473,50 +467,6 @@ public class RaplaPruefungen {
         out.println( "</body>" );
         out.println( "</html>" );
         out.close();
-
-
-
-        // for (Reservation reservation:reservations) {
-        //     out.println("<p>");
-
-        //     out.println(reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")));
-
-        //     // out.println(reservation.getName(null));
-        //     // out.println("<br>");
-        //     // // out.println(reservation.getResources());
-        //     // out.println("<br>");
-        //     // out.println("Resourcen: <br>");
-        //     // for (Allocatable resource:reservation.getResources()) {
-        //     //     out.println(resource.getName(null));
-        //     //     out.println("<br>");
-        //     // }
-        //     // out.println("Dozierende: <br>");
-        //     // for (Allocatable resource:reservation.getPersons()) {
-        //     //     out.println(resource.getName(null));
-        //     //     out.println("<br>");
-        //     // }
-        //     // out.println("<br>");
-        //     // out.println(reservation.getFirstDate());
-        //     // out.println("<br>");
-        //     // // out.println(reservation.getAnnotationKeys());
-        //     // // out.println("<br>");
-        //     // // for (String key:reservation.getAnnotationKeys()) {
-        //     // //     out.println(key + " : " + reservation.getAnnotation(key, null));
-        //     // //     out.println("<br>");
-        //     // // }
-
-        //     // out.println("Dynamic Type Test <br>");
-        //     // Classification classification = reservation.getClassification();
-        //     // out.println(classification.getName(null));
-        //     // for (Attribute attribute:classification.getAttributes()) {
-        //     //     out.println(attribute.getKey() + " : " + classification.getValueForAttribute(attribute));
-        //     //     out.println("<br>");
-        //     // }
-
-
-        //     out.println("</p>");
-        // }
-
     }
 
 
@@ -527,7 +477,6 @@ public class RaplaPruefungen {
     public void generatePage( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
         java.io.PrintWriter out = response.getWriter();
         response.setContentType("text/html; charset=ISO-8859-1");
-        String linkPrefix = request.getPathTranslated() != null ? "../": "";
 
         DynamicType kursTyp = facade.getDynamicType("Kurs");
 
@@ -539,15 +488,46 @@ public class RaplaPruefungen {
         );
         Allocatable[] kurse = facade.getAllocatablesWithFilter(kursFilter.toArray());
 
+        Arrays.sort(kurse, new Comparator<Allocatable>() {
+            @Override
+            public int compare(Allocatable a1, Allocatable a2) {
+                // Assuming you have a method to get the name from Allocatable
+                String name1 = a1.getName(null);
+                String name2 = a2.getName(null);
+                return name1.compareTo(name2);
+            }
+        });
+
+        out.println( "<html>" );
+        out.println( "<head>" );
+        out.println("<title>Kurswahl - Prüfungsübersicht</title>");
+        out.println(AbstractHTMLCalendarPage.getCssLine(request, "pruefungsansicht.css"));
+        out.println("</head>" );
 
         out.println( "<body>" );
+        out.println( "<h1>Prüfungsübersicht - Kurswahl</h1>" );
+        out.println( "<ul>" );
         for (Allocatable kurs:kurse) {
-            out.println("<p>");
-            out.println("<a href=\"pruefungen/kurs?id="+kurs.getId()+"\">");
-            out.println(kurs.getName(null));
-            out.println("</a></p>");
+            out.println("<li><a href=\"pruefungen/kurs?id=" + kurs.getId() + "\" class=\"kurs-liste\">" + kurs.getName(null) + "</a></li>");
+            // out.println("<li><a href=\"pruefungen/kurs?id=" + kurs.getId() + "\" class=\"kurs-liste\">" + kurs.getName(null) + "</a><button onclick=\"copyToClipboard('pruefungen/kurs?id=" + kurs.getId() + "')\">Copy Link</button></li>");
+
         }
-        out.println( "<hr>" );
+        out.println( "</ul>" );
+        out.println("<script>");
+        
+        out.println("function copyToClipboard(text) {\r\n" + //
+                        "            var textarea = document.createElement(\"textarea\");\r\n" + //
+                        "            textarea.value = text;\r\n" + //
+                        "            textarea.style.position = \"fixed\";\r\n" + //
+                        "            textarea.style.opacity = 0;\r\n" + //
+                        "            document.body.appendChild(textarea);\r\n" + //
+                        "            textarea.select();\r\n" + //
+                        "            document.execCommand(\"copy\");\r\n" + //
+                        "            document.body.removeChild(textarea);\r\n" + //
+                        "            alert(\"Link copied to clipboard: \" + text);\r\n" + //
+                        "        }");
+
+        out.println("</script>");
         out.println( "</body>" );
         out.println( "</html>" );
         out.close();
