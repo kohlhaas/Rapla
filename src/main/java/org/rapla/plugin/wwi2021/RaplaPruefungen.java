@@ -179,7 +179,7 @@ public class RaplaPruefungen {
                 
         // - - -  View lectures:
         out.println("<div class=\"lectures-container\">");
-        out.println("<div class=\"container-header\"> <h2>Vorlesungen</h2> </div>");      
+        out.println("<div class=\"vorlesungen-header\"> <h2>Vorlesungen</h2> </div>");      
         out.println("<div class=\"grid\" id=\"lectures-grid\">");     
         // Generated in JS   
         out.println("</div>");      // grid
@@ -187,8 +187,9 @@ public class RaplaPruefungen {
         
 
         // - - -  View exams:
+        out.println("<div class=\"vorlesungen-header\"> <h2>Prüfungen</h2> </div>");
         out.println("<div class=\"table-container\">");
-        out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
+        // out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
         out.println("<div id=\"exams-table-container\">");
         // Generated in JS
         out.println("</div>"); // exams-table-container
