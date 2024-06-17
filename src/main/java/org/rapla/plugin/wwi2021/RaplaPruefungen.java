@@ -255,8 +255,8 @@ public class RaplaPruefungen {
                 datesList += "praesentation: \"" + presentationDates + "\", ";
             }
             if (examDates.length() > 0) {
-                datesList += "klausur: \"" + examDates + "\", ";
                 examDates = examDates.substring(0, examDates.length() - 2);
+                datesList += "klausur: \"" + examDates + "\", ";
             }
 
             out.println("{");
@@ -277,6 +277,31 @@ public class RaplaPruefungen {
         out.println("];");
         out.println("console.log(exam_performances);");
 
+        out.println("function convertDateStringToDDMMYYYY(dateString) {\r\n" + //
+                        "            const date = new Date(dateString);\r\n" + //
+                        "            const day = String(date.getUTCDate()).padStart(2, '0');\r\n" + //
+                        "            const month = String(date.getUTCMonth() + 1).padStart(2, '0');\r\n" + //
+                        "            const year = date.getUTCFullYear();\r\n" + //
+                        "            return `${day}.${month}.${year}`;\r\n" + //
+                        "        }");
+
+        out.println("function convertDateStringToHHMM(dateString) {\r\n" + //
+                        "            const date = new Date(dateString);\r\n" + //
+                        "            const hours = String(date.getUTCHours()).padStart(2, '0');\r\n" + //
+                        "            const minutes = String(date.getUTCMinutes()).padStart(2, '0');\r\n" + //
+                        "            return `${hours}:${minutes}`;\r\n" + //
+                        "        }");
+
+        out.println("function calculateEndTime(startTime, durationMinutes) {\r\n" + //
+                        "            const [startHours, startMinutes] = startTime.split(':').map(Number);\r\n" + //
+                        "            const totalMinutes = startHours * 60 + startMinutes + durationMinutes;\r\n" + //
+                        "            const endHours = Math.floor(totalMinutes / 60) % 24; \r\n" + //
+                        "            const endMinutes = totalMinutes % 60;\r\n" + //
+                        "            const formattedEndHours = String(endHours).padStart(2, '0');\r\n" + //
+                        "            const formattedEndMinutes = String(endMinutes).padStart(2, '0');\r\n" + //
+                        "            return `${formattedEndHours}:${formattedEndMinutes}`;\r\n" + //
+                        "        }");
+
         out.println("function filterExamPerformancesByLecturesSemester(exam_performances, semester) {\r\n" + //
                         "return exam_performances.filter(exam_performances => exam_performances.semester_lectures === semester);}"
         );
@@ -296,9 +321,8 @@ public class RaplaPruefungen {
                             "const unitName = exam.unit_name;\r\n" + //
                             "if (!aggregatedData[unitName]) {\r\n" + //
                                 "aggregatedData[unitName] = {\r\n" + //
-                                    "date: exam.dates,\r\n" + //
-                                    "day: exam.dates,\r\n" + //
-                                    "start_time: exam.dates,\r\n" + //
+                                    "day: convertDateStringToDDMMYYYY(exam.dates.klausur),\r\n" + //
+                                    "start_time: convertDateStringToHHMM(exam.dates.klausur),\r\n" + //
                                     "room: exam.room,\r\n" + //
                                     "unit_name: exam.unit_name,\r\n" + //
                                     "duration: 0,\r\n" + //
@@ -314,6 +338,8 @@ public class RaplaPruefungen {
                         "return Object.values(aggregatedData);\r\n" + //
                     "};"
         );
+
+        
 
         
         // Lecture view
@@ -337,7 +363,7 @@ public class RaplaPruefungen {
                             "tableContent += `Abgabe: ${exam_performance.dates.abgabe}<br>`; \r\n" + //
                         "} \r\n" + //
                         "if (exam_performance.dates.klausur != null) { \r\n" + //
-                            "tableContent += `Klausur: ${exam_performance.dates.klausur}<br>`; \r\n" + //
+                            "tableContent += `Klausur: ${convertDateStringToDDMMYYYY(exam_performance.dates.klausur)}<br>`; \r\n" + //
                         "} \r\n" + //
                         "tableContent += `</td></tr>`; \r\n" + //
 
@@ -367,8 +393,8 @@ public class RaplaPruefungen {
                     "tableContent += `<tr><th>Datum</th><th>Uhrzeit</th><th>Raum</th><th>Modul</th><th>Dauer</th><th>Vorlesung / Modul-(teil)klausur</th><th>Klausuranteil</th></tr>`; \r\n" + //
                     "exam_performances.forEach(exam_performance => {         \r\n" + //
                         "tableContent += `<tr>`; \r\n" + //
-                        "tableContent += `<td>${exam_performance.date}</td>`; \r\n" + //
-                        "tableContent += `<td>${exam_performance.date}</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.day}</td>`; \r\n" + //
+                        "tableContent += `<td>${exam_performance.start_time} - ${calculateEndTime(exam_performance.start_time, exam_performance.duration)}</td>`; \r\n" + //
                         "tableContent += `<td>${exam_performance.room}</td>`; \r\n" + //
                         "tableContent += `<td>${exam_performance.unit_name}</td>`; \r\n" + //
                         "tableContent += `<td>${exam_performance.duration} Min.</td>`; \r\n" + //
