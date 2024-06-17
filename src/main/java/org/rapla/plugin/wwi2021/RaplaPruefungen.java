@@ -179,7 +179,6 @@ public class RaplaPruefungen {
         // - - -  View exams:
         out.println("<div class=\"vorlesungen-header\"> <h2>Prüfungen</h2> </div>");
         out.println("<div class=\"table-container\">");
-        // out.println("<div class=\"container-header\"> <h2>Prüfungen</h2> </div>");
         out.println("<div id=\"exams-table-container\">");
         // Generated in JS
         out.println("</div>"); // exams-table-container
@@ -207,11 +206,9 @@ public class RaplaPruefungen {
                     // Ignore exceptions for resources without room names
                 }
             }
-            // TODO: "Richtiges" Datum nutzen (statt getFirstDate())
             int semesterExam = getSemesterForDate(reservation.getFirstDate(), createSemesterDates(courseName));
             Reservation lectureOfExam = getLectureOfExam(reservation, lecturesReservations);
             int semesterLectures = semesterExam;
-            // // String semesterLectureFeedback = "testing";
             try{
                 semesterLectures = getSemesterForDate(lectureOfExam.getFirstDate(), createSemesterDates(courseName));
             }
@@ -409,7 +406,6 @@ public class RaplaPruefungen {
                             "tableContent += `<br>${exam_performance.lecture_name[i]}`; \r\n" + //
                         "}\r\n" + //
                         "tableContent += `</td>`;\r\n" + //
-                        // TODO: Errorhandeling, wenn maximal_points "null" returnt
                         "tableContent += `<td>${exam_performance.maximal_points[0]}/120`; \r\n" + //
                         "for (let i = 1; i < exam_performance.maximal_points.length; i++) { \r\n" + //
                             "tableContent += `<br>${exam_performance.maximal_points[i]}/120`;\r\n" + //
@@ -515,17 +511,17 @@ public class RaplaPruefungen {
         out.println( "</ul>" );
         out.println("<script>");
         
-        out.println("function copyToClipboard(text) {\r\n" + //
-                        "            var textarea = document.createElement(\"textarea\");\r\n" + //
-                        "            textarea.value = text;\r\n" + //
-                        "            textarea.style.position = \"fixed\";\r\n" + //
-                        "            textarea.style.opacity = 0;\r\n" + //
-                        "            document.body.appendChild(textarea);\r\n" + //
-                        "            textarea.select();\r\n" + //
-                        "            document.execCommand(\"copy\");\r\n" + //
-                        "            document.body.removeChild(textarea);\r\n" + //
-                        "            alert(\"Link copied to clipboard: \" + text);\r\n" + //
-                        "        }");
+        // out.println("function copyToClipboard(text) {\r\n" + //
+        //                 "            var textarea = document.createElement(\"textarea\");\r\n" + //
+        //                 "            textarea.value = text;\r\n" + //
+        //                 "            textarea.style.position = \"fixed\";\r\n" + //
+        //                 "            textarea.style.opacity = 0;\r\n" + //
+        //                 "            document.body.appendChild(textarea);\r\n" + //
+        //                 "            textarea.select();\r\n" + //
+        //                 "            document.execCommand(\"copy\");\r\n" + //
+        //                 "            document.body.removeChild(textarea);\r\n" + //
+        //                 "            alert(\"Link copied to clipboard: \" + text);\r\n" + //
+        //                 "        }");
 
         out.println("</script>");
         out.println( "</body>" );
