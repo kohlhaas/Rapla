@@ -235,13 +235,13 @@ public class RaplaPruefungen {
                 if (appointment.getComment() != null) {
                     switch (appointment.getComment()) {
                         case "Abgabe":
-                            submissionDates += formatDate(appointment.getStart(), "dd.MM.yyyy") + "; ";
+                            submissionDates += "\"" + formatDate(appointment.getStart(), "dd.MM.yyyy") + "\", ";
                             break;
                         case "Präsentation":
-                            presentationDates += formatDate(appointment.getStart(), "dd.MM.yyyy") + "; ";
+                            presentationDates += "\"" + formatDate(appointment.getStart(), "dd.MM.yyyy") + "\", ";
                             break;
                         case "Klausur":
-                            examDates += appointment.getStart() + "; ";
+                            examDates += appointment.getStart();
                             break;
                         default:
                             break;
@@ -252,16 +252,16 @@ public class RaplaPruefungen {
             String datesList = "";
             if (submissionDates.length() > 0) {
                 submissionDates = submissionDates.substring(0, submissionDates.length() - 2);
-                datesList += "abgabe: \"" + submissionDates + "\", ";
+                datesList += "abgabe: [" + submissionDates + "], ";
             }
             if (presentationDates.length() > 0) {
                 presentationDates = presentationDates.substring(0, presentationDates.length() - 2);
-                datesList += "praesentation: \"" + presentationDates + "\", ";
+                datesList += "praesentation: [" + presentationDates + "], ";
             }
             if (examDates.length() > 0) {
-                examDates = examDates.substring(0, examDates.length() - 2);
                 datesList += "klausur: \"" + examDates + "\", ";
             }
+            datesList = datesList.substring(0, datesList.length() - 2);
 
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
@@ -318,7 +318,6 @@ public class RaplaPruefungen {
                         "return exam_performances.filter(exam_performance => exam_performance.type.toLowerCase() === type.toLowerCase());}"
         );
         
-        // TODO: "date" in Tag und Uhrzeit trennen
         out.println("function aggregateExamsPerUnit(exams) {\r\n" + //
                         "const aggregatedData = {};\r\n" + //
                         "exams.forEach(exam => {\r\n" + //
@@ -360,11 +359,19 @@ public class RaplaPruefungen {
                         "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Termine</th><td class=\"termine-zelle\"><table class=\"termine-tabelle\">`; \r\n" + //
-                        "if (exam_performance.dates.praesentation != null) { \r\n" + //
-                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Präsentation:</td><td class=\"termine-tabelle\">${exam_performance.dates.praesentation}</td></tr>`; \r\n" + //
+                        "if (exam_performance.dates.praesentation != null) { \r\n" + //+
+                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Präsentation:</td><td class=\"termine-tabelle\">${exam_performance.dates.praesentation[0]}`; \r\n" + //
+                            "for (let i = 1; i < exam_performance.dates.praesentation.length; i++) { \r\n" + //
+                                "tableContent += `<br>${exam_performance.dates.praesentation[i]}`; \r\n" + //
+                            "} \r\n" + //
+                            "tableContent += `</td></tr>`; \r\n" + //
                         "} \r\n" + //
                         "if (exam_performance.dates.abgabe != null) { \r\n" + //
-                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Abgabe:</td><td class=\"termine-tabelle\">${exam_performance.dates.abgabe}</td></tr>`; \r\n" + //
+                        "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Abgabe:</td><td class=\"termine-tabelle\">${exam_performance.dates.abgabe[0]}`; \r\n" + //
+                            "for (let i = 1; i < exam_performance.dates.abgabe.length; i++) { \r\n" + //
+                                "tableContent += `<br>${exam_performance.dates.abgabe[i]}`; \r\n" + //
+                            "} \r\n" + //
+                            "tableContent += `</td></tr>`; \r\n" + //
                         "} \r\n" + //
                         "if (exam_performance.dates.klausur != null) { \r\n" + //
                             "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Klausur:</td><td class=\"termine-tabelle\">${convertDateStringToDDMMYYYY(exam_performance.dates.klausur)}</td></tr>`; \r\n" + //
