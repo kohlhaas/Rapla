@@ -20,8 +20,9 @@ import org.rapla.scheduler.Promise;
 import org.rapla.scheduler.sync.SynchronizedCompletablePromise;
 import org.rapla.server.internal.RaplaStatusEntry;
 import org.rapla.server.internal.ServerContainerContext;
+import org.rapla.entities.domain.Appointment;
 
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
+// import microsoft.exchange.webservices.data.core.service.item.Appointment;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -69,10 +70,15 @@ public class RaplaPruefungen {
     {
     }
 
+    public String formatDate(Date date, String formatPattern){
+        SimpleDateFormat formatter = new SimpleDateFormat(formatPattern);
+        return formatter.format(date);
+    }
 
     public int getSemesterForDate(Date date, String[][] semesterDates) {
-        SimpleDateFormat dateDayFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = dateDayFormat.format(date);
+        // SimpleDateFormat dateDayFormat = new SimpleDateFormat("yyyy-MM-dd");
+        // String dateString = dateDayFormat.format(date);
+        String dateString = formatDate(date, "yyyy-MM-dd");
         int semester = 0;
         for (int i = 0; i < 6; i++) {
             if (dateString.compareTo(semesterDates[i][0]) >= 0 && dateString.compareTo(semesterDates[i][1]) <= 0) {
@@ -109,11 +115,6 @@ public class RaplaPruefungen {
 
     public Reservation getLectureOfExam(Reservation exam, Collection<Reservation> lectures) {
         for (Reservation lecture:lectures) {
-            // String nameExam = exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("Name"));
-            // String nameLecture = lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("Name"));
-            // String unitNameExam = exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("unit_name"));
-            // String unitNameLecture = lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("unit_name"));
-
             if (exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("Name")).equals(lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("Name")))){
                 return lecture;
             }
@@ -195,8 +196,9 @@ public class RaplaPruefungen {
         for (Reservation reservation:examsReservations) {
             String lecturers_list = "";
             for (Allocatable resource:reservation.getPersons()) {
-                lecturers_list += "\"" + resource.getName(null) + "\", ";
+                lecturers_list += "" + resource.getName(null) + "; ";
             }
+            lecturers_list = lecturers_list.substring(0, lecturers_list.length() - 2);
             String exam_room_name = "";
             for (Allocatable resource:reservation.getResources()) {
                 try {
@@ -218,8 +220,44 @@ public class RaplaPruefungen {
             catch (Exception e) {
                 // Ignore exceptions 
             }
-            // if (lectureOfExam != null) {
-            // }
+
+            Appointment[] appointments = reservation.getAppointments();
+            String submissionDates = "";
+            String presentationDates = "";
+            String examDates = "";
+
+            for (Appointment appointment:appointments) {
+                if (appointment.getComment() != null) {
+                    switch (appointment.getComment()) {
+                        case "Abgabe":
+                            submissionDates += formatDate(appointment.getStart(), "dd.MM.yyyy") + "; ";
+                            break;
+                        case "Präsentation":
+                            presentationDates += formatDate(appointment.getStart(), "dd.MM.yyyy") + "; ";
+                            break;
+                        case "Klausur":
+                            examDates += appointment.getStart() + "; ";
+                            // examDates += formatDate(appointment.getStart(), "dd.MM.yyyy") + "; ";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            
+            String datesList = "";
+            if (submissionDates.length() > 0) {
+                submissionDates = submissionDates.substring(0, submissionDates.length() - 2);
+                datesList += "abgabe: \"" + submissionDates + "\", ";
+            }
+            if (presentationDates.length() > 0) {
+                presentationDates = presentationDates.substring(0, presentationDates.length() - 2);
+                datesList += "praesentation: \"" + presentationDates + "\", ";
+            }
+            if (examDates.length() > 0) {
+                datesList += "klausur: \"" + examDates + "\", ";
+                examDates = examDates.substring(0, examDates.length() - 2);
+            }
 
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
@@ -227,14 +265,13 @@ public class RaplaPruefungen {
             out.println("type: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Pruefungsart")) + "\",");
             out.println("description: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Beschreibung")) + "\",");
             out.println("maximal_points: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("max_punkte")) + ",");
-            out.println("lecturer: [" + lecturers_list + "],");
+            out.println("lecturer: \"" + lecturers_list + "\",");
             out.println("duration: " + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Dauer")) + ",");
             out.println("room: \"" + exam_room_name + "\",");
             out.println("link: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("link")) + "\",");
             out.println("semester_exams: " + semesterExam + ",");
             out.println("semester_lectures: " + semesterLectures + ",");
-            // TODO: Logik für Datum einlesen (Klausur, Abgabe, Präsentation)
-            out.println("dates: \"" + reservation.getSortedAppointments() + "\"");
+            out.println("dates: {" + datesList + "}");
             out.println("},");
         }
         out.println("];");
@@ -292,7 +329,18 @@ public class RaplaPruefungen {
                         "tableContent += `<table>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
-                        "tableContent += `<tr><th>Termine</th><td>${exam_performance.dates}</td></tr>`; \r\n" + //
+                        "tableContent += `<tr><th>Termine</th><td>`; \r\n" + //
+                        "if (exam_performance.dates.praesentation != null) { \r\n" + //
+                            "tableContent += `Präsentation: ${exam_performance.dates.praesentation}<br>`; \r\n" + //
+                        "} \r\n" + //
+                        "if (exam_performance.dates.abgabe != null) { \r\n" + //
+                            "tableContent += `Abgabe: ${exam_performance.dates.abgabe}<br>`; \r\n" + //
+                        "} \r\n" + //
+                        "if (exam_performance.dates.klausur != null) { \r\n" + //
+                            "tableContent += `Klausur: ${exam_performance.dates.klausur}<br>`; \r\n" + //
+                        "} \r\n" + //
+                        "tableContent += `</td></tr>`; \r\n" + //
+
                         "if (exam_performance.maximal_points != null) { \r\n" + //
                             "tableContent += `<tr><th>Max. Punkte</th><td>${exam_performance.maximal_points}</td></tr>`; \r\n" + //
                         "} else { \r\n" + //
