@@ -42,6 +42,20 @@ select {
     margin-bottom: 10px;
 }
 
+.termine-zelle {
+    padding: 0px;
+}
+
+.termine-tabelle {
+    border: none;
+    vertical-align: top;
+}
+
+.card-heading{
+    font-weight: bold;
+    height: 36px;
+}
+
 header h1,
 .vorlesungen-header h2 {
     margin: 0;

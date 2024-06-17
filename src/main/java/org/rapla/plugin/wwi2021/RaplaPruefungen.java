@@ -242,7 +242,6 @@ public class RaplaPruefungen {
                             break;
                         case "Klausur":
                             examDates += appointment.getStart() + "; ";
-                            // examDates += formatDate(appointment.getStart(), "dd.MM.yyyy") + "; ";
                             break;
                         default:
                             break;
@@ -356,21 +355,21 @@ public class RaplaPruefungen {
                         "card.className = \"card\";                         \r\n" + //
                         "let tableContent = '';                            \r\n" + //
         
-                        "tableContent += `<h4><b>${exam_performance.lecture_name} - ${exam_performance.unit_name}</b></h4>`; \r\n" + //
+                        "tableContent += `<h4><div class=\"card-heading\">${exam_performance.lecture_name} - ${exam_performance.unit_name}</div></h4>`; \r\n" + //
                         "tableContent += `<table>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
                         "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
-                        "tableContent += `<tr><th>Termine</th><td>`; \r\n" + //
+                        "tableContent += `<tr><th>Termine</th><td class=\"termine-zelle\"><table class=\"termine-tabelle\">`; \r\n" + //
                         "if (exam_performance.dates.praesentation != null) { \r\n" + //
-                            "tableContent += `Präsentation: ${exam_performance.dates.praesentation}<br>`; \r\n" + //
+                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Präsentation:</td><td class=\"termine-tabelle\">${exam_performance.dates.praesentation}</td></tr>`; \r\n" + //
                         "} \r\n" + //
                         "if (exam_performance.dates.abgabe != null) { \r\n" + //
-                            "tableContent += `Abgabe: ${exam_performance.dates.abgabe}<br>`; \r\n" + //
+                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Abgabe:</td><td class=\"termine-tabelle\">${exam_performance.dates.abgabe}</td></tr>`; \r\n" + //
                         "} \r\n" + //
                         "if (exam_performance.dates.klausur != null) { \r\n" + //
-                            "tableContent += `Klausur: ${convertDateStringToDDMMYYYY(exam_performance.dates.klausur)}<br>`; \r\n" + //
+                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Klausur:</td><td class=\"termine-tabelle\">${convertDateStringToDDMMYYYY(exam_performance.dates.klausur)}</td></tr>`; \r\n" + //
                         "} \r\n" + //
-                        "tableContent += `</td></tr>`; \r\n" + //
+                        "tableContent += `</table></td></tr>`; \r\n" + //
 
                         "if (exam_performance.maximal_points != null) { \r\n" + //
                             "tableContent += `<tr><th>Max. Punkte</th><td>${exam_performance.maximal_points}</td></tr>`; \r\n" + //
@@ -433,48 +432,32 @@ public class RaplaPruefungen {
         );
         out.println("document.getElementById(\"dropdown_semester\").dispatchEvent(new Event(\"change\"));");
 
+        // Save as PDF
         out.println("async function saveAsPDF() { \r\n" + //
-        "const { jsPDF } = window.jspdf; \r\n" + //
+                        "const { jsPDF } = window.jspdf; \r\n" + //
+                        "const saveButton = document.querySelector('.save-button-container'); \r\n" + //
+                        "saveButton.classList.add('hidden'); \r\n" + //
+                        "const canvas = await html2canvas(document.body); \r\n" + //
+                        "saveButton.classList.remove('hidden'); \r\n" + //
+                        "const imgData = canvas.toDataURL('image/png'); \r\n" + //
+                        "const pdf = new jsPDF('p', 'mm', 'a4'); \r\n" + //
+                        "const imgWidth = 210; // A4 width in mm \r\n" + //
+                        "const pageHeight = 295; // A4 height in mm \r\n" + //
+                        "const imgHeight = canvas.height * imgWidth / canvas.width; \r\n" + //
+                        "let heightLeft = imgHeight; \r\n" + //
 
-        // Hide the button
-        "const saveButton = document.querySelector('.save-button-container'); \r\n" + //
-        "saveButton.classList.add('hidden'); \r\n" + //
+                        "let position = 0; \r\n" + //
+                        "pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight); \r\n" + //
+                        "heightLeft -= pageHeight; \r\n" + //
+                        "while (heightLeft >= 0) { \r\n" + //
+                            "position = heightLeft - imgHeight; \r\n" + //
+                            "pdf.addPage(); \r\n" + //
+                            "pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight); \r\n" + //
+                            "heightLeft -= pageHeight; \r\n" + //
+                        "} \r\n" + //
 
-        // Capture the webpage as a canvas
-        "const canvas = await html2canvas(document.body); \r\n" + //
-
-        // Show the button again
-        "saveButton.classList.remove('hidden'); \r\n" + //
-
-        // Convert the canvas to an image
-        "const imgData = canvas.toDataURL('image/png'); \r\n" + //
-
-        // Create a new jsPDF instance
-        "const pdf = new jsPDF('p', 'mm', 'a4'); \r\n" + //
-
-        // Calculate the width and height of the image
-        "const imgWidth = 210; // A4 width in mm \r\n" + //
-        "const pageHeight = 295; // A4 height in mm \r\n" + //
-        "const imgHeight = canvas.height * imgWidth / canvas.width; \r\n" + //
-        "let heightLeft = imgHeight; \r\n" + //
-
-        "let position = 0; \r\n" + //
-
-        // Add image to PDF
-        "pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight); \r\n" + //
-        "heightLeft -= pageHeight; \r\n" + //
-
-        // Add new pages if necessary
-        "while (heightLeft >= 0) { \r\n" + //
-            "position = heightLeft - imgHeight; \r\n" + //
-            "pdf.addPage(); \r\n" + //
-            "pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight); \r\n" + //
-            "heightLeft -= pageHeight; \r\n" + //
-        "} \r\n" + //
-
-        // Save the PDF
-        "pdf.save('webpage.pdf'); \r\n" + //
-        "}"
+                        "pdf.save('webpage.pdf'); \r\n" + //
+                    "};"
         );
 
         out.println("</script>");
