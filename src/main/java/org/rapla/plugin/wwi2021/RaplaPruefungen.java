@@ -151,10 +151,15 @@ public class RaplaPruefungen {
         out.println( "<head>" );
         out.println("<title>Prüfungsverzeichnis: " + courseName + "</title>"); 
         out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+        out.println("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js\"></script>");
+        out.println("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js\"></script>");
         out.println(AbstractHTMLCalendarPage.getCssLine(request, "pruefungsansicht.css"));
         out.println("</head>" );
 
         out.println( "<body>" );
+        out.println("<div class=\"save-button-container\">");
+        out.println("<button onclick=\"saveAsPDF()\" class=\"save-button\">Save as PDF</button>");
+        out.println("</div>");
         out.println("<div class=\"container\">");
         out.println("<header> <h1>Prüfungsverzeichnis - Kurs " + courseName + "</h1></header>");
 
@@ -401,6 +406,50 @@ public class RaplaPruefungen {
                     "});"
         );
         out.println("document.getElementById(\"dropdown_semester\").dispatchEvent(new Event(\"change\"));");
+
+        out.println("async function saveAsPDF() { \r\n" + //
+        "const { jsPDF } = window.jspdf; \r\n" + //
+
+        // Hide the button
+        "const saveButton = document.querySelector('.save-button-container'); \r\n" + //
+        "saveButton.classList.add('hidden'); \r\n" + //
+
+        // Capture the webpage as a canvas
+        "const canvas = await html2canvas(document.body); \r\n" + //
+
+        // Show the button again
+        "saveButton.classList.remove('hidden'); \r\n" + //
+
+        // Convert the canvas to an image
+        "const imgData = canvas.toDataURL('image/png'); \r\n" + //
+
+        // Create a new jsPDF instance
+        "const pdf = new jsPDF('p', 'mm', 'a4'); \r\n" + //
+
+        // Calculate the width and height of the image
+        "const imgWidth = 210; // A4 width in mm \r\n" + //
+        "const pageHeight = 295; // A4 height in mm \r\n" + //
+        "const imgHeight = canvas.height * imgWidth / canvas.width; \r\n" + //
+        "let heightLeft = imgHeight; \r\n" + //
+
+        "let position = 0; \r\n" + //
+
+        // Add image to PDF
+        "pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight); \r\n" + //
+        "heightLeft -= pageHeight; \r\n" + //
+
+        // Add new pages if necessary
+        "while (heightLeft >= 0) { \r\n" + //
+            "position = heightLeft - imgHeight; \r\n" + //
+            "pdf.addPage(); \r\n" + //
+            "pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight); \r\n" + //
+            "heightLeft -= pageHeight; \r\n" + //
+        "} \r\n" + //
+
+        // Save the PDF
+        "pdf.save('webpage.pdf'); \r\n" + //
+        "}"
+        );
 
         out.println("</script>");
 

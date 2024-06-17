@@ -10,6 +10,32 @@ body {
     margin: auto;
 }
 
+select {
+    font-size: large;
+    max-height: 40px;
+}
+
+.save-button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bolder;
+}
+
+.save-button {
+    background-color: #f2f2f2;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
 .card,
 .table-container {
     padding: 10px;
@@ -20,7 +46,16 @@ header h1,
 .vorlesungen-header h2 {
     margin: 0;
     padding: 10px 0;
-    /* color: #1929d5; */
+}
+
+.vorlesungen-header {
+    border-bottom: 1px solid #ccc;
+}
+
+header h1,
+.vorlesungen-header h2 {
+    margin: 0;
+    padding: 10px 0;
 }
 
 .vorlesungen-header {
