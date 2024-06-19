@@ -21,6 +21,8 @@ import org.rapla.client.swing.RaplaGUIComponent;
 import org.rapla.client.swing.images.RaplaImages;
 import org.rapla.client.swing.internal.SwingPopupContext;
 import org.rapla.client.swing.internal.common.PeriodChooser;
+import org.rapla.client.swing.internal.edit.fields.TextField; //added
+import org.rapla.client.swing.internal.edit.fields.TextField.TextFieldFactory;
 import org.rapla.client.swing.toolkit.MonthChooser;
 import org.rapla.client.swing.toolkit.RaplaButton;
 import org.rapla.client.swing.toolkit.WeekdayChooser;
@@ -68,6 +70,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -118,6 +121,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
 
     ArrayList<ChangeListener> listenerList = new ArrayList<>();
     JPanel repeatingType = new JPanel();
+    JPanel commentPanel = new JPanel();
     JRadioButton noRepeating = new JRadioButton();
     JRadioButton weeklyRepeating = new JRadioButton();
     JRadioButton dailyRepeating = new JRadioButton();
@@ -127,6 +131,8 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
     CardLayout repeatingCard = new CardLayout();
     // Button for splitting appointments
     RaplaButton convertButton = new RaplaButton();
+
+    
 
     private final CommandHistory commandHistory;
 
@@ -215,6 +221,9 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         yearlyRepeating.setText(getString("yearly"));
         // Rapla 1.4: Initialize the split appointment button
         convertButton.setText(getString("appointment.convert"));
+
+        
+        
     }
 
     private void switchRepeatings()
@@ -363,6 +372,8 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         JLabel endTimeLabel = new JLabel();
         RaplaTime endTime;
         JCheckBox oneDayEventCheckBox = new JCheckBox();
+        JTextField commentField = new JTextField(10);
+        
         private boolean listenerEnabled = true;
 
         public SingleEditor()
@@ -401,6 +412,8 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 setToWholeDays(selected);
                 processChange(itemevent.getSource());
             });
+
+            content.add(commentField, "2,4,6,4");
 
             startDate.addDateChangeListener(this);
             startTime.addDateChangeListener(this);
@@ -505,10 +518,12 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 Date start = appointment.getStart();
                 startDate.setDate(start);
                 Date end = appointment.getEnd();
+                String comment = appointment.getComment();
                 endDate.setDate(DateTools.addDays(end, wholeDaysSet ? -1 : 0));
                 endTime.setDurationStart(DateTools.isSameDay(start, end) ? start : null);
                 startTime.setTime(start);
                 endTime.setTime(end);
+                commentField.setText(comment);
                 oneDayEventCheckBox.setSelected(wholeDaysSet);
                 startTimeLabel.setVisible(!wholeDaysSet);
                 startTime.setVisible(!wholeDaysSet);
@@ -527,11 +542,13 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
             RaplaLocale raplaLocale = getRaplaLocale();
             Date start = raplaLocale.toDate(startDate.getDate(), startTime.getTime());
             Date end = raplaLocale.toDate(endDate.getDate(), endTime.getTime());
+            String comment = commentField.getText();
             if (oneDayEventCheckBox.isSelected())
             {
                 end = raplaLocale.toDate(DateTools.addDay(endDate.getDate()), endTime.getTime());
             }
             appointment.move(start, end);
+            appointment.setComment(comment);
             fireAppointmentChanged();
         }
 
@@ -590,6 +607,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                     oneDayEventCheckBox.setSelected(newoneDay);
                     getLogger().debug("Whole day adjusted");
                 }
+
                 mapToAppointment();
                 getLogger().debug("SingleEditor adjusted");
                 mapFromAppointment();
