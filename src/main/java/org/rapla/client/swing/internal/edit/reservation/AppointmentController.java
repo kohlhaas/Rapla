@@ -25,6 +25,7 @@ import org.rapla.client.swing.internal.edit.fields.TextField; //added
 import org.rapla.client.swing.internal.edit.fields.TextField.TextFieldFactory;
 import org.rapla.client.swing.toolkit.MonthChooser;
 import org.rapla.client.swing.toolkit.RaplaButton;
+import org.rapla.client.extensionpoints.CommentExtensionFactory;
 import org.rapla.client.swing.toolkit.WeekdayChooser;
 import org.rapla.components.calendar.DateChangeEvent;
 import org.rapla.components.calendar.DateChangeListener;
@@ -103,9 +104,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 /** GUI for editing a single Appointment. */
-public class AppointmentController extends RaplaGUIComponent implements Disposable, RaplaWidget
+public class AppointmentController extends RaplaGUIComponent implements Disposable, RaplaWidget, CommentExtensionFactory.AppointmentEditExtensionEvents
 {
     JPanel panel = new JPanel();
 
@@ -146,7 +148,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
     private TimeInterval lastModifiedExceptionDialogInterval = null;
 
     public AppointmentController(ClientFacade facade, RaplaResources i18n, RaplaLocale raplaLocale, Logger logger, CommandHistory commandHistory,
-            DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface) throws RaplaException
+            DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface, Set<CommentExtensionFactory> commentExtensionFactory) throws RaplaException
     {
         super(facade, i18n, raplaLocale, logger);
         this.commandHistory = commandHistory;
@@ -170,6 +172,17 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         buttonGroup.add(dailyRepeating);
         buttonGroup.add(monthlyRepeating);
         buttonGroup.add(yearlyRepeating);
+
+        if ( commentExtensionFactory.size() > 0) { //hier
+            JPanel commentPanel = new JPanel();
+            for (CommentExtensionFactory factory : commentExtensionFactory) {
+                RaplaWidget widget = factory.createComment(this);
+                if (widget != null) {
+                    commentPanel.add((JComponent) widget.getComponent(), BorderLayout.SOUTH);
+                }
+            }
+            panel.add(commentPanel, BorderLayout.SOUTH);
+        }
 
         panel.add(repeatingContainer, BorderLayout.CENTER);
 
@@ -274,9 +287,22 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         savedRepeatingType = getCurrentRepeatingType();
     }
 
+    List<Consumer<Appointment>> appointmentChangedConsumer = new ArrayList<>(); //hier
+    @Override
+    public void init(Consumer<Appointment> appointmentChanged)
+    {
+        this.appointmentChangedConsumer.add(appointmentChanged);
+    }
+
     public Appointment getAppointment()
     {
         return appointment;
+    }
+
+    @Override
+    public void appointmentChanged()
+    {
+        fireAppointmentChanged();
     }
 
     public void setSelectedEditDate(Date selectedEditDate)
@@ -529,6 +555,9 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 startTime.setVisible(!wholeDaysSet);
                 endTime.setVisible(!wholeDaysSet);
                 endTimeLabel.setVisible(!wholeDaysSet);
+                for (Consumer<Appointment> consumer : appointmentChangedConsumer) { //hier
+                    consumer.accept(appointment);
+                }
             }
             finally
             {
