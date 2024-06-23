@@ -346,41 +346,44 @@ public class RaplaPruefungen {
                         "card.className = \"card\";                         \r\n" + //
                         "let tableContent = '';                            \r\n" + //
         
-                        "tableContent += `<h4><div class=\"card-heading\">${exam_performance.lecture_name} - ${exam_performance.unit_name}</div></h4>`; \r\n" + //
+                        "tableContent += `<h4><div class=\"card-heading\">${exam_performance.lecture_name} (${exam_performance.unit_name})</div></h4>`; \r\n" + //
                         "tableContent += `<table>`; \r\n" + //
-                        "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
-                        "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
-                        "tableContent += `<tr><th>Termine</th><td class=\"termine-zelle\"><table class=\"termine-tabelle\">`; \r\n" + //
-                        "if (exam_performance.dates.praesentation != null) { \r\n" + //+
-                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Präsentation:</td><td class=\"termine-tabelle\">${exam_performance.dates.praesentation[0]}`; \r\n" + //
-                            "for (let i = 1; i < exam_performance.dates.praesentation.length; i++) { \r\n" + //
-                                "tableContent += `<br>${exam_performance.dates.praesentation[i]}`; \r\n" + //
+                        "if (exam_performance.type != \"\") { \r\n" + //
+                            "tableContent += `<tr><th>Prüfungsart</th><td>${exam_performance.type}</td></tr>`; \r\n" + //
+                        "} \r\n" + //
+                        "if (exam_performance.description != \"\") { \r\n" + //
+                            "tableContent += `<tr><th>Prüfungsdetails</th><td>${exam_performance.description}</td></tr>`; \r\n" + //
+                        "} \r\n" + //
+                        "if (exam_performance.dates.praesentation != null || exam_performance.dates.abgabe != null || exam_performance.dates.klausur != null) { \r\n" + // 
+                            "tableContent += `<tr><th>Termine</th><td class=\"termine-zelle\"><table class=\"termine-tabelle\">`; \r\n" + //
+                            "if (exam_performance.dates.praesentation != null) { \r\n" + //+ 
+                                "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Präsentation:</td><td class=\"termine-tabelle\">${exam_performance.dates.praesentation[0]}`; \r\n" + //
+                                "for (let i = 1; i < exam_performance.dates.praesentation.length; i++) { \r\n" + //
+                                    "tableContent += `<br>${exam_performance.dates.praesentation[i]}`; \r\n" + //
+                                "} \r\n" + //
+                                "tableContent += `</td></tr>`; \r\n" + //
                             "} \r\n" + //
-                            "tableContent += `</td></tr>`; \r\n" + //
-                        "} \r\n" + //
-                        "if (exam_performance.dates.abgabe != null) { \r\n" + //
-                        "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Abgabe:</td><td class=\"termine-tabelle\">${exam_performance.dates.abgabe[0]}`; \r\n" + //
-                            "for (let i = 1; i < exam_performance.dates.abgabe.length; i++) { \r\n" + //
-                                "tableContent += `<br>${exam_performance.dates.abgabe[i]}`; \r\n" + //
+                            "if (exam_performance.dates.abgabe != null) { \r\n" + //
+                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Abgabe:</td><td class=\"termine-tabelle\">${exam_performance.dates.abgabe[0]}`; \r\n" + //
+                                "for (let i = 1; i < exam_performance.dates.abgabe.length; i++) { \r\n" + //
+                                    "tableContent += `<br>${exam_performance.dates.abgabe[i]}`; \r\n" + //
+                                "} \r\n" + //
+                                "tableContent += `</td></tr>`; \r\n" + //
                             "} \r\n" + //
-                            "tableContent += `</td></tr>`; \r\n" + //
+                            "if (exam_performance.dates.klausur != null) { \r\n" + //
+                                "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Klausur:</td><td class=\"termine-tabelle\">${convertDateStringToDDMMYYYY(exam_performance.dates.klausur)}</td></tr>`; \r\n" + //
+                            "} \r\n" + //
+                            "tableContent += `</table></td></tr>`; \r\n" + //
                         "} \r\n" + //
-                        "if (exam_performance.dates.klausur != null) { \r\n" + //
-                            "tableContent += `<tr class=\"termine-tabelle\"><td class=\"termine-tabelle\">Klausur:</td><td class=\"termine-tabelle\">${convertDateStringToDDMMYYYY(exam_performance.dates.klausur)}</td></tr>`; \r\n" + //
-                        "} \r\n" + //
-                        "tableContent += `</table></td></tr>`; \r\n" + //
-
                         "if (exam_performance.maximal_points != null) { \r\n" + //
                             "tableContent += `<tr><th>Max. Punkte</th><td>${exam_performance.maximal_points}</td></tr>`; \r\n" + //
-                        "} else { \r\n" + //
-                            "tableContent += `<tr><th>Max. Punkte</th><td></td></tr>`; \r\n" + //
                         "} \r\n" + //
-                        "tableContent += `<tr><th>Dozierende</th><td>${exam_performance.lecturer}</td></tr>`; \r\n" + //
+                        "if (exam_performance.lecturer != \"\") { \r\n" + //
+                            "tableContent += `<tr><th>Dozierende</th><td>${exam_performance.lecturer}</td></tr>`; \r\n" + //
+                        "} \r\n" + //
                         "if (exam_performance.link != \"null\") { \r\n" + //
                             "tableContent += `<tr><th>Moodle</th><td><p><a href=\"${exam_performance.link}\">Link</a></p></td></tr>`; \r\n" + //
-                        "} else { \r\n" + //
-                            "tableContent += `<tr><th>Moodle</th><td></td></tr>`; \r\n" + //
-                        "} \r\n" + //
+                        "}\r\n" + //
                         "tableContent += `</table>`; \r\n" + //
                         "card.innerHTML = tableContent; \r\n" + //
                         "grid.appendChild(card); \r\n" + //
