@@ -148,7 +148,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
     private TimeInterval lastModifiedExceptionDialogInterval = null;
 
     public AppointmentController(ClientFacade facade, RaplaResources i18n, RaplaLocale raplaLocale, Logger logger, CommandHistory commandHistory,
-            DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface, Set<CommentExtensionFactory> commentExtensionFactory) throws RaplaException
+            DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface, Set<CommentExtensionFactory> commentEditFactory) throws RaplaException
     {
         super(facade, i18n, raplaLocale, logger);
         this.commandHistory = commandHistory;
@@ -173,12 +173,12 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         buttonGroup.add(monthlyRepeating);
         buttonGroup.add(yearlyRepeating);
 
-        if ( commentExtensionFactory.size() > 0) { //hier
+        if ( commentEditFactory.size() > 0) { //hier
             JPanel commentPanel = new JPanel();
-            for (CommentExtensionFactory factory : commentExtensionFactory) {
+            for (CommentExtensionFactory factory : commentEditFactory) {
                 RaplaWidget widget = factory.createComment(this);
                 if (widget != null) {
-                    commentPanel.add((JComponent) widget.getComponent(), BorderLayout.SOUTH);
+                    commentPanel.add((JComponent) widget.getComponent(), BorderLayout.WEST);
                 }
             }
             panel.add(commentPanel, BorderLayout.SOUTH);
@@ -289,9 +289,8 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
 
     List<Consumer<Appointment>> appointmentChangedConsumer = new ArrayList<>(); //hier
     @Override
-    public void init(Consumer<Appointment> appointmentChanged)
-    {
-        this.appointmentChangedConsumer.add(appointmentChanged);
+    public void init(Consumer<Appointment> appointmentChanged) {
+        this.appointmentChangedConsumer.add( appointmentChanged);
     }
 
     public Appointment getAppointment()

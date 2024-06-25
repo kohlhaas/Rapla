@@ -44,7 +44,10 @@ public class CommentEditFactory implements CommentExtensionFactory {
 
     class CommentEditor implements RaplaWidget, Consumer<Appointment>
     {
-        JTextField commentField = new JTextField();
+        // JTextArea commentField = new JTextArea(4, 10);
+        JTextField commentField = new JTextField(10);
+        private boolean isSaving = false; // Flag to prevent infinite loop
+
         AppointmentEditExtensionEvents events;
         CommentEditor(AppointmentEditExtensionEvents events)
         {
@@ -63,9 +66,18 @@ public class CommentEditFactory implements CommentExtensionFactory {
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    Appointment appointment = events.getAppointment();
-                    appointment.setComment(commentField.getText());
-                    events.appointmentChanged();
+                    
+                    if (!isSaving) {
+                        try {
+                            isSaving = true;
+                            Appointment appointment = events.getAppointment();
+                            appointment.setComment(commentField.getText());
+                            appointment.setComment("commentfield testcomment text");
+                            events.appointmentChanged();
+                        } finally {
+                            isSaving = false;
+                        }
+                    }
                 }
             });
         }
