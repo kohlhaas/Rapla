@@ -46,6 +46,7 @@ public class CommentEditFactory implements CommentExtensionFactory {
     {
         // JTextArea commentField = new JTextArea(4, 10);
         JTextField commentField = new JTextField(10);
+        JButton saveButton = new JButton("Save");
         private boolean isSaving = false; // Flag to prevent infinite loop
 
         AppointmentEditExtensionEvents events;
@@ -53,32 +54,39 @@ public class CommentEditFactory implements CommentExtensionFactory {
         {
             this.events = events;
             events.init(this);
-            commentField.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    events.appointmentChanged();
-                }
+            // commentField.getDocument().addDocumentListener(new DocumentListener() {
+            //     @Override
+            //     public void insertUpdate(DocumentEvent e) {
+            //         events.appointmentChanged();
+            //     }
 
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    events.appointmentChanged();
-                }
+            //     @Override
+            //     public void removeUpdate(DocumentEvent e) {
+            //         events.appointmentChanged();
+            //     }
 
-                @Override
-                public void changedUpdate(DocumentEvent e) {
+            //     @Override
+            //     public void changedUpdate(DocumentEvent e) {
                     
-                    if (!isSaving) {
-                        try {
-                            isSaving = true;
-                            Appointment appointment = events.getAppointment();
-                            appointment.setComment(commentField.getText());
-                            appointment.setComment("commentfield testcomment text");
-                            events.appointmentChanged();
-                        } finally {
-                            isSaving = false;
-                        }
-                    }
-                }
+            //         if (!isSaving) {
+            //             try {
+            //                 isSaving = true;
+            //                 Appointment appointment = events.getAppointment();
+            //                 appointment.setComment(commentField.getText());
+            //                 appointment.setComment("commentfield testcomment saving");
+            //                 events.appointmentChanged();
+            //             } finally {
+            //                 isSaving = false;
+            //             }
+            //         }
+            //     }
+            // });
+
+            saveButton.addActionListener(e -> {
+                Appointment appointment = events.getAppointment();
+                appointment.setComment(commentField.getText());
+                // appointment.setComment("commentfield testcomment savebutton");
+                events.appointmentChanged();
             });
         }
 
@@ -90,6 +98,7 @@ public class CommentEditFactory implements CommentExtensionFactory {
         @Override
         public void accept(Appointment appointment) {
             appointment.getStart().getTime();
+            // appointment.setComment("commentfield testcomment accept");
             commentField.setText(appointment.getComment());
         }
     }
