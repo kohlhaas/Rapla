@@ -4,7 +4,6 @@ WORKDIR /app
 
 RUN apk add --no-cache \
     openjdk11-jre \
-    wget \
     tar
 
 COPY target/distribution/*.tar.gz /app/rapla_package.tar.gz
@@ -13,8 +12,6 @@ RUN tar -xzvf rapla_package.tar.gz
 COPY target/*.war /app/webapps/rapla.war
 
 COPY data/data.xml /app/data/data.xml
-
-COPY keystore.p12 /app/keystore.p12
 
 COPY rapla.ks /app/rapla.ks
 
