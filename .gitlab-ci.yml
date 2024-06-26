@@ -20,6 +20,7 @@ maven_build:
     artifacts:
         paths:
             - target/*.war
+            - target/distribution/*.tar.gz
     tags:
         - rapla
 
