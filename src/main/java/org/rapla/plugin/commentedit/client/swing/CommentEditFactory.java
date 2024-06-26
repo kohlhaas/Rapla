@@ -17,6 +17,8 @@ import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.function.Consumer;
 
 @Extension (provides = CommentExtensionFactory.class, id = "commentextension")
@@ -46,7 +48,6 @@ public class CommentEditFactory implements CommentExtensionFactory {
     {
         // JTextArea commentField = new JTextArea(4, 10);
         JTextField commentField = new JTextField(10);
-        JButton saveButton = new JButton("Save");
         private boolean isSaving = false; // Flag to prevent infinite loop
 
         AppointmentEditExtensionEvents events;
@@ -54,41 +55,32 @@ public class CommentEditFactory implements CommentExtensionFactory {
         {
             this.events = events;
             events.init(this);
-            // commentField.getDocument().addDocumentListener(new DocumentListener() {
-            //     @Override
-            //     public void insertUpdate(DocumentEvent e) {
-            //         events.appointmentChanged();
-            //     }
 
-            //     @Override
-            //     public void removeUpdate(DocumentEvent e) {
-            //         events.appointmentChanged();
-            //     }
+            commentField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    // Do nothing
+                }
 
-            //     @Override
-            //     public void changedUpdate(DocumentEvent e) {
-                    
-            //         if (!isSaving) {
-            //             try {
-            //                 isSaving = true;
-            //                 Appointment appointment = events.getAppointment();
-            //                 appointment.setComment(commentField.getText());
-            //                 appointment.setComment("commentfield testcomment saving");
-            //                 events.appointmentChanged();
-            //             } finally {
-            //                 isSaving = false;
-            //             }
-            //         }
-            //     }
-            // });
-
-            saveButton.addActionListener(e -> {
-                Appointment appointment = events.getAppointment();
-                appointment.setComment(commentField.getText());
-                // appointment.setComment("commentfield testcomment savebutton");
-                events.appointmentChanged();
+                @Override
+                public void focusLost(FocusEvent e) {
+                    if (!isSaving) {
+                        isSaving = true;
+                        try {
+                            Appointment appointment = events.getAppointment();
+                            String comment = commentField.getText();
+                            appointment.setComment(comment);
+                            events.appointmentChanged();
+                        } finally {
+                            isSaving = false;
+                        }
+                    }
+                }
             });
+
+            
         }
+
 
         public JComponent getComponent()
         {
@@ -98,7 +90,6 @@ public class CommentEditFactory implements CommentExtensionFactory {
         @Override
         public void accept(Appointment appointment) {
             appointment.getStart().getTime();
-            // appointment.setComment("commentfield testcomment accept");
             commentField.setText(appointment.getComment());
         }
     }

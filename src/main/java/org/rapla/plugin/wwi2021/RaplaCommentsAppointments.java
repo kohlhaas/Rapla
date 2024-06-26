@@ -71,8 +71,10 @@ public class RaplaCommentsAppointments {
 
         out.println( "<body>" );
         for (Reservation reservation:reservations) {
-            out.println("<p style=\"font-weight: bold; font-size: larger;\">");
+            out.println("<p>");
+            out.println("<span style=\"font-weight: bold; font-size: larger;\">");
             out.println(reservation.getName(null));
+            out.println("</span>");
             out.println("<br>");
 
             // for (String key : reservation.getAnnotationKeys()) {
