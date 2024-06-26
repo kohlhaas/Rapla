@@ -106,7 +106,7 @@
 
 <!-- Example configuration for ssl connector -->
 <New id=“sslContextFactory” class=“org.eclipse.jetty.util.ssl.SslContextFactory”>
- <Set name="keyStorePath"><Property name="jetty.base" default="/app" />/app/rapla.ks</Set>
+ <Set name=“keyStorePath”><Property name=“jetty.base” default=“.” />/rapla.ks</Set>
  <Set name=“keyStorePassword”>secret</Set>
  <Set name=“keyManagerPassword”>secret</Set>
 </New>
