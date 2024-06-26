@@ -104,40 +104,37 @@
   </Call>
 
 
+<!-- Example configuration for ssl connector -->
+<New id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory">
+ <Set name="keyStorePath"><Property name="jetty.base" default=""/>rapla.ks</Set>
+ <Set name="keyStorePassword">secret</Set>
+ <Set name="keyManagerPassword">secret</Set>
+</New>
+ <Call name="addConnector">
+  <Arg>
+   <New class="org.eclipse.jetty.server.ServerConnector">
+    <Arg name="server"><Ref refid="Server"/></Arg>
+    <Arg name="factories">
+     <Array type="org.eclipse.jetty.server.ConnectionFactory">
+      <Item>
+       <New class="org.eclipse.jetty.server.SslConnectionFactory">
+        <Arg name="sslContextFactory"><Ref refid="sslContextFactory"/></Arg>
+        <Arg name="next">http/1.1</Arg>
+       </New>
+      </Item>
+      <Item>
+       <New class="org.eclipse.jetty.server.HttpConnectionFactory">
+        <Arg name="config"><Ref refid="httpConfig"/></Arg>
+       </New>
+      </Item>
+     </Array>
+    </Arg>
+    <Set name="port"><Property name="jetty.ssl.port" default="443"/></Set>
+    <Set name="idleTimeout">30000</Set>
+   </New>
+  </Arg>
+ </Call>
 
-<!-- Example configuration for ssl connector
-
-    <New id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory$Server">
-        <Set name="keyStorePath"><SystemProperty name="jetty.home" default="." />/.keystore</Set>
-	    <Set name="keyStorePassword">secret</Set>
-	    <Set name="certAlias">rapla</Set>
-        <Set name="keyStorePassword">secret</Set>
-    </New>
-
-    <Call name="addConnector">
-        <Arg>
-            <New class="org.eclipse.jetty.server.ServerConnector">
-                <Arg><Ref refid="Server"/></Arg>
-                <Arg>
-                    <Array type="org.eclipse.jetty.server.ConnectionFactory">
-                        <Item>
-                            <New class="org.eclipse.jetty.server.SslConnectionFactory">
-                                <Arg><Ref refid="sslContextFactory"/></Arg>
-                                <Arg>http/1.1</Arg>
-                            </New>
-                        </Item>
-                        <Item>
-                            <New class="org.eclipse.jetty.server.HttpConnectionFactory">
-                                <Arg><Ref id="httpConfig"/></Arg>
-                            </New>
-                        </Item>
-                    </Array>
-                </Arg>
-                <Set name="port">8443</Set>
-            </New>
-        </Arg>
-    </Call>
-	  -->
 
     <!-- Configure Proxy if you want to use nodejs server in dev mode-->
     <!--
