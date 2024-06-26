@@ -88,6 +88,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -175,12 +176,19 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
 
         if ( commentEditFactory.size() > 0) { //hier
             JPanel commentPanel = new JPanel();
+            commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.X_AXIS));
+
+            JLabel commentLabel = new JLabel("Comment:"); // Create a label for the comment
+            commentLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add some space to the right of the label
+            commentPanel.add(commentLabel); // Add the label to the panel
+
             for (CommentExtensionFactory factory : commentEditFactory) {
                 RaplaWidget widget = factory.createComment(this);
                 if (widget != null) {
-                    commentPanel.add((JComponent) widget.getComponent(), BorderLayout.WEST);
+                    commentPanel.add((JComponent) widget.getComponent());
                 }
             }
+            commentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             panel.add(commentPanel, BorderLayout.SOUTH);
         }
 
@@ -397,7 +405,6 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         JLabel endTimeLabel = new JLabel();
         RaplaTime endTime;
         JCheckBox oneDayEventCheckBox = new JCheckBox();
-        JTextField commentField = new JTextField(10);
         
         private boolean listenerEnabled = true;
 
@@ -437,8 +444,6 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 setToWholeDays(selected);
                 processChange(itemevent.getSource());
             });
-
-            content.add(commentField, "2,4,6,4");
 
             startDate.addDateChangeListener(this);
             startTime.addDateChangeListener(this);
@@ -543,12 +548,10 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 Date start = appointment.getStart();
                 startDate.setDate(start);
                 Date end = appointment.getEnd();
-                String comment = appointment.getComment();
                 endDate.setDate(DateTools.addDays(end, wholeDaysSet ? -1 : 0));
                 endTime.setDurationStart(DateTools.isSameDay(start, end) ? start : null);
                 startTime.setTime(start);
                 endTime.setTime(end);
-                commentField.setText(comment);
                 oneDayEventCheckBox.setSelected(wholeDaysSet);
                 startTimeLabel.setVisible(!wholeDaysSet);
                 startTime.setVisible(!wholeDaysSet);
@@ -570,13 +573,11 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
             RaplaLocale raplaLocale = getRaplaLocale();
             Date start = raplaLocale.toDate(startDate.getDate(), startTime.getTime());
             Date end = raplaLocale.toDate(endDate.getDate(), endTime.getTime());
-            String comment = commentField.getText();
             if (oneDayEventCheckBox.isSelected())
             {
                 end = raplaLocale.toDate(DateTools.addDay(endDate.getDate()), endTime.getTime());
             }
             appointment.move(start, end);
-            appointment.setComment(comment);
             fireAppointmentChanged();
         }
 
