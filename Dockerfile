@@ -12,4 +12,6 @@ COPY target/*.war /app/webapps/rapla.war
 
 COPY data/data.xml /app/data/data.xml
 
+COPY keystore.p12 /app/keystore.p12
+
 CMD ./raplaserver.sh run
