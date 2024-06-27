@@ -25,6 +25,7 @@ import org.rapla.client.swing.internal.edit.fields.TextField; //added
 import org.rapla.client.swing.internal.edit.fields.TextField.TextFieldFactory;
 import org.rapla.client.swing.toolkit.MonthChooser;
 import org.rapla.client.swing.toolkit.RaplaButton;
+import org.rapla.client.extensionpoints.CommentExtensionFactory;
 import org.rapla.client.swing.toolkit.WeekdayChooser;
 import org.rapla.components.calendar.DateChangeEvent;
 import org.rapla.components.calendar.DateChangeListener;
@@ -87,6 +88,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -103,9 +105,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 /** GUI for editing a single Appointment. */
-public class AppointmentController extends RaplaGUIComponent implements Disposable, RaplaWidget
+public class AppointmentController extends RaplaGUIComponent implements Disposable, RaplaWidget, CommentExtensionFactory.AppointmentEditExtensionEvents
 {
     JPanel panel = new JPanel();
 
@@ -146,7 +149,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
     private TimeInterval lastModifiedExceptionDialogInterval = null;
 
     public AppointmentController(ClientFacade facade, RaplaResources i18n, RaplaLocale raplaLocale, Logger logger, CommandHistory commandHistory,
-            DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface) throws RaplaException
+            DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface, Set<CommentExtensionFactory> commentEditFactory) throws RaplaException
     {
         super(facade, i18n, raplaLocale, logger);
         this.commandHistory = commandHistory;
@@ -170,6 +173,24 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         buttonGroup.add(dailyRepeating);
         buttonGroup.add(monthlyRepeating);
         buttonGroup.add(yearlyRepeating);
+
+        if ( commentEditFactory.size() > 0) { //hier
+            JPanel commentPanel = new JPanel();
+            commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.X_AXIS));
+
+            JLabel commentLabel = new JLabel("Kommentar:"); // Create a label for the comment
+            commentLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add some space to the right of the label
+            commentPanel.add(commentLabel); // Add the label to the panel
+
+            for (CommentExtensionFactory factory : commentEditFactory) {
+                RaplaWidget widget = factory.createComment(this);
+                if (widget != null) {
+                    commentPanel.add((JComponent) widget.getComponent());
+                }
+            }
+            commentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            panel.add(commentPanel, BorderLayout.SOUTH);
+        }
 
         panel.add(repeatingContainer, BorderLayout.CENTER);
 
@@ -274,9 +295,21 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         savedRepeatingType = getCurrentRepeatingType();
     }
 
+    List<Consumer<Appointment>> appointmentChangedConsumer = new ArrayList<>(); //hier
+    @Override
+    public void init(Consumer<Appointment> appointmentChanged) {
+        this.appointmentChangedConsumer.add( appointmentChanged);
+    }
+
     public Appointment getAppointment()
     {
         return appointment;
+    }
+
+    @Override
+    public void appointmentChanged()
+    {
+        fireAppointmentChanged();
     }
 
     public void setSelectedEditDate(Date selectedEditDate)
@@ -372,7 +405,6 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         JLabel endTimeLabel = new JLabel();
         RaplaTime endTime;
         JCheckBox oneDayEventCheckBox = new JCheckBox();
-        JTextField commentField = new JTextField(10);
         
         private boolean listenerEnabled = true;
 
@@ -412,8 +444,6 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 setToWholeDays(selected);
                 processChange(itemevent.getSource());
             });
-
-            content.add(commentField, "2,4,6,4");
 
             startDate.addDateChangeListener(this);
             startTime.addDateChangeListener(this);
@@ -518,17 +548,18 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 Date start = appointment.getStart();
                 startDate.setDate(start);
                 Date end = appointment.getEnd();
-                String comment = appointment.getComment();
                 endDate.setDate(DateTools.addDays(end, wholeDaysSet ? -1 : 0));
                 endTime.setDurationStart(DateTools.isSameDay(start, end) ? start : null);
                 startTime.setTime(start);
                 endTime.setTime(end);
-                commentField.setText(comment);
                 oneDayEventCheckBox.setSelected(wholeDaysSet);
                 startTimeLabel.setVisible(!wholeDaysSet);
                 startTime.setVisible(!wholeDaysSet);
                 endTime.setVisible(!wholeDaysSet);
                 endTimeLabel.setVisible(!wholeDaysSet);
+                for (Consumer<Appointment> consumer : appointmentChangedConsumer) { //hier
+                    consumer.accept(appointment);
+                }
             }
             finally
             {
@@ -542,13 +573,11 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
             RaplaLocale raplaLocale = getRaplaLocale();
             Date start = raplaLocale.toDate(startDate.getDate(), startTime.getTime());
             Date end = raplaLocale.toDate(endDate.getDate(), endTime.getTime());
-            String comment = commentField.getText();
             if (oneDayEventCheckBox.isSelected())
             {
                 end = raplaLocale.toDate(DateTools.addDay(endDate.getDate()), endTime.getTime());
             }
             appointment.move(start, end);
-            appointment.setComment(comment);
             fireAppointmentChanged();
         }
 
