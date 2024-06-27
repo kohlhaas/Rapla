@@ -45,23 +45,24 @@ public class showCommentFunctions implements FunctionFactory{
 
         if ( obj instanceof AppointmentBlock)
         {
-            l = "not supported Block";
+            Appointment appointment = ((AppointmentBlock)obj).getAppointment();
+            l = "\n" + appointment.getComment();
         }
         else if (obj instanceof Appointment)
         {
-            l= ((Appointment)obj).getComment();
+            l= "\n" + ((Appointment)obj).getComment();
         }
         else if (obj instanceof Reservation)
         {
-            l = "not supported Reservation";
+            l = "\n not supported Reservation";
         }
         else if ( obj instanceof Collection)
         {
-            l = "not supported Collection";
+            l = "\n not supported Collection";
         }
         else
         {
-            l = "nope";
+            l = "\n nope";
         }
         return l;
     }
