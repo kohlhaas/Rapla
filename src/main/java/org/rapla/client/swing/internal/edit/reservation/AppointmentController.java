@@ -178,7 +178,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
             JPanel commentPanel = new JPanel();
             commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.X_AXIS));
 
-            JLabel commentLabel = new JLabel("Comment:"); // Create a label for the comment
+            JLabel commentLabel = new JLabel("Kommentar:"); // Create a label for the comment
             commentLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add some space to the right of the label
             commentPanel.add(commentLabel); // Add the label to the panel
 
