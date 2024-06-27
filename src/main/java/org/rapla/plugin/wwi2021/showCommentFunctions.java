@@ -46,11 +46,28 @@ public class showCommentFunctions implements FunctionFactory{
         if ( obj instanceof AppointmentBlock)
         {
             Appointment appointment = ((AppointmentBlock)obj).getAppointment();
-            l = "\n" + appointment.getComment();
+            String comment = appointment.getComment();
+            if (comment == null)
+            {
+                l = "";
+            }
+            else
+            {
+                l = "\n" + "(" + comment + ")";
+            }
         }
         else if (obj instanceof Appointment)
         {
-            l= "\n" + ((Appointment)obj).getComment();
+            Appointment appointment = (Appointment)obj;
+            String comment = appointment.getComment();
+            if (comment == null)
+            {
+                l = "";
+            }
+            else
+            {
+                l = "\n" + "(" + comment + ")";
+            }
         }
         else if (obj instanceof Reservation)
         {
