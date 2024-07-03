@@ -46,7 +46,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -192,16 +191,12 @@ public class ImportController {
             String end = event.getProperty(Property.DTEND).getValue();
             String raplaId = event.getProperty("X-RAPLA-ID").getValue();
 
-            // Convert start and end strings to Date objects
-            //Date startDate = convertToDate(start);
-            //Date endDate = convertToDate(end);
-
             // Convert start and end strings to correct time zone
-            ZonedDateTime startDate = convertToZonedDateTime(start);
-            ZonedDateTime endDate = convertToZonedDateTime(end);
+            Date startDate = convertToDateWithUTCAdjustment(start);
+            Date endDate = convertToDateWithUTCAdjustment(end);
 
             // Create a new appointment with the start and end dates
-            Appointment appointment = facade.newAppointmentWithUser(Date.from(startDate.toInstant()), Date.from(endDate.toInstant()), facade.getUser(userName));
+            Appointment appointment = facade.newAppointmentWithUser(startDate, endDate, facade.getUser(userName));
 
             // Group appointments by X-RAPLA-ID
             tempMap.computeIfAbsent(raplaId, k -> new ArrayList<>()).add(appointment);
@@ -225,24 +220,21 @@ public class ImportController {
      * @param timestamp the timestamp string
      * @return the converted Date object
      */
-    public Date convertToDate(String timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    public Date convertToDateWithUTCAdjustment(String timestamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'");
         try {
-            // Parse the date string in UTC
-            Date utcDate = sdf.parse(timestamp);
+            LocalDateTime localDateTime = LocalDateTime.parse(timestamp, formatter);
+            ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of("UTC"));
+            ZonedDateTime berlinDateTime = utcDateTime.withZoneSameInstant(ZoneId.of("Europe/Berlin"));
 
-            TimeZone mezTimeZone = TimeZone.getTimeZone("Europe/Berlin");
+            // Check if the date is in DST in the Europe/Berlin time zone
+            boolean isDST = berlinDateTime.getZone().getRules().isDaylightSavings(berlinDateTime.toInstant());
 
-            // Create a new SimpleDateFormat for the MEZ time zone
-            SimpleDateFormat mezSdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-            mezSdf.setTimeZone(mezTimeZone);
+            // Adjust the UTC time by +1 or +2 hours
+            ZonedDateTime adjustedUtcDateTime = utcDateTime.plusHours(isDST ? 2 : 1);
 
-            // Format the UTC date into the MEZ time zone
-            String mezFormattedDate = mezSdf.format(utcDate);
-
-            return mezSdf.parse(mezFormattedDate);
-        } catch (ParseException e) {
+            return Date.from(adjustedUtcDateTime.toInstant());
+        } catch (DateTimeParseException e) {
             e.printStackTrace();
             return null;
         }
