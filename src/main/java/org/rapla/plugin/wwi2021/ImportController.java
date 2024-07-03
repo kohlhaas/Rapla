@@ -47,6 +47,11 @@ import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
@@ -188,11 +193,15 @@ public class ImportController {
             String raplaId = event.getProperty("X-RAPLA-ID").getValue();
 
             // Convert start and end strings to Date objects
-            Date startDate = convertToDate(start);
-            Date endDate = convertToDate(end);
+            //Date startDate = convertToDate(start);
+            //Date endDate = convertToDate(end);
+
+            // Convert start and end strings to correct time zone
+            ZonedDateTime startDate = convertToZonedDateTime(start);
+            ZonedDateTime endDate = convertToZonedDateTime(end);
 
             // Create a new appointment with the start and end dates
-            Appointment appointment = facade.newAppointmentWithUser(startDate, endDate, facade.getUser(userName));
+            Appointment appointment = facade.newAppointmentWithUser(Date.from(startDate.toInstant()), Date.from(endDate.toInstant()), facade.getUser(userName));
 
             // Group appointments by X-RAPLA-ID
             tempMap.computeIfAbsent(raplaId, k -> new ArrayList<>()).add(appointment);
@@ -234,6 +243,24 @@ public class ImportController {
 
             return mezSdf.parse(mezFormattedDate);
         } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Converts a timestamp string to a Date object in Europe/Berlin time zone.
+     *
+     * @param timestamp the timestamp string
+     * @return the converted Date object
+     */
+    public ZonedDateTime convertToZonedDateTime(String timestamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'");
+        try {
+            LocalDateTime localDateTime = LocalDateTime.parse(timestamp, formatter);
+            ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of("UTC"));
+            return utcDateTime.withZoneSameInstant(ZoneId.of("Europe/Berlin"));
+        } catch (DateTimeParseException e) {
             e.printStackTrace();
             return null;
         }
