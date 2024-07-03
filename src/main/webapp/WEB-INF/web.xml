@@ -40,7 +40,7 @@
         <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class>
         <init-param>
             <param-name>allowedOrigins</param-name>
-            <param-value>https://wwiappdev1.dhbw-stuttgart.de/</param-value>
+            <param-value>https://wwiappdev1.dhbw-stuttgart.de</param-value>
         </init-param>
         <init-param>
             <param-name>allowedMethods</param-name>
