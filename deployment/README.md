@@ -4,7 +4,7 @@
 ## Setup Container
 
 navigate to the deployment folder
-```bash 
+```bash
 cd /path/to/rapla/deployment
 ```
 
@@ -14,12 +14,12 @@ chmod 777 filelistener.sh
 ```
 
 build image from Dockerfile (only needed once)
-```bash 
+```bash
 podman build -t rapla .
 ```
 
 start container with .yaml file (build the project first)
-```bash 
+```bash
 podman compose up
 ```
 
@@ -75,7 +75,7 @@ podman exec -it [CONTAINER-ID] /bin/sh
 ## Setup Container
 
 navigate to the deployment folder
-```bash 
+```bash
 cd /path/to/rapla/deployment
 ```
 
@@ -85,12 +85,12 @@ chmod 777 filelistener.sh
 ```
 
 build image from Dockerfile (only needed once)
-```bash 
+```bash
 podman build -t rapla .
 ```
 
 start container with .yaml file (build the project first)
-```bash 
+```bash
 podman compose up
 ```
 
@@ -175,11 +175,11 @@ install runner on vm with commands
 
 
 ## Setup
-auf vm in 
+auf vm in
 /etc/gitlab-runner/config.toml -> privileged = true
 
 
-
+redeploy
 
 
 
