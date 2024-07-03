@@ -1,11 +1,27 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Author: Lennart Pahl on behalf of all authors
+ * Date: 2024-07-03
+ */
+
 package org.rapla.plugin.wwi2021;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import org.jboss.resteasy.annotations.jaxrs.FormParam;
-import org.rapla.RaplaSystemInfo;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.rapla.entities.Entity;
 import org.rapla.entities.EntityNotFoundException;
 import org.rapla.entities.User;
@@ -16,26 +32,26 @@ import org.rapla.facade.RaplaFacade;
 import org.rapla.framework.RaplaException;
 import org.rapla.logger.Logger;
 import org.rapla.server.RemoteSession;
-import org.rapla.server.internal.ServerContainerContext;
+import org.rapla.storage.RaplaSecurityException;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.net.ssl.HttpsURLConnection;
-import javax.print.attribute.standard.Media;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.rapla.storage.RaplaSecurityException;
 
-
+/**
+ * ImportController handles the import of semester plans from ICS files.
+ */
 @Singleton
 @Path("semesterplan")
 public class ImportController {
@@ -47,13 +63,19 @@ public class ImportController {
 
     @Inject
     RemoteSession session;
-    private final HttpServletRequest request;
 
     @Inject
     public ImportController(@Context HttpServletRequest request){
-        this.request = request;
     }
 
+    /**
+     * Endpoint logic for importing a semester plan from an ICS file.
+     *
+     * @param req   the HTTP request
+     * @param res   the HTTP response
+     * @param form  the form containing the ICS file
+     * @throws Exception if an error occurs during the import
+     */
     @POST
     @Path("/import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -61,13 +83,16 @@ public class ImportController {
     public void importSemesterplan(@Context HttpServletRequest req, @Context HttpServletResponse res, @MultipartForm ICSFileUploadForm form) throws Exception {
         InputStream icsInputStream = null;
         User user;
+        String userName;
 
         try {
             // Check and get the user from the session
             user = session.checkAndGetUser(req);
+            userName = user.getUsername();
         } catch (RaplaSecurityException sec) {
             logger.error("Unauthorized access: No user found in session.", sec);
-            res.setStatus(HttpsURLConnection.HTTP_UNAUTHORIZED);
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            generatePage(res, res.getStatus());
             return;
         }
 
@@ -75,65 +100,80 @@ public class ImportController {
             // Get the ICS file input stream
             icsInputStream = form.getIcsFile();
             String ics = convertStreamToString(icsInputStream);
-            //String ics = new String(icsInputStream.readAllBytes());
-            //String ics = "";
-            Map<ReferenceInfo<Reservation>, List<Appointment>> result = importAppointmentsFromIcs(ics);
-            List<Reservation> reservationsToStore = new ArrayList<>();
 
             // Process the ICS file and update reservations
+            Map<ReferenceInfo<Reservation>, List<Appointment>> result = importAppointmentsFromIcs(ics, userName);
+            List<Reservation> reservationsToStore = new ArrayList<>();
+
             for (Map.Entry<ReferenceInfo<Reservation>, List<Appointment>> entry : result.entrySet()) {
-                Reservation reservation;
-                ReferenceInfo<Reservation> reservationId = entry.getKey();
-                List<Appointment> appointments = entry.getValue();
-
-                try {
-                    reservation = facade.edit(facade.resolve(reservationId));
-                } catch(EntityNotFoundException e) {
-                    logger.error("Module id not found", e);
-                    continue;
-                }
-
-                List<Appointment> placeholderAppointments = Arrays.asList(reservation.getAppointments());
-                for (Appointment appointment : placeholderAppointments) {
-                    reservation.removeAppointment(appointment);
-                }
-
-                for (Appointment appointment : appointments) {
-                    reservation.addAppointment(appointment);
-                }
-
-                reservationsToStore.add(reservation);
-                logger.info("Successfully added reservation appointments for id " + reservationId + " from imported ics-File");
+                processReservation(entry, reservationsToStore);
             }
 
             // Store all reservations at once
-            Entity[] events = reservationsToStore.toArray(new Reservation[0]);
-            //facade.storeObjects(events);
+            Entity[] events = reservationsToStore.toArray(Reservation.RESERVATION_ARRAY);
             facade.storeAndRemove(events, new Entity[]{}, user);
 
-
-            res.setStatus(HttpsURLConnection.HTTP_OK);
-
+            // Set successful response status
+            res.setStatus(HttpServletResponse.SC_OK);
+            res.getWriter().write("Import successful");
         } catch (RaplaSecurityException e) {
-            logger.error("User doesn´t have enough rights for storing the ICS file", e);
-            res.setStatus(HttpsURLConnection.HTTP_FORBIDDEN);
+            logger.error("User doesn't have enough rights for storing the ICS file", e);
+            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            res.getWriter().write("Forbidden: insufficient rights");
         } catch (Exception e) {
             logger.error("Error processing the ICS file", e);
-            res.setStatus(HttpsURLConnection.HTTP_INTERNAL_ERROR);
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            res.getWriter().write("Internal server error");
         } finally {
             if (icsInputStream != null) {
                 icsInputStream.close();
             }
+            // Optionally generating a web page displaying the results
             generatePage(res, res.getStatus());
         }
     }
 
+    /**
+     * Processes a reservation by removing placeholder appointments and adding recently parsed appointments.
+     *
+     * @param entry                 the entry containing the reservation reference and appointments
+     * @param reservationsToStore   the list of reservations to store
+     * @throws RaplaException       if an error occurs during processing
+     */
+    private void processReservation(Map.Entry<ReferenceInfo<Reservation>, List<Appointment>> entry, List<Reservation> reservationsToStore) throws RaplaException {
+        Reservation reservation;
+        ReferenceInfo<Reservation> reservationId = entry.getKey();
+        List<Appointment> appointments = entry.getValue();
 
-    public Map<ReferenceInfo<Reservation>, List<Appointment>> importAppointmentsFromIcs(String icsFile) throws RaplaException, ParseException, ParserException, IOException {
+        try {
+            reservation = facade.edit(facade.resolve(reservationId));
+        } catch (EntityNotFoundException e) {
+            logger.error("Module id not found", e);
+            return;
+        }
 
+        // Remove placeholder appointments and add new ones
+        for (Appointment appointment : reservation.getAppointments()) {
+            reservation.removeAppointment(appointment);
+        }
+        for (Appointment appointment : appointments) {
+            reservation.addAppointment(appointment);
+        }
+
+        reservationsToStore.add(reservation);
+        logger.info("Successfully added reservation appointments for id " + reservationId + " from imported ics-File");
+    }
+
+    /**
+     * Converting the ICS contents to a suitable format and logical parsing of appointments from the ICS file.
+     *
+     * @param icsFile the content of the ICS file
+     * @param userName the username of the user
+     * @return a map of reservations and their corresponding appointments
+     * @throws RaplaException, ParseException, ParserException, IOException if an error occurs during import
+     */
+    public Map<ReferenceInfo<Reservation>, List<Appointment>> importAppointmentsFromIcs(String icsFile, String userName) throws RaplaException, ParseException, ParserException, IOException {
         Map<ReferenceInfo<Reservation>, List<Appointment>> newMap = new LinkedHashMap<>();
-
-        // Use an ICS parser to parse the ICS file string
         StringReader sin = new StringReader(icsFile);
         CalendarBuilder builder = new CalendarBuilder();
         net.fortuna.ical4j.model.Calendar calendar = builder.build(sin);
@@ -152,7 +192,7 @@ public class ImportController {
             Date endDate = convertToDate(end);
 
             // Create a new appointment with the start and end dates
-            Appointment appointment = facade.newAppointmentWithUser(startDate, endDate, facade.getUser("admin"));
+            Appointment appointment = facade.newAppointmentWithUser(startDate, endDate, facade.getUser(userName));
 
             // Group appointments by X-RAPLA-ID
             tempMap.computeIfAbsent(raplaId, k -> new ArrayList<>()).add(appointment);
@@ -165,35 +205,58 @@ public class ImportController {
 
             // Convert raplaId to ReferenceInfo<Reservation>
             ReferenceInfo<Reservation> refInfo = new ReferenceInfo<>(raplaId, Reservation.class);
-
-            // Put the grouped appointments in the newMap
             newMap.put(refInfo, appointments);
         }
         return newMap;
     }
 
-    private Date convertToDate(String timestamp) {
+    /**
+     * Converts a timestamp string to a Date object in Europe/Berlin time zone.
+     *
+     * @param timestamp the timestamp string
+     * @return the converted Date object
+     */
+    public Date convertToDate(String timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
-            return sdf.parse(timestamp);
+            // Parse the date string in UTC
+            Date utcDate = sdf.parse(timestamp);
+
+            TimeZone mezTimeZone = TimeZone.getTimeZone("Europe/Berlin");
+
+            // Create a new SimpleDateFormat for the MEZ time zone
+            SimpleDateFormat mezSdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+            mezSdf.setTimeZone(mezTimeZone);
+
+            // Format the UTC date into the MEZ time zone
+            String mezFormattedDate = mezSdf.format(utcDate);
+
+            return mezSdf.parse(mezFormattedDate);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    /**
+     * Generates an HTML response page.
+     *
+     * @param res the HTTP response
+     * @param responseCode the HTTP response code
+     * @throws IOException if an error occurs while writing the response
+     */
     public void generatePage(HttpServletResponse res, int responseCode) throws IOException {
         res.setContentType("text/html;charset=UTF-8");
         PrintWriter out = res.getWriter();
 
         String title, heading, message, color;
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+        if (responseCode == HttpServletResponse.SC_OK) {
             title = "Import Erfolg";
             heading = "Erfolgreich hinzugefügt";
             message = "Der Semesterplan wurde erfolgreich importiert";
             color = "#4CAF50"; // Green color for success
-        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+        } else if (responseCode == HttpServletResponse.SC_UNAUTHORIZED) {
             title = "Zugriff verweigert";
             heading = "Nicht autorisiert";
             message = "Sie sind nicht berechtigt, diese Aktion auszuführen.";
@@ -228,6 +291,13 @@ public class ImportController {
         out.close();
     }
 
+    /**
+     * Converts an InputStream to a String.
+     *
+     * @param is the InputStream
+     * @return the resulting String
+     * @throws IOException if an error occurs during conversion
+     */
     private String convertStreamToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
