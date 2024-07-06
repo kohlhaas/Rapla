@@ -71,15 +71,15 @@ public class showCommentFunctions implements FunctionFactory{
         }
         else if (obj instanceof Reservation)
         {
-            l = "\n not supported Reservation";
+            l = "";
         }
         else if ( obj instanceof Collection)
         {
-            l = "\n not supported Collection";
+            l = "";
         }
         else
         {
-            l = "\n nope";
+            l = "";
         }
         return l;
     }
