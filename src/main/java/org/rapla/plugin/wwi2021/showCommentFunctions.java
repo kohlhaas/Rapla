@@ -47,7 +47,8 @@ public class showCommentFunctions implements FunctionFactory{
         {
             Appointment appointment = ((AppointmentBlock)obj).getAppointment();
             String comment = appointment.getComment();
-            if (comment == null)
+
+            if (comment == null || comment.equals(""))
             {
                 l = "";
             }
@@ -60,7 +61,8 @@ public class showCommentFunctions implements FunctionFactory{
         {
             Appointment appointment = (Appointment)obj;
             String comment = appointment.getComment();
-            if (comment == null)
+
+            if (comment == null || comment.equals(""))
             {
                 l = "";
             }
