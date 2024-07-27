@@ -15,8 +15,8 @@ package org.rapla.client.swing.internal.edit.reservation;
 import org.rapla.RaplaResources;
 import org.rapla.client.RaplaWidget;
 import org.rapla.client.dialog.DialogUiFactoryInterface;
-import org.rapla.client.extensionpoints.CommentExtensionFactory; //hier
-import org.rapla.client.extensionpoints.AppointmentStatusFactory; //hier
+import org.rapla.client.extensionpoints.CommentExtensionFactory;
+import org.rapla.client.extensionpoints.AppointmentStatusFactory; 
 import org.rapla.client.swing.images.RaplaImages;
 import org.rapla.client.swing.internal.edit.RaplaListEdit;
 import org.rapla.client.swing.toolkit.RaplaButton;
@@ -101,13 +101,13 @@ class AppointmentListEdit extends AbstractAppointmentEditor
     AppointmentFormater appointmentFormater;
     private final DialogUiFactoryInterface dialogUiFactory;
 	@SuppressWarnings("unchecked")
-	AppointmentListEdit(ClientFacade facade, RaplaResources i18n, RaplaLocale raplaLocale, Logger logger, AppointmentFormater appointmentFormater, CommandHistory commandHistory, DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface, Set<CommentExtensionFactory> commentExtensionFactory) //hier
+	AppointmentListEdit(ClientFacade facade, RaplaResources i18n, RaplaLocale raplaLocale, Logger logger, AppointmentFormater appointmentFormater, CommandHistory commandHistory, DateRenderer dateRenderer, DialogUiFactoryInterface dialogUiFactory, IOInterface ioInterface, Set<CommentExtensionFactory> commentExtensionFactory) 
 			throws RaplaException {
 		super(facade, i18n, raplaLocale, logger);
         this.appointmentFormater = appointmentFormater;
 		this.commandHistory = commandHistory;
         this.dialogUiFactory = dialogUiFactory;
-        appointmentController = new AppointmentController(facade, i18n, raplaLocale, logger, commandHistory,  dateRenderer, dialogUiFactory, ioInterface, commentExtensionFactory); //hier
+        appointmentController = new AppointmentController(facade, i18n, raplaLocale, logger, commandHistory,  dateRenderer, dialogUiFactory, ioInterface, commentExtensionFactory); 
         listEdit = new RaplaListEdit<>(getI18n(), appointmentController.getComponent(), listener, false);
         listEdit.getToolbar().add( freeButtonNext);
 
@@ -596,7 +596,7 @@ class AppointmentListEdit extends AbstractAppointmentEditor
         private final DateRenderer dateRenderer;
         private final DialogUiFactoryInterface dialogUiFactory;
         private final IOInterface ioInterface;
-		private final Set<CommentExtensionFactory> commentExtensionFactory; //hier
+		private final Set<CommentExtensionFactory> commentExtensionFactory;
 
         @Inject
         public AppointmentListEditFactory(ClientFacade facade, RaplaResources i18n, RaplaLocale raplaLocale, Logger logger,
@@ -612,13 +612,13 @@ class AppointmentListEdit extends AbstractAppointmentEditor
             this.dateRenderer = dateRenderer;
             this.dialogUiFactory = dialogUiFactory;
             this.ioInterface = ioInterface;
-			this.commentExtensionFactory = commentExtensionFactory; //hier
+			this.commentExtensionFactory = commentExtensionFactory; 
         }
 
         public AppointmentListEdit create(CommandHistory commandHistory) throws RaplaException
         {
             return new AppointmentListEdit(facade, i18n, raplaLocale, logger, appointmentFormater, commandHistory,
-                    dateRenderer, dialogUiFactory, ioInterface, commentExtensionFactory); //hier
+                    dateRenderer, dialogUiFactory, ioInterface, commentExtensionFactory); 
         }
     }
 	
