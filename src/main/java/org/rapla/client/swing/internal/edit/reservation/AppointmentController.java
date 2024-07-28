@@ -174,13 +174,13 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         buttonGroup.add(monthlyRepeating);
         buttonGroup.add(yearlyRepeating);
 
-        if ( commentEditFactory.size() > 0) { //hier
+        if ( commentEditFactory.size() > 0) { 
             JPanel commentPanel = new JPanel();
             commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.X_AXIS));
 
-            JLabel commentLabel = new JLabel("Kommentar:"); // Create a label for the comment
-            commentLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add some space to the right of the label
-            commentPanel.add(commentLabel); // Add the label to the panel
+            JLabel commentLabel = new JLabel("Kommentar:"); 
+            commentLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); 
+            commentPanel.add(commentLabel); 
 
             for (CommentExtensionFactory factory : commentEditFactory) {
                 RaplaWidget widget = factory.createComment(this);
@@ -295,7 +295,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
         savedRepeatingType = getCurrentRepeatingType();
     }
 
-    List<Consumer<Appointment>> appointmentChangedConsumer = new ArrayList<>(); //hier
+    List<Consumer<Appointment>> appointmentChangedConsumer = new ArrayList<>(); 
     @Override
     public void init(Consumer<Appointment> appointmentChanged) {
         this.appointmentChangedConsumer.add( appointmentChanged);
@@ -557,7 +557,7 @@ public class AppointmentController extends RaplaGUIComponent implements Disposab
                 startTime.setVisible(!wholeDaysSet);
                 endTime.setVisible(!wholeDaysSet);
                 endTimeLabel.setVisible(!wholeDaysSet);
-                for (Consumer<Appointment> consumer : appointmentChangedConsumer) { //hier
+                for (Consumer<Appointment> consumer : appointmentChangedConsumer) { 
                     consumer.accept(appointment);
                 }
             }

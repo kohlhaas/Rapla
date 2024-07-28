@@ -1,26 +1,39 @@
-/**
- *
- */
+/*
+* Copyright [2024] [Mario Köpcke, Lorenz Krause]
+* 
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* 
+*     http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package org.rapla.plugin.wwi2021;
 
 import org.rapla.RaplaSystemInfo;
-import org.rapla.entities.Entity;
 import org.rapla.entities.domain.Allocatable;
 import org.rapla.entities.domain.Reservation;
 import org.rapla.entities.dynamictype.ClassificationFilter;
 import org.rapla.entities.dynamictype.DynamicType;
-import org.rapla.entities.dynamictype.Classification;
-import org.rapla.entities.dynamictype.Attribute;
 import org.rapla.entities.storage.ReferenceInfo;
 import org.rapla.facade.RaplaFacade;
-import org.rapla.framework.RaplaException;
 import org.rapla.logger.Logger;
 import org.rapla.plugin.abstractcalendar.server.AbstractHTMLCalendarPage;
 import org.rapla.scheduler.Promise;
 import org.rapla.scheduler.sync.SynchronizedCompletablePromise;
-import org.rapla.server.internal.RaplaStatusEntry;
 import org.rapla.server.internal.ServerContainerContext;
 import org.rapla.entities.domain.Appointment;
+import org.rapla.entities.Entity;
+import org.rapla.entities.dynamictype.Classification;
+import org.rapla.entities.dynamictype.Attribute;
+import org.rapla.framework.RaplaException;
+import org.rapla.server.internal.RaplaStatusEntry;
 
 // import microsoft.exchange.webservices.data.core.service.item.Appointment;
 
@@ -32,16 +45,16 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.*;
+import java.text.SimpleDateFormat;
+import javax.ws.rs.WebApplicationException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
 import java.text.SimpleDateFormat;
 import java.util.stream.Collectors;
 
@@ -63,11 +76,13 @@ public class RaplaPruefungen {
     }
 
     public String formatDate(Date date, String formatPattern){
+        // This function formats a date with a given pattern
         SimpleDateFormat formatter = new SimpleDateFormat(formatPattern);
         return formatter.format(date);
     }
 
     public int getSemesterForDate(Date date, String[][] semesterDates) {
+        // This function returns the semester a given date belongs to
         String dateString = formatDate(date, "yyyy-MM-dd");
         int semester = 0;
         for (int i = 0; i < 6; i++) {
@@ -86,6 +101,7 @@ public class RaplaPruefungen {
     }
 
     public String[][] createSemesterDates(String courseName) {
+        // This function creates the start and end dates for each semester of a course
         int courseYear = Integer.parseInt(courseName.replaceAll("\\D", ""));
         String[][] semesterDates = new String[6][2];
         semesterDates[0][0] = courseYear + "-10-01";
@@ -104,6 +120,7 @@ public class RaplaPruefungen {
     }
 
     public Reservation getLectureOfExam(Reservation exam, Collection<Reservation> lectures) {
+        // This function checks if there are lectures with the same name as the exam and returns the first lecture
         for (Reservation lecture:lectures) {
             if (exam.getClassification().getValueForAttribute(exam.getClassification().getAttribute("Name")).equals(lecture.getClassification().getValueForAttribute(lecture.getClassification().getAttribute("Name")))){
                 return lecture;
@@ -115,6 +132,7 @@ public class RaplaPruefungen {
     @GET
     @Path("kurs")
     public void generateKurs( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
+        // This function generates the page for a specific course
         java.io.PrintWriter out = response.getWriter();
         String kursId = request.getParameter("id");
         
@@ -165,22 +183,22 @@ public class RaplaPruefungen {
             }
             out.println("</select>");
         out.println("</h2>");
-        out.println("</div>");      // filter-semester-container
+        out.println("</div>");      // "filter-semester-container"
                 
         // - - -  View lectures:
         out.println("<div class=\"lectures-container\">");
         out.println("<div class=\"vorlesungen-header\"> <h2>Vorlesungen</h2> </div>");      
         out.println("<div class=\"grid\" id=\"lectures-grid\">");     
-        // Generated in JS   
+        // Content is generated later in JS part
         out.println("</div>");      // grid
-        out.println("</div>");      // lectures-container
+        out.println("</div>");      // "lectures-container"
         
 
         // - - -  View exams:
         out.println("<div class=\"vorlesungen-header\"> <h2>Prüfungen</h2> </div>");
         out.println("<div class=\"table-container\">");
         out.println("<div id=\"exams-table-container\">");
-        // Generated in JS
+        // Content is generated later in JS part
         out.println("</div>"); // exams-table-container
         out.println("</div>"); // table-container
 
@@ -188,7 +206,9 @@ public class RaplaPruefungen {
         out.println("<script>");       
         // Store exam performances in JS
         out.println("const exam_performances = [");
+        // iterate over all filtered reservations (exams)
         for (Reservation reservation:examsReservations) {
+            // - - - Extract information from the reservation and respective appointments
             String lecturers_list = "";
             for (Allocatable resource:reservation.getPersons()) {
                 lecturers_list += "" + resource.getName(null) + "; ";
@@ -255,6 +275,7 @@ public class RaplaPruefungen {
                 datesList = datesList.substring(0, datesList.length() - 2);
             }
 
+            // - - - Combine all information to a JS object
             out.println("{");
             out.println("lecture_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("Name")) + "\",");
             out.println("unit_name: \"" + reservation.getClassification().getValueForAttribute(reservation.getClassification().getAttribute("unit_name")) + "\",");
@@ -271,8 +292,9 @@ public class RaplaPruefungen {
             out.println("},");
         }
         out.println("];");
-        out.println("console.log(exam_performances);");
 
+        // - - - Supporting JS functions:
+        // Create the JS function to convert a date string to DD.MM.YYYY
         out.println("function convertDateStringToDDMMYYYY(dateString) {\r\n" + //
                         "            const date = new Date(dateString);\r\n" + //
                         "            const day = String(date.getUTCDate()).padStart(2, '0');\r\n" + //
@@ -281,6 +303,7 @@ public class RaplaPruefungen {
                         "            return `${day}.${month}.${year}`;\r\n" + //
                         "        }");
 
+        // Create the JS function to convert a date string to HH:MM
         out.println("function convertDateStringToHHMM(dateString) {\r\n" + //
                         "            const date = new Date(dateString);\r\n" + //
                         "            const hours = String(date.getUTCHours()).padStart(2, '0');\r\n" + //
@@ -288,6 +311,7 @@ public class RaplaPruefungen {
                         "            return `${hours}:${minutes}`;\r\n" + //
                         "        }");
 
+        // Create the JS function to calculate the end time of an exam
         out.println("function calculateEndTime(startTime, durationMinutes) {\r\n" + //
                         "            const [startHours, startMinutes] = startTime.split(':').map(Number);\r\n" + //
                         "            const totalMinutes = startHours * 60 + startMinutes + durationMinutes;\r\n" + //
@@ -298,18 +322,22 @@ public class RaplaPruefungen {
                         "            return `${formattedEndHours}:${formattedEndMinutes}`;\r\n" + //
                         "        }");
 
+        // Create the JS function to filter exams by semester of the lecture
         out.println("function filterExamPerformancesByLecturesSemester(exam_performances, semester) {\r\n" + //
                         "return exam_performances.filter(exam_performances => exam_performances.semester_lectures === semester);}"
         );
 
+        // Create the JS function to filter exams by semester of the exam
         out.println("function filterExamPerformancesByExamsSemester(exam_performances, semester) {\r\n" + //
                         "return exam_performances.filter(exam_performances => exam_performances.semester_exams === semester);}"
         );
 
+        // Create the JS function to filter exams by type
         out.println("function filterExamPerformancesByType(exam_performances, type) {\r\n" + 
                         "return exam_performances.filter(exam_performance => exam_performance.type.toLowerCase() === type.toLowerCase());}"
         );
         
+        // Create the JS function to aggregate exams per unit ("Modul")
         out.println("function aggregateExamsPerUnit(exams) {\r\n" + //
                         "const aggregatedData = {};\r\n" + //
                         "exams.forEach(exam => {\r\n" + //
@@ -329,7 +357,6 @@ public class RaplaPruefungen {
                             "aggregatedData[unitName].lecture_name.push(exam.lecture_name);\r\n" + //
                             "aggregatedData[unitName].maximal_points.push(exam.maximal_points);\r\n" + //
                         "});\r\n" + //
-                        "console.log(aggregatedData);\r\n" + //
                         "return Object.values(aggregatedData);\r\n" + //
                     "};"
         );
@@ -337,7 +364,7 @@ public class RaplaPruefungen {
         
 
         
-        // Lecture view
+        // Create the JS function to render the lectures view
         out.println("const grid = document.getElementById('lectures-grid');");
         out.println("function renderLecturesView(exam_performances) {");
         out.println("grid.innerHTML = '';                                   \r\n" + //
@@ -391,7 +418,7 @@ public class RaplaPruefungen {
                 "}"
         );
 
-        // Exam view
+        // Create the JS function to render the exams view
         out.println("const examsTable = document.getElementById('exams-table-container');");
         out.println("function renderExamsView(exam_performances) {");
         out.println("examsTable.innerHTML = '';                                   \r\n" + //
@@ -421,7 +448,7 @@ public class RaplaPruefungen {
                 "}"
         );
 
-
+        // Add event listener to dropdown to filter exams by semester
         out.println("document.getElementById(\"dropdown_semester\").addEventListener(\"change\", function () {     \r\n" + //
                         "const selectedSemesterValue = parseInt(this.value); \r\n" + //
                         "const filteredExamPerformances = filterExamPerformancesByLecturesSemester(exam_performances, selectedSemesterValue); \r\n" + //
@@ -433,7 +460,7 @@ public class RaplaPruefungen {
         );
         out.println("document.getElementById(\"dropdown_semester\").dispatchEvent(new Event(\"change\"));");
 
-        // Save as PDF
+        // Create the JS function to save the page as PDF
         out.println("async function saveAsPDF() { \r\n" + //
                         "const { jsPDF } = window.jspdf; \r\n" + //
                         "const saveButton = document.querySelector('.save-button-container'); \r\n" + //
@@ -474,6 +501,7 @@ public class RaplaPruefungen {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public void generatePage( @Context HttpServletRequest request, @Context HttpServletResponse response ) throws Exception {
+        // This function generates the overview page with all courses
         java.io.PrintWriter out = response.getWriter();
         response.setContentType("text/html; charset=ISO-8859-1");
 
@@ -490,7 +518,6 @@ public class RaplaPruefungen {
         Arrays.sort(kurse, new Comparator<Allocatable>() {
             @Override
             public int compare(Allocatable a1, Allocatable a2) {
-                // Assuming you have a method to get the name from Allocatable
                 String name1 = a1.getName(null);
                 String name2 = a2.getName(null);
                 return name1.compareTo(name2);
@@ -508,25 +535,8 @@ public class RaplaPruefungen {
         out.println( "<ul>" );
         for (Allocatable kurs:kurse) {
             out.println("<li><a href=\"pruefungen/kurs?id=" + kurs.getId() + "\" class=\"kurs-liste\">" + kurs.getName(null) + "</a></li>");
-            // out.println("<li><a href=\"pruefungen/kurs?id=" + kurs.getId() + "\" class=\"kurs-liste\">" + kurs.getName(null) + "</a><button onclick=\"copyToClipboard('pruefungen/kurs?id=" + kurs.getId() + "')\">Copy Link</button></li>");
-
         }
         out.println( "</ul>" );
-        out.println("<script>");
-        
-        // out.println("function copyToClipboard(text) {\r\n" + //
-        //                 "            var textarea = document.createElement(\"textarea\");\r\n" + //
-        //                 "            textarea.value = text;\r\n" + //
-        //                 "            textarea.style.position = \"fixed\";\r\n" + //
-        //                 "            textarea.style.opacity = 0;\r\n" + //
-        //                 "            document.body.appendChild(textarea);\r\n" + //
-        //                 "            textarea.select();\r\n" + //
-        //                 "            document.execCommand(\"copy\");\r\n" + //
-        //                 "            document.body.removeChild(textarea);\r\n" + //
-        //                 "            alert(\"Link copied to clipboard: \" + text);\r\n" + //
-        //                 "        }");
-
-        out.println("</script>");
         out.println( "</body>" );
         out.println( "</html>" );
         out.close();
@@ -543,4 +553,4 @@ public class RaplaPruefungen {
     }
 
 
-    }
+}
